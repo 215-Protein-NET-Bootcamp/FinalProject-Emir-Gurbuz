@@ -1,4 +1,7 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using NTech.Business.DependencyResolvers.Autofac;
 using NTech.DataAccess.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,15 +13,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region SqlContext
+#region SqlContext, PostgreContext
 builder.Services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-#endregion
-
-#region PostgreContext
 //builder.Services.AddDbContext<NpgDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
 #endregion
 
+#region AutofacBusinessModule
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(builder =>
+    {
+        builder.RegisterModule(new AutofacBusinessModule());
+    });
+#endregion
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
