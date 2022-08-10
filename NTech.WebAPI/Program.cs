@@ -10,7 +10,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region SqlContext
 builder.Services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+#endregion
+
+#region PostgreContext
+//builder.Services.AddDbContext<NpgDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
+#endregion
 
 var app = builder.Build();
 
