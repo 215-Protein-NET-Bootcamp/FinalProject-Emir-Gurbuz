@@ -1,6 +1,8 @@
-﻿namespace NTech.Entity.Concrete
+﻿using Core.Entity;
+
+namespace NTech.Entity.Concrete
 {
-    public class Brand
+    public class Brand : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -19,6 +19,7 @@ namespace NTech.Entity.Concrete
         public Color Color { get; set; }
 
         public int? BrandId { get; set; }
+        [ForeignKey("BrandId")]
         public Brand Brand { get; set; }
 
         public int? UsingStatusId { get; set; }
@@ -31,6 +32,7 @@ namespace NTech.Entity.Concrete
 
         public decimal Price { get; set; }
         public bool isOfferable { get; set; }
+        public byte Rating { get; set; }
 
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }

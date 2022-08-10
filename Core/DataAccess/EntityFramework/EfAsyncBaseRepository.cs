@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 
 namespace Core.DataAccess.EntityFramework
 {
-    public class AsyncBaseRepository<TEntity> : IAsyncRepository<TEntity>
+    public class EfAsyncBaseRepository<TEntity> : IAsyncRepository<TEntity>
         where TEntity : class, IEntity, new()
     {
         public DbContext _context { get; set; }
-        public AsyncBaseRepository(DbContext dbContext)
+        public EfAsyncBaseRepository(DbContext dbContext)
         {
             _context = dbContext;
         }
