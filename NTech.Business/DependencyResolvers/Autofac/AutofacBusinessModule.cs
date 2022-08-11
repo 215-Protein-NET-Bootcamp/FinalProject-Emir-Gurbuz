@@ -26,6 +26,8 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
             builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
             builder.RegisterType<ColorManager>().As<IColorService>().SingleInstance();
+            builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
+            builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>().SingleInstance();
             #endregion
 
             #region UnitOfWork
