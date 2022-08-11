@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NTech.Business.Abstract;
-using NTech.Dto.Concrete.Product;
+using NTech.Dto.Concrete;
 using NTech.Entity.Concrete;
 
 namespace NTech.WebAPI.Controllers

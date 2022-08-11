@@ -1,4 +1,4 @@
-﻿using NTech.Dto.Concrete.Product;
+﻿using NTech.Dto.Concrete;
 using NTech.Entity.Concrete;
 
 namespace NTech.Business.Abstract
