@@ -6,18 +6,19 @@ using NTech.Business.Abstract;
 namespace NTech.WebAPI.Controllers
 {
     [ApiController]
-    public class BaseController<TEntity, TDto> : ControllerBase
+    public class BaseController<TEntity, TWriteDto, TReadDto> : ControllerBase
         where TEntity : class, IEntity, new()
-        where TDto : class, IDto, new()
+        where TWriteDto : class, IWriteDto, new()
+        where TReadDto : class, IReadDto, new()
     {
-        private readonly IAsyncBaseService<TEntity, TDto> BaseService;
+        protected readonly IAsyncBaseService<TEntity, TWriteDto, TReadDto> BaseService;
 
-        public BaseController(IAsyncBaseService<TEntity, TDto> baseService)
+        public BaseController(IAsyncBaseService<TEntity, TWriteDto, TReadDto> baseService)
         {
             BaseService = baseService;
         }
         [NonAction]
-        public async Task<IActionResult> AddAsync(TDto dto)
+        public async Task<IActionResult> AddAsync(TWriteDto dto)
         {
             var result = await BaseService.AddAsync(dto);
             if (result.Success)
@@ -25,7 +26,7 @@ namespace NTech.WebAPI.Controllers
             return BadRequest(result);
         }
         [NonAction]
-        public async Task<IActionResult> UpdateAsync(int id, TDto dto)
+        public async Task<IActionResult> UpdateAsync(int id, TWriteDto dto)
         {
             var result = await BaseService.UpdateAsync(id, dto);
             if (result.Success)

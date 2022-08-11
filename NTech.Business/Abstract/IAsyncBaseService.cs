@@ -4,14 +4,15 @@ using Core.Utilities.Result;
 
 namespace NTech.Business.Abstract
 {
-    public interface IAsyncBaseService<TEntity, TDto>
+    public interface IAsyncBaseService<TEntity, TWriteDto, TReadDto>
         where TEntity : class, IEntity, new()
-        where TDto : class, IDto, new()
+        where TWriteDto : class, IWriteDto, new()
+        where TReadDto : class, IReadDto, new()
     {
-        Task<IResult> AddAsync(TDto dto);
-        Task<IResult> UpdateAsync(int id, TDto dto);
+        Task<IResult> AddAsync(TWriteDto dto);
+        Task<IResult> UpdateAsync(int id, TWriteDto dto);
         Task<IResult> DeleteAsync(int id);
-        Task<IDataResult<TDto>> GetByIdAsync(int id);
-        Task<IDataResult<List<TDto>>> GetListAsync();
+        Task<IDataResult<TReadDto>> GetByIdAsync(int id);
+        Task<IDataResult<List<TReadDto>>> GetListAsync();
     }
 }

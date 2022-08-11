@@ -9,9 +9,10 @@ using NTech.DataAccess.UnitOfWork.Abstract;
 
 namespace NTech.Business.Concrete
 {
-    public class AsyncBaseService<TEntity, TDto> : IAsyncBaseService<TEntity, TDto>
+    public class AsyncBaseService<TEntity, TWriteDto, TReadDto> : IAsyncBaseService<TEntity, TWriteDto, TReadDto>
         where TEntity : class, IEntity, new()
-        where TDto : class, IDto, new()
+        where TWriteDto : class, IWriteDto, new()
+        where TReadDto : class, IReadDto, new()
     {
 
         protected readonly IAsyncRepository<TEntity> Repository;
@@ -24,7 +25,7 @@ namespace NTech.Business.Concrete
             UnitOfWork = unitOfWork;
         }
 
-        public async Task<IResult> AddAsync(TDto dto)
+        public async Task<IResult> AddAsync(TWriteDto dto)
         {
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
             await Repository.AddAsync(addedEntity);
@@ -39,7 +40,7 @@ namespace NTech.Business.Concrete
         {
             TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
             if (deletedEntity == null)
-                return new ErrorDataResult<TDto>();
+                return new ErrorResult();
 
             await Repository.DeleteAsync(deletedEntity);
 
@@ -49,29 +50,29 @@ namespace NTech.Business.Concrete
                 new ErrorResult();
         }
 
-        public async Task<IDataResult<TDto>> GetByIdAsync(int id)
+        public async Task<IDataResult<TReadDto>> GetByIdAsync(int id)
         {
             TEntity entity = await Repository.GetAsync(x => x.Id == id);
             if (entity == null)
-                return new ErrorDataResult<TDto>();
+                return new ErrorDataResult<TReadDto>();
 
-            TDto returnEntity = Mapper.Map<TDto>(entity);
-            return new SuccessDataResult<TDto>(returnEntity);
+            TReadDto returnEntity = Mapper.Map<TReadDto>(entity);
+            return new SuccessDataResult<TReadDto>(returnEntity);
         }
 
-        public async Task<IDataResult<List<TDto>>> GetListAsync()
+        public async Task<IDataResult<List<TReadDto>>> GetListAsync()
         {
             List<TEntity> entities = await Repository.GetAll().ToListAsync();
-            List<TDto> returnEntities = Mapper.Map<List<TDto>>(entities);
+            List<TReadDto> returnEntities = Mapper.Map<List<TReadDto>>(entities);
 
-            return new SuccessDataResult<List<TDto>>(returnEntities);
+            return new SuccessDataResult<List<TReadDto>>(returnEntities);
         }
 
-        public async Task<IResult> UpdateAsync(int id, TDto dto)
+        public async Task<IResult> UpdateAsync(int id, TWriteDto dto)
         {
             TEntity updatedEntity = await Repository.GetAsync(x => x.Id == id);
             if (updatedEntity == null)
-                return new ErrorDataResult<TDto>();
+                return new ErrorDataResult<TWriteDto>();
 
             Mapper.Map(dto, updatedEntity);
             await Repository.UpdateAsync(updatedEntity);

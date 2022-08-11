@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using NTech.Business.Abstract;
+using NTech.Business.Concrete;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.Concrete.EntityFramework;
 using NTech.DataAccess.UnitOfWork.Abstract;
@@ -20,7 +22,7 @@ namespace NTech.Business.DependencyResolvers.Autofac
             #endregion
 
             #region Business
-
+            builder.RegisterType<ProductManager>().As<IProductService>().SingleInstance();
             #endregion
 
             #region UnitOfWork

@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Concrete\" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\NTech.Entity\NTech.Entity.csproj" />
   </ItemGroup>
 
 </Project>

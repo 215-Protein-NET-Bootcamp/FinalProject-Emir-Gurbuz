@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using NTech.Business.DependencyResolvers.Autofac;
+using NTech.Business.Helpers;
 using NTech.DataAccess.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,11 @@ builder.Services.AddSwaggerGen();
 #region SqlContext, PostgreContext
 builder.Services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 //builder.Services.AddDbContext<NpgDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
+builder.Services.AddScoped<DbContext, SqlDbContext>();
+#endregion
+
+#region AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
 
 #region AutofacBusinessModule
