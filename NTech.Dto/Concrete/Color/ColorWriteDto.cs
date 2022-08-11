@@ -1,6 +1,6 @@
 ﻿using Core.Dto;
 
-namespace NTech.Dto.Concrete.Color
+namespace NTech.Dto.Concrete
 {
     public class ColorWriteDto : IWriteDto
     {

@@ -1,6 +1,6 @@
 ﻿using Core.Dto;
 
-namespace NTech.Dto.Concrete.Category
+namespace NTech.Dto.Concrete
 {
     public class CategoryReadDto : IReadDto
     {

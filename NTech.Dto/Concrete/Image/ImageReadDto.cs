@@ -2,9 +2,9 @@
 
 namespace NTech.Dto.Concrete
 {
-    public class BrandReadDto : IReadDto
+    public class ImageReadDto : IReadDto
     {
-        public string Name { get; set; }
+        public string Path { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? DeletedDate { get; set; }

@@ -1,6 +1,6 @@
 ﻿using Core.Dto;
 
-namespace NTech.Dto.Concrete.Product
+namespace NTech.Dto.Concrete
 {
     public class ProductWriteDto : IWriteDto
     {

@@ -1,7 +1,7 @@
 ﻿using Core.Dto;
 using NTech.Entity.Concrete;
 
-namespace NTech.Dto.Concrete.Product
+namespace NTech.Dto.Concrete
 {
     public class ProductReadDto : IReadDto
     {

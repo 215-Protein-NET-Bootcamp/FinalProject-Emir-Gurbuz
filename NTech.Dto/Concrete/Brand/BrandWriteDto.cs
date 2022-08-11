@@ -1,6 +1,6 @@
 ﻿using Core.Dto;
 
-namespace NTech.Dto.Concrete.Brand
+namespace NTech.Dto.Concrete
 {
     public class BrandWriteDto : IWriteDto
     {
