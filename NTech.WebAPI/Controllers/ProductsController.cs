@@ -22,5 +22,11 @@ namespace NTech.WebAPI.Controllers
         {
             return await base.AddAsync(productWriteDto);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            return await base.SoftDeleteAsync(id);
+        }
     }
 }

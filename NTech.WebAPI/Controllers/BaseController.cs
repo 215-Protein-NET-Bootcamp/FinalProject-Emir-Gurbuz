@@ -34,9 +34,17 @@ namespace NTech.WebAPI.Controllers
             return BadRequest(result);
         }
         [NonAction]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> SoftDeleteAsync(int id)
         {
-            var result = await BaseService.DeleteAsync(id);
+            var result = await BaseService.SoftDeleteAsync(id);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [NonAction]
+        public async Task<IActionResult> HardDeleteAsync(int id)
+        {
+            var result = await BaseService.HardDeleteAsync(id);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

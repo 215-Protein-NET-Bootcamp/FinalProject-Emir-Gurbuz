@@ -36,20 +36,6 @@ namespace NTech.Business.Concrete
                 new ErrorResult();
         }
 
-        public virtual async Task<IResult> DeleteAsync(int id)
-        {
-            TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
-            if (deletedEntity == null)
-                return new ErrorResult();
-
-            await Repository.DeleteAsync(deletedEntity);
-
-            int row = await UnitOfWork.CompleteAsync();
-            return row > 0 ?
-                new SuccessResult() :
-                new ErrorResult();
-        }
-
         public virtual async Task<IDataResult<TReadDto>> GetByIdAsync(int id)
         {
             TEntity entity = await Repository.GetAsync(x => x.Id == id);
@@ -66,6 +52,35 @@ namespace NTech.Business.Concrete
             List<TReadDto> returnEntities = Mapper.Map<List<TReadDto>>(entities);
 
             return new SuccessDataResult<List<TReadDto>>(returnEntities);
+        }
+
+        public async Task<IResult> HardDeleteAsync(int id)
+        {
+            TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
+            if (deletedEntity == null)
+                return new ErrorResult();
+
+            await Repository.DeleteAsync(deletedEntity);
+
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult() :
+                new ErrorResult();
+        }
+
+        public async Task<IResult> SoftDeleteAsync(int id)
+        {
+            TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
+            if (deletedEntity == null)
+                return new ErrorResult();
+
+            deletedEntity.DeletedDate = DateTime.Now;
+            await Repository.UpdateAsync(deletedEntity);
+
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult() :
+                new ErrorResult();
         }
 
         public virtual async Task<IResult> UpdateAsync(int id, TWriteDto dto)

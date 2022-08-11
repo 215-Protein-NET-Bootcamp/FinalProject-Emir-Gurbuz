@@ -11,7 +11,8 @@ namespace NTech.Business.Abstract
     {
         Task<IResult> AddAsync(TWriteDto dto);
         Task<IResult> UpdateAsync(int id, TWriteDto dto);
-        Task<IResult> DeleteAsync(int id);
+        Task<IResult> SoftDeleteAsync(int id);
+        Task<IResult> HardDeleteAsync(int id);
         Task<IDataResult<TReadDto>> GetByIdAsync(int id);
         Task<IDataResult<List<TReadDto>>> GetListAsync();
     }
