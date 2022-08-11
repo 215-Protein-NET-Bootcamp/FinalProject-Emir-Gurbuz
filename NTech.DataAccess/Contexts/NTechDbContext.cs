@@ -5,9 +5,9 @@ using NTech.Entity.Concrete;
 
 namespace NTech.DataAccess.Contexts
 {
-    public class SqlDbContext : DbContext
+    public class NTechDbContext : DbContext
     {
-        public SqlDbContext(DbContextOptions options) : base(options)
+        public NTechDbContext(DbContextOptions options) : base(options)
         {
 
         }

@@ -10,7 +10,7 @@ using NTech.DataAccess.Contexts;
 
 namespace NTech.DataAccess.Migrations
 {
-    [DbContext(typeof(SqlDbContext))]
+    [DbContext(typeof(NTechDbContext))]
     partial class SqlDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

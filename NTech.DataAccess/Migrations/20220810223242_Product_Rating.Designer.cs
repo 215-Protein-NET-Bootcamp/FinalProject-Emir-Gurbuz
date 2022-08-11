@@ -11,7 +11,7 @@ using NTech.DataAccess.Contexts;
 
 namespace NTech.DataAccess.Migrations
 {
-    [DbContext(typeof(SqlDbContext))]
+    [DbContext(typeof(NTechDbContext))]
     [Migration("20220810223242_Product_Rating")]
     partial class Product_Rating
     {

@@ -11,7 +11,7 @@ using NTech.DataAccess.Contexts;
 
 namespace NTech.DataAccess.Migrations
 {
-    [DbContext(typeof(SqlDbContext))]
+    [DbContext(typeof(NTechDbContext))]
     [Migration("20220810213054_Initial")]
     partial class Initial
     {
