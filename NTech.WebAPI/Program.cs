@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.DependencyResolvers;
 using Core.Entity.Concrete;
 using Core.Extensions;
 using Core.Utilities.ResultMessage;
@@ -68,7 +69,10 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         builder.RegisterModule(new AutofacBusinessModule());
     });
 #endregion
-
+#region CoreServiceTool
+builder.Services.AddDependencyResolvers(
+    new CoreModule());
+#endregion
 
 var app = builder.Build();
 
