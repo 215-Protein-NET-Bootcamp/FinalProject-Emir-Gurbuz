@@ -7,7 +7,7 @@ namespace Core.Extensions
     {
         public static void SetUserId(this object obj, object value, bool throwException = false)
         {
-            PropertyInfo propertyInfo = obj.GetType().GetProperty("UserId");
+            PropertyInfo? propertyInfo = obj.GetType().GetProperty("UserId");
 
             if (throwException)
                 NotFoundUserIdException.ThrowIfNull(propertyInfo);

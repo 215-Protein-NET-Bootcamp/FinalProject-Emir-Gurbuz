@@ -8,6 +8,7 @@ using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.DataAccess.UnitOfWork.Concrete;
 using Autofac.Extras.DynamicProxy;
 using Core.Utilities.Interceptor;
+using Core.Utilities.Mail;
 
 namespace NTech.Business.DependencyResolvers.Autofac
 {
@@ -40,6 +41,10 @@ namespace NTech.Business.DependencyResolvers.Autofac
 
             #region Jwt
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
+            #endregion
+
+            #region EmailService
+            builder.RegisterType<MailManager>().As<IMailService>().SingleInstance();
             #endregion
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
