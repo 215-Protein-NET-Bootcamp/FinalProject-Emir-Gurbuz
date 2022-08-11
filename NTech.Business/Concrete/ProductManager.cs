@@ -14,5 +14,15 @@ namespace NTech.Business.Concrete
         public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork) : base(repository, mapper, unitOfWork)
         {
         }
+
+        public override Task<IResult> AddAsync(ProductWriteDto dto)
+        {
+            return base.AddAsync(dto);
+        }
+
+        public override Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
+        {
+            return base.UpdateAsync(id, dto);
+        }
     }
 }

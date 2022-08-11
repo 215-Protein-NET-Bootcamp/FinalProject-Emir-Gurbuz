@@ -2,10 +2,12 @@
 using Core.DataAccess;
 using Core.Dto;
 using Core.Entity;
+using Core.Extensions;
 using Core.Utilities.Result;
 using Microsoft.EntityFrameworkCore;
 using NTech.Business.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
+using System.Reflection;
 
 namespace NTech.Business.Concrete
 {
@@ -29,6 +31,9 @@ namespace NTech.Business.Concrete
         {
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
             await Repository.AddAsync(addedEntity);
+
+            PropertyInfo userIdProperty = typeof(TEntity).GetProperty("UserId");
+            userIdProperty.SetUserId("currentUserId");
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
