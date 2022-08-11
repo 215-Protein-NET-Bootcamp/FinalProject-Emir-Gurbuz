@@ -12,7 +12,11 @@ namespace Core.Extensions
             if (throwException)
                 NotFoundUserIdException.ThrowIfNull(propertyInfo);
 
-            propertyInfo.SetValue(obj, value);
+            if (obj.GetType() != propertyInfo.PropertyType)
+                throw new NotEqualPropertyTypeException();
+
+            if (propertyInfo is not null)
+                propertyInfo.SetValue(obj, value);
         }
     }
 }

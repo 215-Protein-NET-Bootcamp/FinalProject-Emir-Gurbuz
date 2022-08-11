@@ -35,8 +35,7 @@ namespace NTech.Business.Concrete
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
             await Repository.AddAsync(addedEntity);
 
-            PropertyInfo userIdProperty = typeof(TEntity).GetProperty("UserId");
-            userIdProperty.SetUserId("currentUserId");//TODO: get jwt user id
+            addedEntity.SetUserId(10);//TODO: get jwt user id
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?

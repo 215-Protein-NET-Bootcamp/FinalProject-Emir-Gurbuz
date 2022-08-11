@@ -10,8 +10,7 @@ namespace NTech.Test.Extension
         {
 
         }
-        [Theory]
-        [InlineData(1)]
+        [Theory, InlineData(1)]
         public void Set_user_id_value(int userId)
         {
             Product product = new();
@@ -28,6 +27,16 @@ namespace NTech.Test.Extension
                 Category category = new();
 
                 category.SetUserId(userId, true);
+            });
+        }
+        [Theory, InlineData("id")]
+        public void Not_equal_property_type(string userId)
+        {
+            Assert.Throws(typeof(NotEqualPropertyTypeException), () =>
+            {
+                Product product = new();
+
+                product.SetUserId(userId);
             });
         }
     }
