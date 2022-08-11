@@ -21,13 +21,13 @@ namespace NTech.Test.Extension
             Assert.Equal(userId, product.UserId);
         }
         [Theory, InlineData(1)]
-        public void Set_user_id_null_exception(int userId)
+        public void Set_user_id_throw_exception(int userId)
         {
             Assert.Throws(typeof(NotFoundUserIdException), () =>
             {
                 Category category = new();
 
-                category.SetUserId(userId);
+                category.SetUserId(userId, true);
             });
         }
     }

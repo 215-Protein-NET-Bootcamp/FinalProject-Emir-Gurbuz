@@ -5,11 +5,12 @@ namespace Core.Extensions
 {
     public static class BusinessExtensions
     {
-        public static void SetUserId(this object obj, object value)
+        public static void SetUserId(this object obj, object value, bool throwException = false)
         {
             PropertyInfo propertyInfo = obj.GetType().GetProperty("UserId");
 
-            NotFoundUserIdException.ThrowIfNull(propertyInfo);
+            if (throwException)
+                NotFoundUserIdException.ThrowIfNull(propertyInfo);
 
             propertyInfo.SetValue(obj, value);
         }
