@@ -42,6 +42,34 @@ namespace NTech.Business.Concrete
             if (user == null)
                 return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
 
+            if (user.LockoutEnabled)
+            {
+                if (user.LockoutEnd < DateTime.Now)
+                {
+                    user.LockoutEnd = null;
+                    user.AccessFailedCount = 0;
+                    user.LockoutEnabled = false;
+                    await _userManager.UpdateAsync(user);
+                }
+                else
+                    return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
+            }
+            else if (user.AccessFailedCount == 3)
+            {
+                user.LockoutEnd = DateTime.Now.AddMinutes(5);
+                user.LockoutEnabled = true;
+                await _userManager.UpdateAsync(user);
+
+                await _mailService.SendEmailAsync(new EmailMessage
+                {
+                    Subject = "Uyarı",
+                    Body = $"Sayın {user.FirstName} {user.LastName} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 5 dakika sonra tekrar deneyiniz.",
+                    Email = user.Email
+                });
+
+                return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
+            }
+
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
             if (result.Succeeded)
             {
@@ -86,6 +114,11 @@ namespace NTech.Business.Concrete
                 return new SuccessResult();
             }
             return new ErrorResult();
+        }
+
+        private async Task sendEmailAsync(string email, string subject, string body)
+        {
+
         }
     }
 }

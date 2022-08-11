@@ -31,5 +31,7 @@
         public string RegisterSuccessfull => "Register successfull";
 
         public string RegisterFailure => "Register failure";
+
+        public string LockAccount => "Lock account";
     }
 }

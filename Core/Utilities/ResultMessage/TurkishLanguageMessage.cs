@@ -31,5 +31,7 @@
         public string RegisterSuccessfull => "Kayıt başarılı";
 
         public string RegisterFailure => "Kayıt başarısız";
+
+        public string LockAccount => "Hesabınız kilitlendi";
     }
 }

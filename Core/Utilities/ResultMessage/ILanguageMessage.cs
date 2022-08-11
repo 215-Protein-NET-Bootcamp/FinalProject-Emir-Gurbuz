@@ -23,5 +23,7 @@
 
         string RegisterSuccessfull { get; }
         string RegisterFailure { get; }
+
+        string LockAccount { get; }
     }
 }
