@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.Entity", "NTech.Entity\NTech.Entity.csproj", "{D6DE4C55-E43C-4F75-A1CC-8109CE39858E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTech.Entity", "NTech.Entity\NTech.Entity.csproj", "{D6DE4C55-E43C-4F75-A1CC-8109CE39858E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.DataAccess", "NTech.DataAccess\NTech.DataAccess.csproj", "{F190350D-5C02-4652-88FC-47314968F251}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTech.DataAccess", "NTech.DataAccess\NTech.DataAccess.csproj", "{F190350D-5C02-4652-88FC-47314968F251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.Business", "NTech.Business\NTech.Business.csproj", "{F565A8AC-B8A8-496A-8D21-DCBB0386B555}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTech.Business", "NTech.Business\NTech.Business.csproj", "{F565A8AC-B8A8-496A-8D21-DCBB0386B555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.Dto", "NTech.Dto\NTech.Dto.csproj", "{03007462-2756-4E41-9811-E173A4214DB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTech.Dto", "NTech.Dto\NTech.Dto.csproj", "{03007462-2756-4E41-9811-E173A4214DB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{C0F46195-1792-4EBB-AB7A-0CF8E8FDE2E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{C0F46195-1792-4EBB-AB7A-0CF8E8FDE2E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.WebAPI", "NTech.WebAPI\NTech.WebAPI.csproj", "{B6881E74-B373-4649-800A-E3A418657D94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTech.WebAPI", "NTech.WebAPI\NTech.WebAPI.csproj", "{B6881E74-B373-4649-800A-E3A418657D94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTech.Test", "NTech.Test\NTech.Test.csproj", "{6358D12F-15F1-4E5C-B75A-37EF57534CFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{B6881E74-B373-4649-800A-E3A418657D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6881E74-B373-4649-800A-E3A418657D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6881E74-B373-4649-800A-E3A418657D94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6358D12F-15F1-4E5C-B75A-37EF57534CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6358D12F-15F1-4E5C-B75A-37EF57534CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6358D12F-15F1-4E5C-B75A-37EF57534CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6358D12F-15F1-4E5C-B75A-37EF57534CFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
