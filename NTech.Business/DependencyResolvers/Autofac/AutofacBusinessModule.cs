@@ -44,7 +44,7 @@ namespace NTech.Business.DependencyResolvers.Autofac
             #endregion
 
             #region EmailService
-            builder.RegisterType<MailManager>().As<IMailService>().SingleInstance();
+            builder.RegisterType<SmtpEmailSender>().As<IEmailSender>().SingleInstance();
             #endregion
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

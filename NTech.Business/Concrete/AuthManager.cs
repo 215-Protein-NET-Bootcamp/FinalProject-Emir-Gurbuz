@@ -1,6 +1,7 @@
 ﻿using Core.Aspect.Autofac.Validation;
 using Core.Dto.Concrete;
 using Core.Entity.Concrete;
+using Core.Utilities.Mail;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.JWT;
@@ -16,13 +17,15 @@ namespace NTech.Business.Concrete
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenHelper _tokenHelper;
         private readonly ILanguageMessage _languageMessage;
+        private readonly IEmailSender _mailService;
 
-        public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage)
+        public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage, IEmailSender mailService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _tokenHelper = tokenHelper;
             _languageMessage = languageMessage;
+            _mailService = mailService;
         }
 
         public async Task<IDataResult<AccessToken>> CreateAccessToken(AppUser appUser)
@@ -42,6 +45,12 @@ namespace NTech.Business.Concrete
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
             if (result.Succeeded)
             {
+                await _mailService.SendEmailAsync(new EmailMessage
+                {
+                    Subject = "Giriş Başarılı",
+                    Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
+                    Email = user.Email
+                });
                 var accessToken = await CreateAccessToken(user);
                 return accessToken;
             }
