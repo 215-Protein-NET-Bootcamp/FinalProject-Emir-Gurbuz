@@ -14,6 +14,7 @@ namespace NTech.Dto.Concrete
         public ImageReadDto Image { get; set; }
         public decimal Price { get; set; }
         public bool isOfferable { get; set; }
+        public bool IsSold { get; set; }
         public byte Rating { get; set; }
 
         public DateTime? CreatedDate { get; set; }
