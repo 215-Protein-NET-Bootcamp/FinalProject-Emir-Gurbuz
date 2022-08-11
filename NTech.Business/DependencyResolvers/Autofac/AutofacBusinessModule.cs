@@ -23,6 +23,8 @@ namespace NTech.Business.DependencyResolvers.Autofac
 
             #region Business
             builder.RegisterType<ProductManager>().As<IProductService>().SingleInstance();
+            builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
+            builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
             #endregion
 
             #region UnitOfWork
