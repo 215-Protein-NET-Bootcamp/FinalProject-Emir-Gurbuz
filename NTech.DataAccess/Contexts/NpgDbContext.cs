@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Entity;
+using Microsoft.EntityFrameworkCore;
+using NTech.Core.Extensions;
 using NTech.Entity.Concrete;
 
 namespace NTech.DataAccess.Contexts
@@ -9,6 +11,15 @@ namespace NTech.DataAccess.Contexts
         {
 
         }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<IEntity>();
+            entries.SetStateDate();
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
         public DbSet<Product> Products { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
