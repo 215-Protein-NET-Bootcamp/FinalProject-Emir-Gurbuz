@@ -1,7 +1,6 @@
 ﻿using Core.Entity;
 using Microsoft.EntityFrameworkCore;
 using NTech.Core.Extensions;
-using NTech.DataAccess.Helpers;
 using NTech.Entity.Concrete;
 
 namespace NTech.DataAccess.Contexts
