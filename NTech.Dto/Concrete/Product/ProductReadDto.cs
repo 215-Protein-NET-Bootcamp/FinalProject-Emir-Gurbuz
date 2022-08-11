@@ -1,10 +1,10 @@
 ﻿using Core.Dto;
-using NTech.Entity.Concrete;
 
 namespace NTech.Dto.Concrete
 {
     public class ProductReadDto : IReadDto
     {
+        public int Id { get; set; }
         public CategoryReadDto Category { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

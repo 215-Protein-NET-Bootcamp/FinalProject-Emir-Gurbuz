@@ -2,5 +2,6 @@
 {
     public interface IReadDto : IDto
     {
+        int Id { get; set; }
     }
 }
