@@ -18,7 +18,7 @@ namespace Core.Exceptions.Aspect
 
         public static void ThrowIfNotEqual(Type argument1, Type argument2)
         {
-            if (argument1 != argument2)
+            if (argument1.IsAssignableFrom(argument2) == false)
                 throw new WrongValidationTypeException();
         }
     }

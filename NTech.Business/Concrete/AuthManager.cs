@@ -6,6 +6,7 @@ using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Identity;
 using NTech.Business.Abstract;
+using NTech.Business.Validators.FluentValidation;
 
 namespace NTech.Business.Concrete
 {
@@ -31,7 +32,7 @@ namespace NTech.Business.Concrete
 
             return new SuccessDataResult<AccessToken>(accessToken, _languageMessage.LoginSuccessfull);
         }
-        [ValidationAspect(typeof(LoginDto))]
+        [ValidationAspect(typeof(LoginDtoValidator))]
         public async Task<IDataResult<AccessToken>> LoginAsync(LoginDto loginDto)
         {
             AppUser user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -46,7 +47,7 @@ namespace NTech.Business.Concrete
             }
             return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
         }
-        [ValidationAspect(typeof(RegisterDto))]
+        [ValidationAspect(typeof(RegisterDtoValidator))]
         public async Task<IResult> RegisterAsync(RegisterDto registerDto)
         {
             AppUser user = new()
