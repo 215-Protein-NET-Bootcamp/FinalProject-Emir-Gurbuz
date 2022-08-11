@@ -25,7 +25,7 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     
-}).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
+}).AddDefaultTokenProviders();
 #endregion
 #region AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
