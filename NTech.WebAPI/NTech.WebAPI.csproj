@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NTech.Business\NTech.Business.csproj" />
     <ProjectReference Include="..\NTech.DataAccess\NTech.DataAccess.csproj" />
   </ItemGroup>
