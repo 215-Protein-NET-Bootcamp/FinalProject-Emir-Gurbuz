@@ -23,5 +23,13 @@
         public string FailedGet => "Failed get";
 
         public string NotFound => "Not found";
+
+        public string LoginSuccessfull => "Login successfull";
+
+        public string LoginFailure => "Login failure";
+
+        public string RegisterSuccessfull => "Register successfull";
+
+        public string RegisterFailure => "Register failure";
     }
 }

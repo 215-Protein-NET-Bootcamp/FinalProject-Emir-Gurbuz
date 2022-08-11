@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NTech.Business.Abstract;
+using NTech.Business.Concrete;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
 using NTech.DataAccess.Contexts;
@@ -21,19 +23,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 #region SqlContext, PostgreContext
 builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 //builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
 builder.Services.AddScoped<DbContext, NTechDbContext>();
 #endregion
 #region Identity
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
-
-}).AddDefaultTokenProviders();
+    options.Password.RequireNonAlphanumeric = false;
+}).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
 #endregion
-#region
+#region JWT
 AccessTokenOptions tokenOptions = builder.Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

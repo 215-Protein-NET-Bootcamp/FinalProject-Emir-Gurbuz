@@ -54,9 +54,12 @@ namespace NTech.Business.Concrete
                 UserName = registerDto.Email,
             };
             IdentityResult identityResult = await _userManager.CreateAsync(user, registerDto.Password);
-            if (identityResult.Succeeded)
-                return new SuccessResult(_languageMessage.RegisterSuccessfull);
-            return new ErrorResult(_languageMessage.RegisterFailure);
+            if (identityResult.Succeeded == false)
+            {
+                string errors = string.Join("\n", identityResult.Errors.Select(x => x.Description));
+                return new SuccessResult(errors);
+            }
+            return new ErrorResult(_languageMessage.RegisterSuccessfull);
         }
 
         public async Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)

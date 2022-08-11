@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Core.Utilities.Security.JWT;
 using NTech.Business.Abstract;
 using NTech.Business.Concrete;
 using NTech.DataAccess.Abstract;
@@ -28,10 +29,15 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<ColorManager>().As<IColorService>().SingleInstance();
             builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
             builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>().SingleInstance();
+            builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
             #endregion
 
             #region UnitOfWork
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            #endregion
+
+            #region Jwt
+            builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
             #endregion
         }
     }
