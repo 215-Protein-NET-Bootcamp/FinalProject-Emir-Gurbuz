@@ -17,5 +17,11 @@
         string FailedGet { get; }
 
         string NotFound { get; }
+
+        string LoginSuccessfull { get; }
+        string LoginFailure { get; }
+
+        string RegisterSuccessfull { get; }
+        string RegisterFailure { get; }
     }
 }

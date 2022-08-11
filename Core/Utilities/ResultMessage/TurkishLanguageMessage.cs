@@ -23,5 +23,13 @@
         public string FailedGet => "Getirme başarısız";
 
         public string NotFound => "Bulunamadı";
+
+        public string LoginSuccessfull => "Giriş başarılı";
+
+        public string LoginFailure => "Giriş başarısız";
+
+        public string RegisterSuccessfull => "Kayıt başarılı";
+
+        public string RegisterFailure => "Kayıt başarısız";
     }
 }

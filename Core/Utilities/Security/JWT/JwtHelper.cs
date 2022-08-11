@@ -19,14 +19,14 @@ namespace Core.Utilities.Security.JWT
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
         }
-        public AccessToken CreateAccessToken(AppUser appUser, List<IdentityRole> identityRoles)
+        public AccessToken CreateAccessToken(AppUser appUser, List<string> roles)
         {
             _accessTokenExpiration = DateTime.UtcNow.AddMinutes(_tokenOptions.AccessTokenExpiration);
 
             SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             SigningCredentials signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
 
-            JwtSecurityToken jwt = createJwtSecurityToken(appUser, identityRoles, _accessTokenExpiration, _tokenOptions, signingCredentials);
+            JwtSecurityToken jwt = createJwtSecurityToken(appUser, roles, _accessTokenExpiration, _tokenOptions, signingCredentials);
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
             string token = tokenHandler.WriteToken(jwt);
@@ -37,7 +37,7 @@ namespace Core.Utilities.Security.JWT
             };
         }
 
-        private JwtSecurityToken createJwtSecurityToken(AppUser appUser, List<IdentityRole> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
+        private JwtSecurityToken createJwtSecurityToken(AppUser appUser, List<string> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
         {
             return new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
@@ -48,7 +48,7 @@ namespace Core.Utilities.Security.JWT
                 signingCredentials: signingCredentials);
         }
 
-        private IEnumerable<Claim> setClaims(AppUser appUser, List<IdentityRole> identityRoles)
+        private IEnumerable<Claim> setClaims(AppUser appUser, List<string> roles)
         {
             List<Claim> claims = new List<Claim>();
 
@@ -56,7 +56,7 @@ namespace Core.Utilities.Security.JWT
             claims.AddName(String.Format("{0} {1}", appUser.FirstName, appUser.LastName));
             claims.AddNameIdentifier(appUser.Id.ToString());
             claims.AddDateOfBirth(appUser.DateOfBirth);
-            claims.AddRoles(identityRoles.Select(r => r.Name).ToArray());
+            claims.AddRoles(roles.ToArray());
 
             return claims;
         }
