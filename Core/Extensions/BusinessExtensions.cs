@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Core.Exceptions.Extension;
+using System.Reflection;
 
 namespace Core.Extensions
 {
@@ -8,7 +9,7 @@ namespace Core.Extensions
         {
             PropertyInfo propertyInfo = obj.GetType().GetProperty("UserId");
 
-            ArgumentNullException.ThrowIfNull(propertyInfo);
+            NotFoundUserIdException.ThrowIfNull(propertyInfo);
 
             propertyInfo.SetValue(obj, value);
         }

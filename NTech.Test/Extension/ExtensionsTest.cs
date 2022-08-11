@@ -1,4 +1,5 @@
-﻿using Core.Extensions;
+﻿using Core.Exceptions.Extension;
+using Core.Extensions;
 using NTech.Entity.Concrete;
 
 namespace NTech.Test.Extension
@@ -19,10 +20,10 @@ namespace NTech.Test.Extension
 
             Assert.Equal(userId, product.UserId);
         }
-        [Theory,InlineData(1)]
+        [Theory, InlineData(1)]
         public void Set_user_id_null_exception(int userId)
         {
-            Assert.Throws(typeof(ArgumentNullException), () =>
+            Assert.Throws(typeof(NotFoundUserIdException), () =>
             {
                 Category category = new();
 
