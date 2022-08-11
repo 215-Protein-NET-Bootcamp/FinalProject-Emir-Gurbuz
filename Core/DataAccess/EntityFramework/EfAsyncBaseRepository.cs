@@ -28,24 +28,19 @@ namespace Core.DataAccess.EntityFramework
             });
         }
 
-        public async Task<IQueryable<TEntity>> GetAllAsync(bool tracking = true)
+        public IQueryable<TEntity> GetAll(bool tracking = true)
         {
-            return await Task.Run(() =>
-            {
-                return tracking ?
-                _context.Set<TEntity>().AsQueryable() :
-                _context.Set<TEntity>().AsNoTracking().AsQueryable();
-            });
+
+            return tracking ?
+            _context.Set<TEntity>().AsQueryable() :
+            _context.Set<TEntity>().AsNoTracking().AsQueryable();
         }
 
-        public async Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
+        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
-            return await Task.Run(() =>
-            {
-                return tracking ?
-                _context.Set<TEntity>().Where(predicate).AsQueryable() :
-                _context.Set<TEntity>().Where(predicate).AsNoTracking().AsQueryable();
-            });
+            return tracking ?
+            _context.Set<TEntity>().Where(predicate).AsQueryable() :
+            _context.Set<TEntity>().Where(predicate).AsNoTracking().AsQueryable();
         }
 
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
