@@ -28,7 +28,7 @@ namespace Core.DataAccess.EntityFramework
             });
         }
 
-        public IQueryable<TEntity> GetAll(bool tracking = true)
+        public virtual IQueryable<TEntity> GetAll(bool tracking = true)
         {
 
             return tracking ?
@@ -36,14 +36,14 @@ namespace Core.DataAccess.EntityFramework
             _context.Set<TEntity>().AsNoTracking().AsQueryable();
         }
 
-        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
+        public virtual IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
             return tracking ?
             _context.Set<TEntity>().Where(predicate).AsQueryable() :
             _context.Set<TEntity>().Where(predicate).AsNoTracking().AsQueryable();
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
             return tracking ?
                 await _context.Set<TEntity>().SingleOrDefaultAsync(predicate) :
