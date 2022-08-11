@@ -30,24 +30,26 @@ namespace Core.DataAccess.EntityFramework
 
         public virtual IQueryable<TEntity> GetAll(bool tracking = true)
         {
-
+            var table = _context.Set<TEntity>().Where(x => x.DeletedDate.HasValue == false);
             return tracking ?
-            _context.Set<TEntity>().AsQueryable() :
-            _context.Set<TEntity>().AsNoTracking().AsQueryable();
+            table.AsQueryable() :
+            table.AsNoTracking().AsQueryable();
         }
 
         public virtual IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
+            var table = _context.Set<TEntity>().Where(x => x.DeletedDate.HasValue == false);
             return tracking ?
-            _context.Set<TEntity>().Where(predicate).AsQueryable() :
-            _context.Set<TEntity>().Where(predicate).AsNoTracking().AsQueryable();
+            table.Where(predicate).AsQueryable() :
+            table.Where(predicate).AsNoTracking().AsQueryable();
         }
 
         public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
+            var table = _context.Set<TEntity>().Where(x => x.DeletedDate.HasValue == false);
             return tracking ?
-                await _context.Set<TEntity>().SingleOrDefaultAsync(predicate) :
-                await _context.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(predicate);
+                await table.SingleOrDefaultAsync(predicate) :
+                await table.AsNoTracking().SingleOrDefaultAsync(predicate);
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)
