@@ -1,8 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core.Entity.Concrete;
+using Core.Utilities.Security.Encryption;
+using Core.Utilities.Security.JWT;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
 using NTech.DataAccess.Contexts;
@@ -24,13 +28,33 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 #region Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
-    
+
 }).AddDefaultTokenProviders();
+#endregion
+#region
+AccessTokenOptions tokenOptions = builder.Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidAudience = tokenOptions.Audience,
+            ValidIssuer = tokenOptions.Issuer,
+            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
+
+            LifetimeValidator = (notBefore, expires, securityToken, validationParameters)
+                    => expires != null ? expires > DateTime.UtcNow : false
+        };
+    });
 #endregion
 #region AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
-
 #region AutofacBusinessModule
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(builder =>
@@ -38,6 +62,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         builder.RegisterModule(new AutofacBusinessModule());
     });
 #endregion
+
 
 var app = builder.Build();
 

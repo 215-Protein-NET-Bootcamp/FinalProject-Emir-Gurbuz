@@ -1,6 +1,6 @@
 ﻿namespace Core.Utilities.Security.JWT
 {
-    public class TokenOptions
+    public class AccessTokenOptions
     {
         public string Audience { get; set; }
         public string Issuer { get; set; }

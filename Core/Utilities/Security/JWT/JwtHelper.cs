@@ -12,12 +12,12 @@ namespace Core.Utilities.Security.JWT
     public class JwtHelper : ITokenHelper
     {
         public IConfiguration Configuration { get; private set; }
-        private readonly TokenOptions _tokenOptions;
+        private readonly AccessTokenOptions _tokenOptions;
         private DateTime _accessTokenExpiration;
         public JwtHelper(IConfiguration configuration)
         {
             Configuration = configuration;
-            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+            _tokenOptions = Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
         }
         public AccessToken CreateAccessToken(AppUser appUser, List<IdentityRole> identityRoles)
         {
@@ -37,7 +37,7 @@ namespace Core.Utilities.Security.JWT
             };
         }
 
-        private JwtSecurityToken createJwtSecurityToken(AppUser appUser, List<IdentityRole> identityRoles, DateTime accessTokenExpiration, TokenOptions tokenOptions, SigningCredentials signingCredentials)
+        private JwtSecurityToken createJwtSecurityToken(AppUser appUser, List<IdentityRole> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
         {
             return new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
