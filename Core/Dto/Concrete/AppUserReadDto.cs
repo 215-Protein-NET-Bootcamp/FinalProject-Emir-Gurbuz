@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Core.Entity.Concrete
+﻿namespace Core.Dto.Concrete
 {
-    public class AppUser : IdentityUser<int>
+    public class AppUserReadDto : IReadDto
     {
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
+        
     }
 }

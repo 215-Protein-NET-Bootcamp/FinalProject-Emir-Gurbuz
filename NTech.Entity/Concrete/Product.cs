@@ -1,4 +1,5 @@
 ﻿using Core.Entity;
+using Core.Entity.Concrete;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NTech.Entity.Concrete
@@ -29,6 +30,10 @@ namespace NTech.Entity.Concrete
         public int? ImageId { get; set; }
         [ForeignKey("ImageId")]
         public Image Image { get; set; }
+
+        public int? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public AppUser User { get; set; }
 
         public decimal Price { get; set; }
         public bool isOfferable { get; set; }

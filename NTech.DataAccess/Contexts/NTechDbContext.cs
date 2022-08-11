@@ -8,7 +8,7 @@ using NTech.Entity.Concrete;
 
 namespace NTech.DataAccess.Contexts
 {
-    public class NTechDbContext : IdentityDbContext<AppUser> 
+    public class NTechDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
     {
         public NTechDbContext(DbContextOptions<NTechDbContext> options) : base(options)
         {
