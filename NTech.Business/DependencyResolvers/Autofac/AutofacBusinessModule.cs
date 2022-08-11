@@ -6,6 +6,8 @@ using NTech.DataAccess.Abstract;
 using NTech.DataAccess.Concrete.EntityFramework;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.DataAccess.UnitOfWork.Concrete;
+using Autofac.Extras.DynamicProxy;
+using Core.Utilities.Interceptor;
 
 namespace NTech.Business.DependencyResolvers.Autofac
 {
@@ -39,6 +41,13 @@ namespace NTech.Business.DependencyResolvers.Autofac
             #region Jwt
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
             #endregion
+
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+                .EnableInterfaceInterceptors(new Castle.DynamicProxy.ProxyGenerationOptions
+                {
+                    Selector = new AspectInterceptorSelector()
+                });
         }
     }
 }
