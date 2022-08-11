@@ -11,6 +11,12 @@ namespace NTech.WebAPI.Controllers
         public ProductsController(IProductService baseService) : base(baseService)
         {
         }
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            return await base.GetListAsync();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductWriteDto productWriteDto)
         {
