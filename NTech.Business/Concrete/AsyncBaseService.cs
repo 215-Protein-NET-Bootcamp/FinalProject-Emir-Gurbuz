@@ -33,7 +33,7 @@ namespace NTech.Business.Concrete
             await Repository.AddAsync(addedEntity);
 
             PropertyInfo userIdProperty = typeof(TEntity).GetProperty("UserId");
-            userIdProperty.SetUserId("currentUserId");
+            userIdProperty.SetUserId("currentUserId");//TODO: get jwt user id
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
