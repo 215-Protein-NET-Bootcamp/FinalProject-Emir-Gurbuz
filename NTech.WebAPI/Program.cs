@@ -1,5 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.Entity.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
@@ -19,7 +21,12 @@ builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(bu
 //builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
 builder.Services.AddScoped<DbContext, NTechDbContext>();
 #endregion
-
+#region Identity
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    
+}).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
+#endregion
 #region AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
