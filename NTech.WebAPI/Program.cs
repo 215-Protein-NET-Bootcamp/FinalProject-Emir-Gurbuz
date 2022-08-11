@@ -1,6 +1,8 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core.Entity.Concrete;
+using Core.Extensions;
+using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,6 +56,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 #endregion
 #region AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
+#endregion
+#region Result Message Language
+builder.Services.AddMessageLanguage(new TurkishLanguageMessage());
 #endregion
 #region AutofacBusinessModule
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())

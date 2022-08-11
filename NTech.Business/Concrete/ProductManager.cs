@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.Utilities.Result;
-using Microsoft.EntityFrameworkCore;
+using Core.Utilities.ResultMessage;
 using NTech.Business.Abstract;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
@@ -11,7 +11,7 @@ namespace NTech.Business.Concrete
 {
     public class ProductManager : AsyncBaseService<Product, ProductWriteDto, ProductReadDto>, IProductService
     {
-        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork) : base(repository, mapper, unitOfWork)
+        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage) : base(repository, mapper, unitOfWork, languageMessage)
         {
         }
 

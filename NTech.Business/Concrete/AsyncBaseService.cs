@@ -4,6 +4,7 @@ using Core.Dto;
 using Core.Entity;
 using Core.Extensions;
 using Core.Utilities.Result;
+using Core.Utilities.ResultMessage;
 using Microsoft.EntityFrameworkCore;
 using NTech.Business.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
@@ -20,11 +21,13 @@ namespace NTech.Business.Concrete
         protected readonly IAsyncRepository<TEntity> Repository;
         protected readonly IMapper Mapper;
         protected readonly IUnitOfWork UnitOfWork;
-        public AsyncBaseService(IAsyncRepository<TEntity> repository, IMapper mapper, IUnitOfWork unitOfWork)
+        protected readonly ILanguageMessage LanguageMessage;
+        public AsyncBaseService(IAsyncRepository<TEntity> repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage)
         {
             Repository = repository;
             Mapper = mapper;
             UnitOfWork = unitOfWork;
+            LanguageMessage = languageMessage;
         }
 
         public virtual async Task<IResult> AddAsync(TWriteDto dto)
@@ -37,8 +40,8 @@ namespace NTech.Business.Concrete
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
-                new SuccessResult() :
-                new ErrorResult();
+                new SuccessResult(LanguageMessage.SuccessfullyAdded) :
+                new ErrorResult(LanguageMessage.FailedToAdd);
         }
 
         public virtual async Task<IDataResult<TReadDto>> GetByIdAsync(int id)
@@ -48,7 +51,7 @@ namespace NTech.Business.Concrete
                 return new ErrorDataResult<TReadDto>();
 
             TReadDto returnEntity = Mapper.Map<TReadDto>(entity);
-            return new SuccessDataResult<TReadDto>(returnEntity);
+            return new SuccessDataResult<TReadDto>(returnEntity, LanguageMessage.SuccessfullyGet);
         }
 
         public virtual async Task<IDataResult<List<TReadDto>>> GetListAsync()
@@ -56,7 +59,7 @@ namespace NTech.Business.Concrete
             List<TEntity> entities = await Repository.GetAll().ToListAsync();
             List<TReadDto> returnEntities = Mapper.Map<List<TReadDto>>(entities);
 
-            return new SuccessDataResult<List<TReadDto>>(returnEntities);
+            return new SuccessDataResult<List<TReadDto>>(returnEntities, LanguageMessage.SuccessfullyListed);
         }
 
         public async Task<IResult> HardDeleteAsync(int id)
@@ -69,8 +72,8 @@ namespace NTech.Business.Concrete
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
-                new SuccessResult() :
-                new ErrorResult();
+                new SuccessResult(LanguageMessage.SuccessfullyDeleted) :
+                new ErrorResult(LanguageMessage.FailedToDelete);
         }
 
         public async Task<IResult> SoftDeleteAsync(int id)
@@ -84,8 +87,8 @@ namespace NTech.Business.Concrete
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
-                new SuccessResult() :
-                new ErrorResult();
+                new SuccessResult(LanguageMessage.SuccessfullyDeleted) :
+                new ErrorResult(LanguageMessage.FailedToDelete);
         }
 
         public virtual async Task<IResult> UpdateAsync(int id, TWriteDto dto)
@@ -99,8 +102,8 @@ namespace NTech.Business.Concrete
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
-                new SuccessResult() :
-                new ErrorResult();
+                new SuccessResult(LanguageMessage.SuccessfullyUpdated) :
+                new ErrorResult(LanguageMessage.FailedToUpdate);
         }
     }
 }

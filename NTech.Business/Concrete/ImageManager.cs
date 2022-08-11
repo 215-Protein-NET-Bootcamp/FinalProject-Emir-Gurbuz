@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.DataAccess;
+using Core.Utilities.ResultMessage;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.Dto.Concrete;
@@ -9,7 +9,7 @@ namespace NTech.Business.Concrete
 {
     public class ImageManager : AsyncBaseService<Image, ImageWriteDto, ImageReadDto>
     {
-        public ImageManager(IImageDal repository, IMapper mapper, IUnitOfWork unitOfWork) : base(repository, mapper, unitOfWork)
+        public ImageManager(IImageDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage) : base(repository, mapper, unitOfWork, languageMessage)
         {
         }
     }
