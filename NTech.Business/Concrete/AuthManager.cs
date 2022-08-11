@@ -1,4 +1,5 @@
-﻿using Core.Dto.Concrete;
+﻿using Core.Aspect.Autofac.Validation;
+using Core.Dto.Concrete;
 using Core.Entity.Concrete;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
@@ -27,14 +28,16 @@ namespace NTech.Business.Concrete
         {
             IList<string> roles = await _userManager.GetRolesAsync(appUser);
             AccessToken accessToken = _tokenHelper.CreateAccessToken(appUser, roles.ToList());
+
             return new SuccessDataResult<AccessToken>(accessToken, _languageMessage.LoginSuccessfull);
         }
-
+        [ValidationAspect(typeof(LoginDto))]
         public async Task<IDataResult<AccessToken>> LoginAsync(LoginDto loginDto)
         {
             AppUser user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null)
                 return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
+
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
             if (result.Succeeded)
             {
@@ -43,7 +46,7 @@ namespace NTech.Business.Concrete
             }
             return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
         }
-
+        [ValidationAspect(typeof(RegisterDto))]
         public async Task<IResult> RegisterAsync(RegisterDto registerDto)
         {
             AppUser user = new()
