@@ -25,7 +25,7 @@ namespace NTech.Business.Concrete
             UnitOfWork = unitOfWork;
         }
 
-        public async Task<IResult> AddAsync(TWriteDto dto)
+        public virtual async Task<IResult> AddAsync(TWriteDto dto)
         {
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
             await Repository.AddAsync(addedEntity);
@@ -36,7 +36,7 @@ namespace NTech.Business.Concrete
                 new ErrorResult();
         }
 
-        public async Task<IResult> DeleteAsync(int id)
+        public virtual async Task<IResult> DeleteAsync(int id)
         {
             TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
             if (deletedEntity == null)
@@ -50,7 +50,7 @@ namespace NTech.Business.Concrete
                 new ErrorResult();
         }
 
-        public async Task<IDataResult<TReadDto>> GetByIdAsync(int id)
+        public virtual async Task<IDataResult<TReadDto>> GetByIdAsync(int id)
         {
             TEntity entity = await Repository.GetAsync(x => x.Id == id);
             if (entity == null)
@@ -60,7 +60,7 @@ namespace NTech.Business.Concrete
             return new SuccessDataResult<TReadDto>(returnEntity);
         }
 
-        public async Task<IDataResult<List<TReadDto>>> GetListAsync()
+        public virtual async Task<IDataResult<List<TReadDto>>> GetListAsync()
         {
             List<TEntity> entities = await Repository.GetAll().ToListAsync();
             List<TReadDto> returnEntities = Mapper.Map<List<TReadDto>>(entities);
@@ -68,7 +68,7 @@ namespace NTech.Business.Concrete
             return new SuccessDataResult<List<TReadDto>>(returnEntities);
         }
 
-        public async Task<IResult> UpdateAsync(int id, TWriteDto dto)
+        public virtual async Task<IResult> UpdateAsync(int id, TWriteDto dto)
         {
             TEntity updatedEntity = await Repository.GetAsync(x => x.Id == id);
             if (updatedEntity == null)
