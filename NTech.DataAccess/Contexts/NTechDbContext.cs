@@ -1,13 +1,16 @@
 ﻿using Core.Entity;
+using Core.Entity.Concrete;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NTech.Core.Extensions;
 using NTech.Entity.Concrete;
 
 namespace NTech.DataAccess.Contexts
 {
-    public class NTechDbContext : DbContext
+    public class NTechDbContext : IdentityDbContext<AppUser> 
     {
-        public NTechDbContext(DbContextOptions options) : base(options)
+        public NTechDbContext(DbContextOptions<NTechDbContext> options) : base(options)
         {
 
         }
