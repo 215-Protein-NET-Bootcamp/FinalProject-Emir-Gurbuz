@@ -5,6 +5,7 @@ using Core.Entity;
 using Core.Utilities.Result;
 using Microsoft.EntityFrameworkCore;
 using NTech.Business.Abstract;
+using NTech.DataAccess.UnitOfWork.Abstract;
 
 namespace NTech.Business.Concrete
 {
@@ -15,17 +16,23 @@ namespace NTech.Business.Concrete
 
         protected readonly IAsyncRepository<TEntity> Repository;
         protected readonly IMapper Mapper;
-        public AsyncBaseService(IAsyncRepository<TEntity> repository, IMapper mapper)
+        protected readonly IUnitOfWork UnitOfWork;
+        public AsyncBaseService(IAsyncRepository<TEntity> repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             Repository = repository;
             Mapper = mapper;
+            UnitOfWork = unitOfWork;
         }
 
         public async Task<IResult> AddAsync(TDto dto)
         {
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
             await Repository.AddAsync(addedEntity);
-            return new SuccessResult();
+
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult() :
+                new ErrorResult();
         }
 
         public async Task<IResult> DeleteAsync(int id)
@@ -35,7 +42,11 @@ namespace NTech.Business.Concrete
                 return new ErrorDataResult<TDto>();
 
             await Repository.DeleteAsync(deletedEntity);
-            return new SuccessResult();
+
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult() :
+                new ErrorResult();
         }
 
         public async Task<IDataResult<TDto>> GetByIdAsync(int id)
@@ -65,7 +76,10 @@ namespace NTech.Business.Concrete
             Mapper.Map(dto, updatedEntity);
             await Repository.UpdateAsync(updatedEntity);
 
-            return new SuccessResult();
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult() :
+                new ErrorResult();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.Concrete.EntityFramework;
+using NTech.DataAccess.UnitOfWork.Abstract;
+using NTech.DataAccess.UnitOfWork.Concrete;
 
 namespace NTech.Business.DependencyResolvers.Autofac
 {
@@ -21,6 +23,9 @@ namespace NTech.Business.DependencyResolvers.Autofac
 
             #endregion
 
+            #region UnitOfWork
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            #endregion
         }
     }
 }
