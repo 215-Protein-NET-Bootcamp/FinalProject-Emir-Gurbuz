@@ -6,5 +6,6 @@
         public static readonly string NotEqualPropertyType = "Not equal property type";
         public static readonly string WrongValidationType = "Wrong validation type";
         public static readonly string WrongLoggingType = "Wrong logging type";
+        public static readonly string SerilogNotFoundFolderPath = "Serilog not found folder path";
     }
 }
