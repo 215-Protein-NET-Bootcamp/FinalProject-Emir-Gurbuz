@@ -1,4 +1,5 @@
 ﻿using Core.Utilities.IoC;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 

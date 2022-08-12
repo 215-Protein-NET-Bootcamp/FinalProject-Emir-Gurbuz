@@ -20,7 +20,6 @@ namespace NTech.Business.Concrete
         private readonly ILanguageMessage _languageMessage;
         private readonly IEmailSender _mailService;
         private readonly IMessageBrokerHelper _messageBrokerHelper;
-        private readonly IMessageConsumer _messageConsumer;
 
         public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage, IEmailSender mailService, IMessageBrokerHelper messageBrokerHelper, IMessageConsumer messageConsumer)
         {
@@ -79,13 +78,12 @@ namespace NTech.Business.Concrete
             if (result.Succeeded)
             {
                 _messageBrokerHelper.QueueMessage(user.Email);
-                _messageConsumer.GetQueue();
-                await _mailService.SendEmailAsync(new EmailMessage
-                {
-                    Subject = "Giriş Başarılı",
-                    Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
-                    Email = user.Email
-                });
+                //await _mailService.SendEmailAsync(new EmailMessage
+                //{
+                //    Subject = "Giriş Başarılı",
+                //    Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
+                //    Email = user.Email
+                //});
                 var accessToken = await CreateAccessToken(user);
                 return accessToken;
             }

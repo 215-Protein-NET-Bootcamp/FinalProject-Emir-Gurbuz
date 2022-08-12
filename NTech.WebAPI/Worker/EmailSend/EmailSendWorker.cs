@@ -1,23 +1,30 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Core.Utilities.IoC;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Diagnostics;
 using System.Text;
 
-namespace Core.Utilities.MessageBrokers.RabbitMq
+namespace NTech.WebAPI.Worker.EmailSend
 {
-    public class MqConsumerHelper : IMessageConsumer
+    public class EmailSendWorker : BackgroundService
     {
         private readonly IConfiguration _configuration;
         private readonly MessageBrokerOptions _brokerOptions;
-        public MqConsumerHelper(IConfiguration configuration)
+        private readonly IMessageConsumer _messageConsumer;
+        public EmailSendWorker(IConfiguration configuration, IMessageConsumer messageConsumer)
         {
             _configuration = configuration;
             _brokerOptions = _configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOptions>();
+            _messageConsumer = messageConsumer;
         }
 
-        public void GetQueue(Action<string> action)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            //_messageConsumer.GetQueue((message) =>
+            //{
+            //    Debug.WriteLine(message);
+            //});
             var factory = new ConnectionFactory()
             {
                 HostName = _brokerOptions.HostName,
@@ -39,7 +46,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
                 {
                     var body = mq.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
-                    action(message);
+                    Debug.WriteLine(message);
                 };
 
                 channel.BasicConsume(

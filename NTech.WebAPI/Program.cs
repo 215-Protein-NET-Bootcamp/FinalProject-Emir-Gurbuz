@@ -16,6 +16,8 @@ using NTech.Business.Concrete;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
 using NTech.DataAccess.Contexts;
+using NTech.WebAPI.BackgorundJobs;
+using NTech.WebAPI.Worker.EmailSend;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,12 +74,18 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 #endregion
 #region CoreServiceTool
 builder.Services.AddDependencyResolvers(
-    new CoreModule());
+    new CoreModule(),
+    new BackgroundServiceModule());
 #endregion
 #region Hangfire
 builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFireSqlServer")));
 #endregion
 
+#region Background Services
+builder.Services.AddHostedService<EmailSendWorker>();
+
+
+#endregion
 var app = builder.Build();
 
 
@@ -90,6 +98,13 @@ if (app.Environment.IsDevelopment())
 #region Hangfire
 app.UseHangfireDashboard();
 app.UseHangfireServer();
+#endregion
+
+#region Background Services
+
+BackgroundJob.Schedule(() => new Deneme().Run(), TimeSpan.FromMilliseconds(5000));
+
+
 #endregion
 
 app.UseHttpsRedirection();

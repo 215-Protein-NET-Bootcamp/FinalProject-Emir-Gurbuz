@@ -2,6 +2,6 @@
 {
     public interface IMessageConsumer
     {
-        void GetQueue();
+        void GetQueue(Action<string> action);
     }
 }
