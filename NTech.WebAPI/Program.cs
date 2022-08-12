@@ -6,6 +6,7 @@ using Core.Extensions;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +74,9 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 builder.Services.AddDependencyResolvers(
     new CoreModule());
 #endregion
+#region Hangfire
+builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFireSqlServer")));
+#endregion
 
 var app = builder.Build();
 
@@ -83,6 +87,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+#region Hangfire
+app.UseHangfireDashboard();
+app.UseHangfireServer();
+#endregion
 
 app.UseHttpsRedirection();
 

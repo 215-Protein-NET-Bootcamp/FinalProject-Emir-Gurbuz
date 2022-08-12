@@ -2,6 +2,7 @@
 using Core.Dto.Concrete;
 using Core.Entity.Concrete;
 using Core.Utilities.Mail;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.JWT;
@@ -18,14 +19,18 @@ namespace NTech.Business.Concrete
         private readonly ITokenHelper _tokenHelper;
         private readonly ILanguageMessage _languageMessage;
         private readonly IEmailSender _mailService;
+        private readonly IMessageBrokerHelper _messageBrokerHelper;
+        private readonly IMessageConsumer _messageConsumer;
 
-        public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage, IEmailSender mailService)
+        public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage, IEmailSender mailService, IMessageBrokerHelper messageBrokerHelper, IMessageConsumer messageConsumer)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _tokenHelper = tokenHelper;
             _languageMessage = languageMessage;
             _mailService = mailService;
+            _messageBrokerHelper = messageBrokerHelper;
+            _messageConsumer = messageConsumer;
         }
 
         public async Task<IDataResult<AccessToken>> CreateAccessToken(AppUser appUser)
@@ -73,6 +78,8 @@ namespace NTech.Business.Concrete
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
             if (result.Succeeded)
             {
+                _messageBrokerHelper.QueueMessage(user.Email);
+                _messageConsumer.GetQueue();
                 await _mailService.SendEmailAsync(new EmailMessage
                 {
                     Subject = "Giriş Başarılı",
@@ -93,6 +100,7 @@ namespace NTech.Business.Concrete
                 LastName = registerDto.LastName,
                 Email = registerDto.Email,
                 UserName = registerDto.Email,
+                LockoutEnabled = false
             };
             IdentityResult identityResult = await _userManager.CreateAsync(user, registerDto.Password);
             if (identityResult.Succeeded == false)

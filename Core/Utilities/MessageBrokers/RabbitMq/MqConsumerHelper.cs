@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Diagnostics;
 using System.Text;
 
 namespace Core.Utilities.MessageBrokers.RabbitMq
@@ -38,6 +39,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
                 {
                     var body = mq.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
+                    Debug.WriteLine(message);
                 };
 
                 channel.BasicConsume(
