@@ -14,7 +14,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             Configuration = configuration;
             _brokerOptions = Configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOptions>();
         }
-        public void QueueMessage(string messageText)
+        public void QueueMessage(object messageText)
         {
             var factory = new ConnectionFactory
             {

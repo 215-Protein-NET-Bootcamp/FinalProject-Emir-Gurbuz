@@ -7,6 +7,7 @@ using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using NTech.Business.Abstract;
 using NTech.Business.Validators.FluentValidation;
 
@@ -21,7 +22,7 @@ namespace NTech.Business.Concrete
         private readonly IEmailSender _mailService;
         private readonly IMessageBrokerHelper _messageBrokerHelper;
 
-        public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage, IEmailSender mailService, IMessageBrokerHelper messageBrokerHelper, IMessageConsumer messageConsumer)
+        public AuthManager(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHelper tokenHelper, ILanguageMessage languageMessage, IEmailSender mailService, IMessageBrokerHelper messageBrokerHelper)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -29,7 +30,6 @@ namespace NTech.Business.Concrete
             _languageMessage = languageMessage;
             _mailService = mailService;
             _messageBrokerHelper = messageBrokerHelper;
-            _messageConsumer = messageConsumer;
         }
 
         public async Task<IDataResult<AccessToken>> CreateAccessToken(AppUser appUser)
@@ -64,12 +64,14 @@ namespace NTech.Business.Concrete
                 user.LockoutEnabled = true;
                 await _userManager.UpdateAsync(user);
 
-                await _mailService.SendEmailAsync(new EmailMessage
+                EmailQueue emailQueue = new()
                 {
                     Subject = "Uyarı",
                     Body = $"Sayın {user.FirstName} {user.LastName} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 5 dakika sonra tekrar deneyiniz.",
-                    Email = user.Email
-                });
+                    Email = user.Email,
+                    TryCount = 0
+                };
+                _messageBrokerHelper.QueueMessage(emailQueue);
 
                 return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
             }
@@ -77,13 +79,15 @@ namespace NTech.Business.Concrete
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
             if (result.Succeeded)
             {
-                _messageBrokerHelper.QueueMessage(user.Email);
-                //await _mailService.SendEmailAsync(new EmailMessage
-                //{
-                //    Subject = "Giriş Başarılı",
-                //    Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
-                //    Email = user.Email
-                //});
+                EmailQueue emailQueue = new()
+                {
+                    Subject = "Giriş Başarılı",
+                    Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
+                    Email = user.Email,
+                    TryCount = 0
+                };
+                _messageBrokerHelper.QueueMessage(emailQueue);
+
                 var accessToken = await CreateAccessToken(user);
                 return accessToken;
             }

@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NTech.Business.Abstract;
-using NTech.Business.Concrete;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
 using NTech.DataAccess.Contexts;
@@ -102,7 +100,8 @@ app.UseHangfireServer();
 
 #region Background Services
 
-BackgroundJob.Schedule(() => new Deneme().Run(), TimeSpan.FromMilliseconds(5000));
+//BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(2000));
+Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/2 * * * * *");
 
 
 #endregion
