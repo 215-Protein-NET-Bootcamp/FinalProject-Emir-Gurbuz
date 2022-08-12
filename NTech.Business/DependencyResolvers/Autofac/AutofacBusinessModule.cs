@@ -9,6 +9,7 @@ using NTech.DataAccess.UnitOfWork.Concrete;
 using Autofac.Extras.DynamicProxy;
 using Core.Utilities.Interceptor;
 using Core.Utilities.Mail;
+using Core.Utilities.MessageBrokers.RabbitMq;
 
 namespace NTech.Business.DependencyResolvers.Autofac
 {
@@ -45,6 +46,11 @@ namespace NTech.Business.DependencyResolvers.Autofac
 
             #region EmailService
             builder.RegisterType<SmtpEmailSender>().As<IEmailSender>().SingleInstance();
+            #endregion
+
+            #region MessageBroker
+            builder.RegisterType<MqConsumerHelper>().As<IMessageConsumer>().SingleInstance();
+            builder.RegisterType<MqQueueHelper>().As<IMessageBrokerHelper>().SingleInstance();
             #endregion
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

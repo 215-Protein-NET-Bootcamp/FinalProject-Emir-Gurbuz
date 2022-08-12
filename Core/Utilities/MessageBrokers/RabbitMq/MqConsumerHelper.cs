@@ -27,7 +27,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(
-                    queue: "",
+                    queue: "NTechQueue",
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
@@ -41,7 +41,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
                 };
 
                 channel.BasicConsume(
-                    queue: "",
+                    queue: "NTechQueue",
                     autoAck: true,
                     consumer: consumer);
                 Console.ReadKey();

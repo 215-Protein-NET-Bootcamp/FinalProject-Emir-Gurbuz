@@ -26,7 +26,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(
-                    queue: "",
+                    queue: "NTechQueue",
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
@@ -37,7 +37,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
 
                 channel.BasicPublish(
                     exchange: string.Empty,
-                    routingKey: "",
+                    routingKey: "NTechQueue",
                     basicProperties: null,
                     body: body);
             }
