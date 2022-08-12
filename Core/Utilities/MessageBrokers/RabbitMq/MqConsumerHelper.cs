@@ -34,12 +34,16 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
                     autoDelete: false,
                     arguments: null);
 
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, mq) =>
+                var consumer = new AsyncEventingBasicConsumer(channel);
+                consumer.Received += async (model, mq) =>
                 {
-                    var body = mq.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    action(message);
+                    await Task.Delay(1000);
+                    await Task.Run(() =>
+                    {
+                        var body = mq.Body.ToArray();
+                        var message = Encoding.UTF8.GetString(body);
+                        action(message);
+                    });
                 };
 
                 channel.BasicConsume(

@@ -99,9 +99,9 @@ app.UseHangfireServer();
 #endregion
 
 #region Background Services
-
-//BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(2000));
-Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/2 * * * * *");
+builder.Services.AddHostedService<EmailSendWorker>();
+////BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
+//Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/2 * * * * *");
 
 
 #endregion

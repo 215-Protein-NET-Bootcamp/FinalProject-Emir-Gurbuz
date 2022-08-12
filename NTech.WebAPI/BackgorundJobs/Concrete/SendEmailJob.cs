@@ -3,6 +3,11 @@ using Core.Utilities.IoC;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Channels;
 
 namespace NTech.WebAPI.BackgorundJobs
 {
@@ -23,29 +28,66 @@ namespace NTech.WebAPI.BackgorundJobs
         }
         public void Run()
         {
-            _messageConsumer.GetQueue(async (message) =>
+            var factory = new ConnectionFactory()
             {
-                EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
-                try
+                HostName = _brokerOptions.HostName,
+                UserName = _brokerOptions.UserName,
+                Password = _brokerOptions.Password
+            };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(
+                    queue: "NTechQueue",
+                    durable: false,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null);
+
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, mq) =>
                 {
-                    if (emailQueue.TryCount >= 5)
-                    {
-                        //TODO: change status
-                        return;
-                    }
-                    await _mailService.SendEmailAsync(new EmailMessage
+                    var body = mq.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
+                    var task = _mailService.SendEmailAsync(new EmailMessage
                     {
                         Body = emailQueue.Body,
                         Email = emailQueue.Email,
                         Subject = emailQueue.Subject
                     });
-                }
-                catch (Exception)
-                {
-                    emailQueue.TryCount++;
-                    _brokerHelper.QueueMessage(emailQueue);
-                }
-            });
+                    task.Wait();
+                };
+                channel.BasicConsume(
+                        queue: "NTechQueue",
+                autoAck: true,
+                consumer: consumer);
+            }
+            //_messageConsumer.GetQueue((message) =>
+            //{
+            //    EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
+            //    try
+            //    {
+            //        if (emailQueue.TryCount >= 5)
+            //        {
+            //            //TODO: change status
+            //            return;
+            //        }
+            //        Debug.WriteLine("gönderildi");
+            //        var task = _mailService.SendEmailAsync(new EmailMessage
+            //        {
+            //            Body = emailQueue.Body,
+            //            Email = emailQueue.Email,
+            //            Subject = emailQueue.Subject
+            //        });
+            //        task.Wait();
+            //    }
+            //    catch (Exception)
+            //    {
+            //        emailQueue.TryCount++;
+            //        _brokerHelper.QueueMessage(emailQueue);
+            //    }
+            //});
         }
     }
 }
