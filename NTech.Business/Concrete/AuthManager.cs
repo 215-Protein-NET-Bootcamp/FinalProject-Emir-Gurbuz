@@ -98,9 +98,9 @@ namespace NTech.Business.Concrete
             if (identityResult.Succeeded == false)
             {
                 string errors = string.Join("\n", identityResult.Errors.Select(x => x.Description));
-                return new SuccessResult(errors);
+                return new ErrorResult(errors);
             }
-            return new ErrorResult(_languageMessage.RegisterSuccessfull);
+            return new SuccessResult(_languageMessage.RegisterSuccessfull);
         }
 
         public async Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
