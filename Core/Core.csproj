@@ -18,11 +18,8 @@
     <PackageReference Include="MimeKit" Version="3.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
+    <PackageReference Include="ServiceStack.Redis" Version="6.2.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CrossCuttingConcerns\Caching\Redis\" />
   </ItemGroup>
 
 </Project>
