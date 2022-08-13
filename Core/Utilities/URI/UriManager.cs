@@ -11,9 +11,9 @@ namespace Core.Utilities.URI
     public class UriManager : IUriService
     {
         private readonly string _baseUri;
-        public UriManager(string baseUri)
+        public UriManager()
         {
-            _baseUri = baseUri;
+            
         }
         /// <summary>
         /// Get page uri from request

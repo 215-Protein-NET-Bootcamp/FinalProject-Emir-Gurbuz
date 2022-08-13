@@ -6,7 +6,7 @@ namespace NTech.Business.Helpers
 {
     public static class PaginationHelper
     {
-        public static PaginatedResult<IEnumerable<T>> CreatePaginatedResponse<T>(IQueryable<T> data, PaginationFilter paginationFilter, int totalRecords, IUriService uriService, string route)
+        public static PaginatedResult<IEnumerable<T>> CreatePaginatedResponse<T>(IEnumerable<T> data, PaginationFilter paginationFilter, int totalRecords, IUriService uriService, string route)
         {
             data = data.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
                 .Take(paginationFilter.PageSize);
