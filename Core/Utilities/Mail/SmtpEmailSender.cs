@@ -15,6 +15,7 @@ namespace Core.Utilities.Mail
 
         public Task SendEmailAsync(EmailMessage emailMessage)
         {
+
             EmailConfiguration emailConfiguration = _configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
 
             var client = new SmtpClient(emailConfiguration.Server, emailConfiguration.Port)

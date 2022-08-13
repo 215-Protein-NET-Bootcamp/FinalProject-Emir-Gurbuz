@@ -19,7 +19,7 @@ namespace Core.Utilities.Security.JWT
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
         }
-        public AccessToken CreateAccessToken(AppUser appUser, List<string> roles)
+        public AccessToken CreateAccessToken(User appUser, List<string> roles)
         {
             _accessTokenExpiration = DateTime.UtcNow.AddMinutes(_tokenOptions.AccessTokenExpiration);
 
@@ -37,7 +37,7 @@ namespace Core.Utilities.Security.JWT
             };
         }
 
-        private JwtSecurityToken createJwtSecurityToken(AppUser appUser, List<string> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
+        private JwtSecurityToken createJwtSecurityToken(User appUser, List<string> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
         {
             return new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
@@ -48,10 +48,9 @@ namespace Core.Utilities.Security.JWT
                 signingCredentials: signingCredentials);
         }
 
-        private IEnumerable<Claim> setClaims(AppUser appUser, List<string> roles)
+        private IEnumerable<Claim> setClaims(User appUser, List<string> roles)
         {
             List<Claim> claims = new List<Claim>();
-
             claims.AddEmail(appUser.Email);
             claims.AddName(String.Format("{0} {1}", appUser.FirstName, appUser.LastName));
             claims.AddNameIdentifier(appUser.Id.ToString());

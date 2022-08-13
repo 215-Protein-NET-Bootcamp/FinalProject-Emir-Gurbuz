@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NTech.Business.Abstract;
+using NTech.DataAccess.Contexts;
 using NTech.DataAccess.UnitOfWork.Abstract;
 
 namespace NTech.Business.Concrete
@@ -37,10 +38,11 @@ namespace NTech.Business.Concrete
         public virtual async Task<IResult> AddAsync(TWriteDto dto)
         {
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
-            await Repository.AddAsync(addedEntity);
 
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
             addedEntity.SetUserId(userId);
+
+            await Repository.AddAsync(addedEntity);
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?

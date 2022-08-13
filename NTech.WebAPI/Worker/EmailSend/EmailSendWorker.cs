@@ -75,17 +75,30 @@ namespace NTech.WebAPI.Worker.EmailSend
                     await Task.Delay(1000);
                     var consumer = new EventingBasicConsumer(channel);
 
-                    consumer.Received += (model, mq) =>
+                    consumer.Received += async (model, mq) =>
                     {
                         var body = mq.Body.ToArray();
                         var message = Encoding.UTF8.GetString(body);
                         EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
-                        _mailService.SendEmailAsync(new EmailMessage
+                        try
                         {
-                            Body = emailQueue.Body,
-                            Email = emailQueue.Email,
-                            Subject = emailQueue.Subject
-                        });
+                            Debug.WriteLine(emailQueue.TryCount);
+                            if(emailQueue.TryCount >= 5)
+                            {
+                                return;
+                            }
+                            await _mailService.SendEmailAsync(new EmailMessage
+                            {
+                                Body = emailQueue.Body,
+                                Email = emailQueue.Email,
+                                Subject = emailQueue.Subject
+                            });
+                        }
+                        catch (Exception e)
+                        {
+                            emailQueue.TryCount++;
+                            _brokerHelper.QueueMessage(emailQueue);
+                        }
                     };
                     channel.BasicConsume(
                             queue: "NTechQueue",

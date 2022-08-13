@@ -8,9 +8,9 @@ using NTech.Entity.Concrete;
 
 namespace NTech.DataAccess.Contexts
 {
-    public class NTechDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
+    public class NTechDbContext : DbContext
     {
-        public NTechDbContext(DbContextOptions<NTechDbContext> options) : base(options)
+        public NTechDbContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -19,7 +19,6 @@ namespace NTech.DataAccess.Contexts
         {
             var entries = ChangeTracker.Entries<IEntity>();
             entries.SetStateDate();
-
             return base.SaveChangesAsync(cancellationToken);
         }
 
@@ -29,5 +28,9 @@ namespace NTech.DataAccess.Contexts
         public DbSet<Color> Colors { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<UsingStatus> UsingStatuses { get; set; }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
     }
 }

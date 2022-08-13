@@ -50,6 +50,7 @@ namespace NTech.WebAPI.BackgorundJobs
                     var body = mq.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
+
                     var task = _mailService.SendEmailAsync(new EmailMessage
                     {
                         Body = emailQueue.Body,
@@ -57,6 +58,10 @@ namespace NTech.WebAPI.BackgorundJobs
                         Subject = emailQueue.Subject
                     });
                     task.Wait();
+
+
+                    //emailQueue.TryCount++;
+                    //_brokerHelper.QueueMessage(JsonConvert.SerializeObject(emailQueue));
                 };
                 channel.BasicConsume(
                         queue: "NTechQueue",

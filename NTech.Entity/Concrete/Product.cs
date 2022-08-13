@@ -33,7 +33,7 @@ namespace NTech.Entity.Concrete
 
         public int? UserId { get; set; }
         [ForeignKey("UserId")]
-        public AppUser User { get; set; }
+        public User User { get; set; }
 
         public decimal Price { get; set; }
         public bool isOfferable { get; set; }

@@ -1,4 +1,8 @@
 ﻿using Autofac;
+using Autofac.Extras.DynamicProxy;
+using Core.Utilities.Interceptor;
+using Core.Utilities.Mail;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Security.JWT;
 using NTech.Business.Abstract;
 using NTech.Business.Concrete;
@@ -6,10 +10,6 @@ using NTech.DataAccess.Abstract;
 using NTech.DataAccess.Concrete.EntityFramework;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.DataAccess.UnitOfWork.Concrete;
-using Autofac.Extras.DynamicProxy;
-using Core.Utilities.Interceptor;
-using Core.Utilities.Mail;
-using Core.Utilities.MessageBrokers.RabbitMq;
 
 namespace NTech.Business.DependencyResolvers.Autofac
 {
@@ -34,10 +34,11 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
             builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>().SingleInstance();
             builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
+            builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
             #endregion
 
             #region UnitOfWork
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
             #endregion
 
             #region Jwt

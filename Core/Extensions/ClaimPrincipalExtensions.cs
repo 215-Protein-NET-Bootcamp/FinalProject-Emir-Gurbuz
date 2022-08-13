@@ -21,7 +21,8 @@ namespace Core.Extensions
 
         public static int ClaimNameIdentifier(this ClaimsPrincipal claimsPrincipal)
         {
-            return Convert.ToInt32(claimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string value = claimsPrincipal?.Claims(ClaimTypes.NameIdentifier)?.FirstOrDefault();
+            return value == null ? 0 : int.Parse(value);
         }
     }
 }

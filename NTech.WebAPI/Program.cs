@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
 using NTech.DataAccess.Contexts;
+using NTech.DataAccess.UnitOfWork.Abstract;
+using NTech.DataAccess.UnitOfWork.Concrete;
 using NTech.WebAPI.BackgorundJobs;
 using NTech.WebAPI.Worker.EmailSend;
 
@@ -25,21 +27,25 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 #region SqlContext, PostgreContext
-//builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
-builder.Services.AddScoped<DbContext, NTechDbContext>();
+builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+//builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
+builder.Services.AddSingleton<DbContext, NTechDbContext>();
+//builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
+
 #region Identity
-builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
-{
-    options.Password.RequireNonAlphanumeric = false;
+//builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
+//{
+//    options.Password.RequireNonAlphanumeric = false;
 
-    options.Lockout.MaxFailedAccessAttempts = 3;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+//    options.Lockout.MaxFailedAccessAttempts = 3;
+//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
 
-}).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
+//}).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
 #endregion
+
 #region JWT
 AccessTokenOptions tokenOptions = builder.Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -85,8 +91,6 @@ builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.Ge
 
 #region Background Services
 builder.Services.AddHostedService<EmailSendWorker>();
-
-
 #endregion
 var app = builder.Build();
 
@@ -103,7 +107,7 @@ app.UseHangfireServer();
 #endregion
 
 #region Background Services
-builder.Services.AddHostedService<EmailSendWorker>();
+//builder.Services.AddHostedService<EmailSendWorker>();
 ////BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
 //Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/2 * * * * *");
 

@@ -10,6 +10,6 @@ namespace NTech.Business.Abstract
         Task<IDataResult<AccessToken>> LoginAsync(LoginDto loginDto);
         Task<IResult> RegisterAsync(RegisterDto registerDto);
         Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
-        Task<IDataResult<AccessToken>> CreateAccessToken(AppUser appUser);
+        Task<IDataResult<AccessToken>> CreateAccessToken(User appUser);
     }
 }

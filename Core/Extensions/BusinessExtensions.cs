@@ -10,10 +10,12 @@ namespace Core.Extensions
             PropertyInfo? propertyInfo = obj.GetType().GetProperty("UserId");
 
             if (throwException)
+            {
                 NotFoundUserIdException.ThrowIfNull(propertyInfo);
 
-            if (obj.GetType() != propertyInfo.PropertyType)
-                throw new NotEqualPropertyTypeException();
+                if (propertyInfo.PropertyType.IsAssignableFrom(value.GetType()) == false)
+                    throw new NotEqualPropertyTypeException();
+            }
 
             if (propertyInfo is not null)
                 propertyInfo.SetValue(obj, value);
