@@ -5,6 +5,7 @@ using Core.Utilities.IoC;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace Core.DependencyResolvers
 {
@@ -19,6 +20,10 @@ namespace Core.DependencyResolvers
             #region Cache
             //services.AddMemoryCache();
             services.AddSingleton<ICacheManager, RedisCacheManager>();
+            #endregion
+
+            #region
+            services.AddSingleton<Stopwatch>();
             #endregion
         }
     }
