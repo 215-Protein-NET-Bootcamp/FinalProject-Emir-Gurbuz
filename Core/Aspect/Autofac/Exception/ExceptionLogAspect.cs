@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Core.Extensions;
+using System.Reflection;
 
 namespace Core.Aspect.Autofac.Exception
 {
@@ -34,7 +35,7 @@ namespace Core.Aspect.Autofac.Exception
             {
                 Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
                 Type = a.GetType().ToString(),
-                Value = a
+                Value = a.CheckPasswordProperty() ? "***" : a.GetType().ToString()
             }).ToList();
 
             string email = _httpContextAccessor.HttpContext.User.ClaimEmail();
@@ -50,5 +51,6 @@ namespace Core.Aspect.Autofac.Exception
 
             return JsonConvert.SerializeObject(logDetailWithException);
         }
+
     }
 }

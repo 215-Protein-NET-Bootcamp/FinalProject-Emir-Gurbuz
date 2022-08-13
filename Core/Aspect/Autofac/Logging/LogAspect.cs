@@ -33,7 +33,7 @@ namespace Core.Aspect.Autofac.Logging
             List<LogParameter> logParameters = invocation.Arguments.Select((a, i) => new LogParameter
             {
                 Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
-                Value = a,
+                Value = a.CheckPasswordProperty() ? "***" : a.GetType().ToString(),
                 Type = a.GetType().ToString()
             }).ToList();
 
