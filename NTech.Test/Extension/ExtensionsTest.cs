@@ -1,4 +1,5 @@
-﻿using Core.Exceptions.Extension;
+﻿using Core.Dto.Concrete;
+using Core.Exceptions.Extension;
 using Core.Extensions;
 using NTech.Entity.Concrete;
 
@@ -38,6 +39,16 @@ namespace NTech.Test.Extension
 
                 product.SetUserId(userId);
             });
+        }
+
+        [Fact]
+        public void Check_password_property_true()
+        {
+            LoginDto loginDto = new() { Email = "deneme@hotmail.com", Password = "123456" };
+
+            bool result = loginDto.CheckPasswordProperty();
+
+            Assert.Equal(true, result);
         }
     }
 }
