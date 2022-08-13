@@ -3,12 +3,14 @@ using Core.DataAccess;
 using Core.Dto;
 using Core.Entity;
 using Core.Extensions;
+using Core.Utilities.IoC;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NTech.Business.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
-using System.Reflection;
 
 namespace NTech.Business.Concrete
 {
@@ -22,12 +24,14 @@ namespace NTech.Business.Concrete
         protected readonly IMapper Mapper;
         protected readonly IUnitOfWork UnitOfWork;
         protected readonly ILanguageMessage LanguageMessage;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
         public AsyncBaseService(IAsyncRepository<TEntity> repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage)
         {
             Repository = repository;
             Mapper = mapper;
             UnitOfWork = unitOfWork;
             LanguageMessage = languageMessage;
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
         public virtual async Task<IResult> AddAsync(TWriteDto dto)
@@ -35,7 +39,8 @@ namespace NTech.Business.Concrete
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
             await Repository.AddAsync(addedEntity);
 
-            addedEntity.SetUserId(10);//TODO: get jwt user id
+            int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
+            addedEntity.SetUserId(userId);
 
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?

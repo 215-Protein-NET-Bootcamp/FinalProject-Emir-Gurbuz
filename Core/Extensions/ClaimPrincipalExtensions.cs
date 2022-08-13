@@ -18,5 +18,10 @@ namespace Core.Extensions
         {
             return claimsPrincipal?.FindFirst(ClaimTypes.Email)?.Value ?? "<Anonymous>";
         }
+
+        public static int ClaimNameIdentifier(this ClaimsPrincipal claimsPrincipal)
+        {
+            return Convert.ToInt32(claimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
     }
 }
