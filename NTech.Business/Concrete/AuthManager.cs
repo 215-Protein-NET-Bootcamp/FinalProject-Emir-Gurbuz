@@ -46,36 +46,6 @@ namespace NTech.Business.Concrete
             if (user == null)
                 return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
 
-            if (user.LockoutEnabled)
-            {
-                if (user.LockoutEnd < DateTime.Now)
-                {
-                    user.LockoutEnd = null;
-                    user.AccessFailedCount = 0;
-                    user.LockoutEnabled = false;
-                    await _userManager.UpdateAsync(user);
-                }
-                else
-                    return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
-            }
-            else if (user.AccessFailedCount == 3)
-            {
-                user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                user.LockoutEnabled = true;
-                await _userManager.UpdateAsync(user);
-
-                EmailQueue emailQueue = new()
-                {
-                    Subject = "Uyarı",
-                    Body = $"Sayın {user.FirstName} {user.LastName} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 5 dakika sonra tekrar deneyiniz.",
-                    Email = user.Email,
-                    TryCount = 0
-                };
-                _messageBrokerHelper.QueueMessage(emailQueue);
-
-                return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
-            }
-
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
             if (result.Succeeded)
             {
@@ -90,6 +60,18 @@ namespace NTech.Business.Concrete
 
                 var accessToken = await CreateAccessToken(user);
                 return accessToken;
+            }
+            if (result.IsLockedOut)
+            {
+                EmailQueue emailQueue = new()
+                {
+                    Subject = "Uyarı",
+                    Body = $"Sayın {user.FirstName} {user.LastName} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 3 dakika sonra tekrar deneyiniz.",
+                    Email = user.Email,
+                    TryCount = 0
+                };
+                _messageBrokerHelper.QueueMessage(emailQueue);
+                return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
             }
             return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
         }

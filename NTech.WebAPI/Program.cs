@@ -34,6 +34,10 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
+
+    options.Lockout.MaxFailedAccessAttempts = 3;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+
 }).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
 #endregion
 #region JWT
