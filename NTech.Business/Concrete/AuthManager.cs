@@ -1,20 +1,14 @@
-﻿using Core.Aspect.Autofac.Performance;
-using Core.Aspect.Autofac.Validation;
+﻿using Core.Aspect.Autofac.Validation;
 using Core.Dto.Concrete;
 using Core.Entity.Concrete;
 using Core.Utilities.Business;
-using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
-using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 using NTech.Business.Abstract;
 using NTech.Business.Validators.FluentValidation;
-using NTech.DataAccess.Abstract;
-using NTech.DataAccess.UnitOfWork.Abstract;
 
 namespace NTech.Business.Concrete
 {
@@ -22,22 +16,20 @@ namespace NTech.Business.Concrete
     {
         private readonly ITokenHelper _tokenHelper;
         private readonly ILanguageMessage _languageMessage;
-        private readonly IUserDal _userDal;
         private readonly IMessageBrokerHelper _messageBrokerHelper;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserService _userService;
 
-        public AuthManager(ITokenHelper tokenHelper, ILanguageMessage languageMessage, IMessageBrokerHelper messageBrokerHelper, IUserDal userDal, IUnitOfWork unitOfWork)
+        public AuthManager(ITokenHelper tokenHelper, ILanguageMessage languageMessage, IMessageBrokerHelper messageBrokerHelper, IUserService userService)
         {
             _tokenHelper = tokenHelper;
             _languageMessage = languageMessage;
             _messageBrokerHelper = messageBrokerHelper;
-            _userDal = userDal;
-            _unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
         public async Task<IDataResult<AccessToken>> CreateAccessToken(User appUser)
         {
-            List<Role> roles = await _userDal.GetRolesAsync(appUser.Id);
+            List<Role> roles = await _userService.GetRolesAsync(appUser.Id);
             AccessToken accessToken = _tokenHelper.CreateAccessToken(appUser, roles.Select(x => x.Name).ToList());
 
             return new SuccessDataResult<AccessToken>(accessToken, _languageMessage.LoginSuccessfull);
@@ -45,10 +37,16 @@ namespace NTech.Business.Concrete
         [ValidationAspect(typeof(LoginDtoValidator))]
         public async Task<IDataResult<AccessToken>> LoginAsync(LoginDto loginDto)
         {
-            User user = await _userDal.GetAsync(x => x.Email.ToLower() == loginDto.Email.ToLower());
-            if (user == null)
+            var userResult = await _userService.GetByEmailAsync(loginDto.Email);
+            if (userResult.Success == false)
                 return new ErrorDataResult<AccessToken>(_languageMessage.UserNotFound);
+            User user = userResult.Data;
 
+            if (user.LockoutEnd > DateTime.Now)
+            {
+                user.AccessFailedCount = 0;
+                await _userService.UpdateAsync(user);
+            }
             if (user.AccessFailedCount >= 3)
             {
                 EmailQueue emailQueue = new()
@@ -57,15 +55,10 @@ namespace NTech.Business.Concrete
                     Body = $"Sayın {user.FirstName} {user.LastName} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 3 dakika sonra tekrar deneyiniz.",
                     Email = user.Email
                 };
+                user.LockoutEnd = DateTime.Now.AddMinutes(3);
+                await _userService.UpdateAsync(user);
                 _messageBrokerHelper.QueueMessage(emailQueue);
                 return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
-            }
-
-            if (user.LockoutEnd > DateTime.Now)
-            {
-                user.AccessFailedCount = 0;
-                await _userDal.UpdateAsync(user);
-                await _unitOfWork.CompleteAsync();
             }
 
             if (HashingHelper.VerifyPasswordHash(loginDto.Password,
@@ -73,8 +66,7 @@ namespace NTech.Business.Concrete
                 user.PasswordSalt) == false)
             {
                 user.AccessFailedCount++;
-                await _userDal.UpdateAsync(user);
-                await _unitOfWork.CompleteAsync();
+                await _userService.UpdateAsync(user);
                 return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
             }
             IDataResult<AccessToken> accessToken = await CreateAccessToken(user);
@@ -87,6 +79,9 @@ namespace NTech.Business.Concrete
                     Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
                     Email = user.Email
                 };
+                user.AccessFailedCount = 0;
+                user.LockoutEnd = null;
+                await _userService.UpdateAsync(user);
                 _messageBrokerHelper.QueueMessage(emailQueue);
                 return accessToken;
             }
@@ -96,8 +91,8 @@ namespace NTech.Business.Concrete
         [ValidationAspect(typeof(RegisterDtoValidator))]
         public async Task<IResult> RegisterAsync(RegisterDto registerDto)
         {
-            User findUser = await _userDal.GetAsync(x => x.Email.ToLower() == registerDto.Email.ToLower());
-            if (findUser != null)
+            var findUserResult = await _userService.GetByEmailAsync(registerDto.Email);
+            if (findUserResult.Success == false)
                 return new ErrorDataResult<AccessToken>(_languageMessage.UserAlreadyExists);
 
             byte[] passwordHash, passwordSalt;
@@ -112,33 +107,33 @@ namespace NTech.Business.Concrete
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-            await _userDal.AddAsync(user);
-            int row = await _unitOfWork.CompleteAsync();
-            return row > 0 ?
+            await _userService.AddAsync(user);
+            //int row = await _unitOfWork.CompleteAsync();
+            return true ?
                 new SuccessResult(_languageMessage.RegisterSuccessfull) :
                 new ErrorResult(_languageMessage.RegisterFailure);
         }
 
         public async Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {
-            User user = await _userDal.GetAsync(x => x.Id == resetPasswordDto.UserId);
-            if (user == null)
+            var userResult = await _userService.GetByIdAsync(resetPasswordDto.UserId);
+            if (userResult.Success == false)
                 return new ErrorDataResult<AccessToken>(_languageMessage.UserNotFound);
 
             var result = BusinessRule.Run(
-                checkOldPassword(user, resetPasswordDto.OldPassword));
+                checkOldPassword(userResult.Data, resetPasswordDto.OldPassword));
             if (result != null)
                 return result;
 
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(resetPasswordDto.NewPassword, out passwordHash, out passwordSalt);
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            userResult.Data.PasswordHash = passwordHash;
+            userResult.Data.PasswordSalt = passwordSalt;
 
-            await _userDal.UpdateAsync(user);
-            int row = await _unitOfWork.CompleteAsync();
-            return row > 0 ?
+            IResult updateResult = await _userService.UpdateAsync(userResult.Data);
+            //int row = await _unitOfWork.CompleteAsync();
+            return updateResult.Success == true ?
                 new SuccessResult(_languageMessage.SuccessResetPassword) :
                 new ErrorResult(_languageMessage.FailedResetPassword);
         }

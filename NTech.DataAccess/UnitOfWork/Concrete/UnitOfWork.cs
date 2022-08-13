@@ -25,7 +25,9 @@ namespace NTech.DataAccess.UnitOfWork.Concrete
             if (!disposed)
             {
                 if (disposing)
-                    _dbContext.Dispose();
+                {
+                    //_dbContext.Dispose();
+                }
             }
             disposed = true;
         }

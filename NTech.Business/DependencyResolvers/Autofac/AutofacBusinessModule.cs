@@ -24,6 +24,7 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<EfImageDal>().As<IImageDal>().SingleInstance();
             builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
             builder.RegisterType<EfUsingStatusDal>().As<IUsingStatusDal>().SingleInstance();
+            builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
             #endregion
 
             #region Business
@@ -34,7 +35,7 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
             builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>().SingleInstance();
             builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
-            builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
+            builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
             #endregion
 
             #region UnitOfWork
