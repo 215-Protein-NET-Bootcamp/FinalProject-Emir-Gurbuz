@@ -31,6 +31,14 @@ namespace NTech.Business.Validators.FluentValidation
                 .NotNull()
                 .NotEmpty();
 
+            RuleFor(r => r.Password)
+                .NotNull()
+                .NotEmpty();
+            RuleFor(r => r.Password)
+                .MaximumLength(20);
+            RuleFor(r => r.Password)
+                .MinimumLength(8);
+
         }
     }
 }
