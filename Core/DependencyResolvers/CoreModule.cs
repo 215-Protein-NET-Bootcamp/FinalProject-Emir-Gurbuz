@@ -19,10 +19,11 @@ namespace Core.DependencyResolvers
 
             #region Cache
             //services.AddMemoryCache();
+            //services.AddSingleton<ICacheManager, MemoryCacheManager>();
             services.AddSingleton<ICacheManager, RedisCacheManager>();
             #endregion
 
-            #region
+            #region Stopwatch
             services.AddSingleton<Stopwatch>();
             #endregion
         }
