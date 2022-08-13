@@ -1,6 +1,7 @@
 ﻿using Castle.DynamicProxy;
 using Core.Aspect.Autofac.Exception;
 using Core.Aspect.Autofac.Logging;
+using Core.Aspect.Autofac.Performance;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using System.Reflection;
 
@@ -17,8 +18,9 @@ namespace Core.Utilities.Interceptor
 
             classAttributes.AddRange(methodAttributes);
 
-            classAttributes.Add(new LogAspect(typeof(FileLogger)));
-            classAttributes.Add(new ExceptionLogAspect(typeof(FileLogger)));
+            classAttributes.Add(new LogAspect(typeof(FileLogger)));//info log
+            classAttributes.Add(new ExceptionLogAspect(typeof(FileLogger))); //exception log
+            classAttributes.Add(new PerformanceAspect(5)); //executing seconds > 5 send email to admin
 
             return classAttributes.OrderBy(x => x.Priority).ToArray();
         }

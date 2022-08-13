@@ -42,7 +42,6 @@ namespace NTech.Business.Concrete
             return new SuccessDataResult<AccessToken>(accessToken, _languageMessage.LoginSuccessfull);
         }
         [ValidationAspect(typeof(LoginDtoValidator))]
-        [PerformanceAspect(1)]
         public async Task<IDataResult<AccessToken>> LoginAsync(LoginDto loginDto)
         {
             User user = await _userDal.GetAsync(x => x.Email.ToLower() == loginDto.Email.ToLower());
