@@ -4,6 +4,7 @@ using Core.Utilities.Interceptor;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Security.JWT;
+using Core.Utilities.URI;
 using NTech.Business.Abstract;
 using NTech.Business.Concrete;
 using NTech.DataAccess.Abstract;
@@ -53,6 +54,10 @@ namespace NTech.Business.DependencyResolvers.Autofac
             #region MessageBroker
             builder.RegisterType<MqConsumerHelper>().As<IMessageConsumer>().SingleInstance();
             builder.RegisterType<MqQueueHelper>().As<IMessageBrokerHelper>().SingleInstance();
+            #endregion
+
+            #region UriService
+            builder.RegisterType<UriManager>().As<IUriService>().SingleInstance();
             #endregion
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
