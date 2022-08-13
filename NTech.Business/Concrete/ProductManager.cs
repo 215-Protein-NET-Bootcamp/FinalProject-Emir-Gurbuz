@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Core.Aspect.Autofac.Validation;
+using Core.CrossCuttingConcerns.Caching;
 using Core.Entity.Concrete;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.URI;
+using Newtonsoft.Json;
 using NTech.Business.Abstract;
 using NTech.Business.Helpers;
 using NTech.Business.Validators.FluentValidation;
@@ -17,9 +19,11 @@ namespace NTech.Business.Concrete
     public class ProductManager : AsyncBaseService<Product, ProductWriteDto, ProductReadDto>, IProductService
     {
         private readonly IUriService _uriService;
-        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService) : base(repository, mapper, unitOfWork, languageMessage)
+        private readonly ICacheManager _cacheManager;
+        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _uriService = uriService;
+            _cacheManager = cacheManager;
         }
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         public override Task<IResult> AddAsync(ProductWriteDto dto)
@@ -29,8 +33,15 @@ namespace NTech.Business.Concrete
 
         public async Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route)
         {
+            string key = $"product+{paginationFilter.PageNumber}+{paginationFilter.PageSize}";
+            if (_cacheManager.IsAdd(key))
+            {
+                return _cacheManager.Get<PaginatedResult<IEnumerable<ProductReadDto>>>(key);
+            }
             var products = Mapper.Map<List<ProductReadDto>>(Repository.GetAll(false).ToList());
-            return PaginationHelper.CreatePaginatedResponse(products, paginationFilter, products.Count(), _uriService, route);
+            var result = PaginationHelper.CreatePaginatedResponse(products, paginationFilter, products.Count(), _uriService, route);
+            _cacheManager.Add(key, result, 30);
+            return result;
         }
 
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
