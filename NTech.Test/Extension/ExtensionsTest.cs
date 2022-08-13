@@ -37,7 +37,7 @@ namespace NTech.Test.Extension
             {
                 Product product = new();
 
-                product.SetUserId(userId);
+                product.SetUserId(userId, true);
             });
         }
 
