@@ -88,9 +88,8 @@ namespace NTech.Business.Concrete
                     TryCount = 0
                 };
                 _messageBrokerHelper.QueueMessage(emailQueue);
+                return accessToken;
             }
-
-            return accessToken;
 
             return new ErrorDataResult<AccessToken>(_languageMessage.LoginFailure);
         }
