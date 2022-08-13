@@ -3,18 +3,24 @@ using Core.CrossCuttingConcerns.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog;
 using Core.Exceptions.Aspect;
 using Core.Utilities.Interceptor;
+using Core.Utilities.IoC;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Core.Extensions;
 
 namespace Core.Aspect.Autofac.Exception
 {
     public class ExceptionLogAspect : MethodInterception
     {
         private readonly LoggerServiceBase _loggerServiceBase;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public ExceptionLogAspect(Type loggingType)
         {
             WrongLoggingTypeException.ThrowIfNotEqual(typeof(LoggerServiceBase), loggingType);
 
             _loggerServiceBase = (LoggerServiceBase)Activator.CreateInstance(loggingType);
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
         protected override void OnException(IInvocation invocation, System.Exception e)
@@ -31,11 +37,15 @@ namespace Core.Aspect.Autofac.Exception
                 Value = a
             }).ToList();
 
+            string email = _httpContextAccessor.HttpContext.User.ClaimEmail();
+            List<string> roles = _httpContextAccessor.HttpContext.User.ClaimRoles();
             LogDetailWithException logDetailWithException = new LogDetailWithException
             {
                 ExceptionMessage = e.Message,
                 MethodName = invocation.Method.Name,
-                Parameters = parameters
+                Parameters = parameters,
+                Email = email,
+                Roles = roles
             };
 
             return JsonConvert.SerializeObject(logDetailWithException);

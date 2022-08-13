@@ -7,6 +7,7 @@ using Core.Utilities.IoC;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Core.Extensions;
 
 namespace Core.Aspect.Autofac.Logging
 {
@@ -35,11 +36,15 @@ namespace Core.Aspect.Autofac.Logging
                 Value = a,
                 Type = a.GetType().ToString()
             }).ToList();
-            //TODO: user info
+
+            string email = _httpContextAccessor.HttpContext.User.ClaimEmail();
+            List<string> roles = _httpContextAccessor.HttpContext.User.ClaimRoles();
             LogDetail logDetail = new()
             {
                 MethodName = invocation.Method.Name,
-                Parameters = logParameters
+                Parameters = logParameters,
+                Email = email,
+                Roles = roles
             };
             return JsonConvert.SerializeObject(logDetail);
         }
