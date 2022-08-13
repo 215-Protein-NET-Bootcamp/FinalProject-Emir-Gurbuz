@@ -50,5 +50,15 @@ namespace NTech.Test.Extension
 
             Assert.Equal(true, result);
         }
+
+        [Fact]
+        public void Check_password_property_false()
+        {
+            Category category = new() { Id = 1, Name = "Telefon" };
+
+            bool result = category.CheckPasswordProperty();
+
+            Assert.Equal(false, result);
+        }
     }
 }
