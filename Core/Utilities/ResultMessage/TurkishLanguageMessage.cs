@@ -33,5 +33,14 @@
         public string RegisterFailure => "Kayıt başarısız";
 
         public string LockAccount => "Hesabınız kilitlendi";
+
+        public string UserNotFound => "Kullanıcı bulunamadı";
+
+        public string UserAlreadyExists => "Kullanıcı zaten mevcut";
+
+        public string OldPasswordWrong => "Eski şifre uyuşmuyor";
+
+        public string SuccessResetPassword => "Şifre sıfırlama başarılı";
+        public string FailedResetPassword => "Şifre sıfırlama başarısız";
     }
 }

@@ -33,5 +33,14 @@
         public string RegisterFailure => "Register failure";
 
         public string LockAccount => "Lock account";
+
+        public string UserNotFound => "User not found";
+
+        public string UserAlreadyExists => "User already exists";
+
+        public string OldPasswordWrong => "Old password is wrong";
+
+        public string SuccessResetPassword => "Reset password successful";
+        public string FailedResetPassword => "Reset password failed";
     }
 }

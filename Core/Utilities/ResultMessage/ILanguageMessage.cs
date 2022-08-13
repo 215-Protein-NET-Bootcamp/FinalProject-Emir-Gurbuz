@@ -25,5 +25,13 @@
         string RegisterFailure { get; }
 
         string LockAccount { get; }
+
+        string UserNotFound { get; }
+        string UserAlreadyExists { get; }
+
+        string OldPasswordWrong { get; }
+
+        string SuccessResetPassword { get; }
+        string FailedResetPassword { get; }
     }
 }
