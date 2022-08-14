@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Core.Entity.Concrete;
 using NTech.Dto.Concrete;
+using NTech.Dto.Concrete.EmailQueue;
 using NTech.Entity.Concrete;
 
 namespace NTech.Business.Helpers
@@ -25,6 +27,12 @@ namespace NTech.Business.Helpers
 
             CreateMap<UsingStatus, UsingStatusWriteDto>().ReverseMap();
             CreateMap<UsingStatus, UsingStatusReadDto>().ReverseMap();
+
+            CreateMap<Offer, OfferWriteDto>().ReverseMap();
+            CreateMap<Offer, OfferReadDto>().ReverseMap();
+
+            CreateMap<EmailQueue, EmailQueueWriteDto>().ReverseMap();
+            CreateMap<EmailQueue, EmailQueueReadDto>().ReverseMap();
         }
     }
 }
