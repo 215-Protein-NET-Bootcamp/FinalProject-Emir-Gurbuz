@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Aspect.Autofac.Caching;
 using Core.DataAccess;
 using Core.Dto;
 using Core.Entity;
@@ -34,7 +35,6 @@ namespace NTech.Business.Concrete
             LanguageMessage = languageMessage;
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
-
         public virtual async Task<IResult> AddAsync(TWriteDto dto)
         {
             TEntity addedEntity = Mapper.Map<TEntity>(dto);
@@ -50,7 +50,7 @@ namespace NTech.Business.Concrete
                 new ErrorResult(LanguageMessage.FailedToAdd);
         }
 
-        public virtual async Task<IDataResult<TReadDto>> GetByIdAsync(int id)
+        public virtual async Task<DataResult<TReadDto>> GetByIdAsync(int id)
         {
             TEntity entity = await Repository.GetAsync(x => x.Id == id);
             if (entity == null)
@@ -59,8 +59,7 @@ namespace NTech.Business.Concrete
             TReadDto returnEntity = Mapper.Map<TReadDto>(entity);
             return new SuccessDataResult<TReadDto>(returnEntity, LanguageMessage.SuccessfullyGet);
         }
-
-        public virtual async Task<IDataResult<List<TReadDto>>> GetListAsync()
+        public virtual async Task<DataResult<List<TReadDto>>> GetListAsync()
         {
             List<TEntity> entities = await Repository.GetAll().ToListAsync();
             List<TReadDto> returnEntities = Mapper.Map<List<TReadDto>>(entities);
