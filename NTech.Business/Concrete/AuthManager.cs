@@ -92,7 +92,7 @@ namespace NTech.Business.Concrete
         public async Task<IResult> RegisterAsync(RegisterDto registerDto)
         {
             var findUserResult = await _userService.GetByEmailAsync(registerDto.Email);
-            if (findUserResult.Success == false)
+            if (findUserResult.Success == true)
                 return new ErrorDataResult<AccessToken>(_languageMessage.UserAlreadyExists);
 
             byte[] passwordHash, passwordSalt;

@@ -8,6 +8,7 @@ using Core.Utilities.ResultMessage;
 using Core.Utilities.URI;
 using Newtonsoft.Json;
 using NTech.Business.Abstract;
+using NTech.Business.BusinessAspects;
 using NTech.Business.Helpers;
 using NTech.Business.Validators.FluentValidation;
 using NTech.DataAccess.Abstract;
@@ -39,6 +40,8 @@ namespace NTech.Business.Concrete
         {
             return base.UpdateAsync(id, dto);
         }
+
+        [SecuredOperation("User")]
         public async Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route)
         {
             string key = $"product+{paginationFilter.PageNumber}+{paginationFilter.PageSize}";
