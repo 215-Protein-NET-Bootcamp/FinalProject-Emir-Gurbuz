@@ -107,9 +107,8 @@ namespace NTech.Business.Concrete
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-            await _userService.AddAsync(user);
-            //int row = await _unitOfWork.CompleteAsync();
-            return true ?
+            var result = await _userService.AddAsync(user);
+            return result.Success ?
                 new SuccessResult(_languageMessage.RegisterSuccessfull) :
                 new ErrorResult(_languageMessage.RegisterFailure);
         }

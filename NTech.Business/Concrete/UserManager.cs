@@ -25,6 +25,25 @@ namespace NTech.Business.Concrete
         {
             await _userDal.AddAsync(user);
             int row = await _unitOfWork.CompleteAsync();
+            await AddToRoleAsync(user.Id, "User");
+            return row > 0 ?
+                new SuccessResult(_languageMessage.SuccessfullyAdded) :
+                new ErrorResult(_languageMessage.FailedToAdd);
+        }
+
+        public async Task<IResult> AddToRoleAsync(int userId, int roleId)
+        {
+            await _userDal.AddToRoleAsync(userId, roleId);
+            int row = await _unitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult(_languageMessage.SuccessfullyAdded) :
+                new ErrorResult(_languageMessage.FailedToAdd);
+        }
+
+        public async Task<IResult> AddToRoleAsync(int userId, string roleName)
+        {
+            await _userDal.AddToRoleAsync(userId, roleName);
+            int row = await _unitOfWork.CompleteAsync();
             return row > 0 ?
                 new SuccessResult(_languageMessage.SuccessfullyAdded) :
                 new ErrorResult(_languageMessage.FailedToAdd);

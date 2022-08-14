@@ -1,6 +1,7 @@
 ﻿using Core.DataAccess.EntityFramework;
 using Core.Entity.Concrete;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NTech.DataAccess.Abstract;
 
 namespace NTech.DataAccess.Concrete.EntityFramework
@@ -11,6 +12,23 @@ namespace NTech.DataAccess.Concrete.EntityFramework
         public EfUserDal(DbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task<bool> AddToRoleAsync(int userId, int roleId)
+        {
+            EntityEntry entityEntry = await _dbContext.Set<UserRole>().AddAsync(new UserRole { UserId = userId, RoleId = roleId });
+            return entityEntry.State == EntityState.Added;
+        }
+
+        public async Task<bool> AddToRoleAsync(int userId, string roleName)
+        {
+            Role role = await _dbContext.Set<Role>().FirstOrDefaultAsync(x => x.Name.ToLower() == roleName.ToLower());
+            if(role == null)
+            {
+                return false;
+            }
+            EntityEntry entityEntry = await _dbContext.Set<UserRole>().AddAsync(new UserRole { UserId = userId, RoleId = role.Id });
+            return entityEntry.State == EntityState.Added;
         }
 
         public async Task<List<Role>> GetRolesAsync(int userId)

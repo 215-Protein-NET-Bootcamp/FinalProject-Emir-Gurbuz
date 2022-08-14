@@ -11,5 +11,7 @@ namespace NTech.Business.Abstract
         Task<IDataResult<User>> GetByEmailAsync(string email);
         Task<IDataResult<User>> GetByIdAsync(int id);
         Task<List<Role>> GetRolesAsync(int userId);
+        Task<IResult> AddToRoleAsync(int userId, int roleId);
+        Task<IResult> AddToRoleAsync(int userId, string roleName);
     }
 }
