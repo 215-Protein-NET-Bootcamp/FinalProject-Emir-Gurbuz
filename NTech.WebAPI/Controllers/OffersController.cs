@@ -14,14 +14,24 @@ namespace NTech.WebAPI.Controllers
             _offerService = offerService;
         }
 
-        [HttpGet("myoffers")]
-        public async Task<IActionResult> Get()
+        [HttpGet("sentoffers")]
+        public async Task<IActionResult> GetSentOffers()
         {
-            var result = await _offerService.GetMyOffersAsync();
+            var result = await _offerService.GetSentOffers();
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
+
+        [HttpGet("receivedoffers")]
+        public async Task<IActionResult> GetReceivedOffers()
+        {
+            var result = await _offerService.GetReceivedOffers();
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OfferWriteDto offerWriteDto)
         {

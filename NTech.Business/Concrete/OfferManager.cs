@@ -76,11 +76,19 @@ namespace NTech.Business.Concrete
             return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
         }
 
-        public async Task<IDataResult<List<OfferReadDto>>> GetMyOffersAsync()
+        public async Task<IDataResult<List<OfferReadDto>>> GetSentOffers()
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
 
             List<Offer> offers = await _offerDal.GetAll(o => o.UserId == userId).ToListAsync();
+            List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
+
+            return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, _languageMessage.SuccessfullyListed);
+        }
+        public async Task<IDataResult<List<OfferReadDto>>> GetReceivedOffers()
+        {
+            int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
+            List<Offer> offers = await _offerDal.GetAll(o => o.Product.UserId == userId).ToListAsync();
             List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
 
             return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, _languageMessage.SuccessfullyListed);
