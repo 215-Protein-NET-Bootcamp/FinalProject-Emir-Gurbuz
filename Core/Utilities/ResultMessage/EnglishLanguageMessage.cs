@@ -46,5 +46,13 @@
         public string OfferedPriceCannotBeHigherThanProductPrice => "Offered price cannot be higher than product price";
 
         public string OfferIsAlreadyExists => "Offer is already exists";
+
+        public string AcceptOfferSuccess => "Offer is accept successful";
+
+        public string AcceptOfferFailed => "Offer is accept failed";
+
+        public string DenyOfferSuccess => "Offer is denied successful";
+
+        public string DenyOfferFailed => "Offer is denied failed";
     }
 }

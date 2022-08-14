@@ -36,5 +36,11 @@
 
         string OfferedPriceCannotBeHigherThanProductPrice { get; }
         string OfferIsAlreadyExists { get; }
+
+        string AcceptOfferSuccess { get; }
+        string AcceptOfferFailed { get; }
+
+        string DenyOfferSuccess { get; }
+        string DenyOfferFailed { get; }
     }
 }

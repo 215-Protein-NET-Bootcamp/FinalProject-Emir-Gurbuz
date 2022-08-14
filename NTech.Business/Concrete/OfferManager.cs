@@ -26,12 +26,14 @@ namespace NTech.Business.Concrete
         private readonly ILanguageMessage _languageMessage;
         private readonly IOfferDal _offerDal;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUnitOfWork _unitOfWork;
         public OfferManager(IOfferDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IProductService productService, IOfferDal offerDal) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _languageMessage = languageMessage;
             _productService = productService;
             _offerDal = offerDal;
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
+            _unitOfWork = unitOfWork;
         }
 
         [ValidationAspect(typeof(OfferWriteDtoValidator))]
@@ -82,6 +84,32 @@ namespace NTech.Business.Concrete
             List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
 
             return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, _languageMessage.SuccessfullyListed);
+        }
+
+        public async Task<IResult> AcceptOffer(int offerId)
+        {
+            Offer offer = await _offerDal.GetAsync(o => o.Id == offerId);
+            if (offer == null)
+                return new ErrorResult(_languageMessage.NotFound);
+            offer.Status = true;
+            await _offerDal.UpdateAsync(offer);
+            int row = await _unitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult(_languageMessage.AcceptOfferSuccess) :
+                new ErrorResult(_languageMessage.AcceptOfferFailed);
+        }
+
+        public async Task<IResult> DenyOffer(int offerId)
+        {
+            Offer offer = await _offerDal.GetAsync(o => o.Id == offerId);
+            if (offer == null)
+                return new ErrorResult(_languageMessage.NotFound);
+            offer.Status = false;
+            await _offerDal.UpdateAsync(offer);
+            int row = await _unitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult(_languageMessage.DenyOfferSuccess) :
+                new ErrorResult(_languageMessage.DenyOfferFailed);
         }
     }
 }

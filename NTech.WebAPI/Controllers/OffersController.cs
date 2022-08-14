@@ -32,6 +32,23 @@ namespace NTech.WebAPI.Controllers
         {
             return await base.UpdateAsync(id, offerWriteDto);
         }
+        [HttpPut("{id}/accept")]
+        public async Task<IActionResult> Accept([FromRoute] int id)
+        {
+            var result = await _offerService.AcceptOffer(id);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPut("{id}/deny")]
+        public async Task<IActionResult> Deny([FromRoute] int id)
+        {
+            var result = await _offerService.DenyOffer(id);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

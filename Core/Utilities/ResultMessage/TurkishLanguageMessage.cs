@@ -46,5 +46,13 @@
         public string OfferedPriceCannotBeHigherThanProductPrice => "Teklif edilen fiyat ürün fiyatından yüksek olamaz";
 
         public string OfferIsAlreadyExists => "Teklif zaten verilmiş";
+
+        public string AcceptOfferSuccess => "Teklif başarıyla onaylandı";
+
+        public string AcceptOfferFailed => "Teklif onaylanamadı";
+
+        public string DenyOfferSuccess => "Teklif başarıyla reddedildi";
+
+        public string DenyOfferFailed => "Teklif reddedilemedi";
     }
 }
