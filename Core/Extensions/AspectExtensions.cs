@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Castle.DynamicProxy;
+using System.Reflection;
 
 namespace Core.Extensions
 {
@@ -13,6 +14,13 @@ namespace Core.Extensions
                 return true;
             }
             return false;
+        }
+        public static string GenerateMethodKey(this IInvocation invocation)
+        {
+            string methodName = string.Format("{0}.{1}", invocation.Method.ReflectedType.FullName, invocation.Method.Name);
+            var parameters = invocation.Arguments.ToList();
+            string key = $"{methodName}({string.Join(",", parameters.Select(x => x?.ToString() ?? "<Null>"))})";
+            return key;
         }
     }
 }
