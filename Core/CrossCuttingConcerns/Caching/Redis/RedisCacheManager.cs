@@ -13,8 +13,11 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
 
         public void Add(string key, object value, int duration)
         {
-            dynamic dynamicValue = value as dynamic;
-            redisInvoker((x) => x.Add(key, dynamicValue.Result, TimeSpan.FromMinutes(duration)));
+            if (value is Task)
+            {
+                value = (value as dynamic).Result;
+            }
+            redisInvoker((x) => x.Add(key, value, TimeSpan.FromMinutes(duration)));
         }
 
         public object Get(string key)
