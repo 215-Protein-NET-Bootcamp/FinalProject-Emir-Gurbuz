@@ -42,6 +42,12 @@ namespace NTech.Business.Concrete
             var result = BusinessRule.Run(
                 await checkOfferedPriceGreaterThanProductPriceAsync(dto),
                 await checkOfferAsync(dto));
+
+            if (dto.Percent != 0)
+            {
+                dto.OfferedPrice = (decimal)(dto.OfferedPrice * dto.Percent / 100);
+            }
+
             if (result != null)
                 return result;
 
