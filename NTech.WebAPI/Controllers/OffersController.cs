@@ -14,7 +14,7 @@ namespace NTech.WebAPI.Controllers
             _offerService = offerService;
         }
 
-        [HttpGet("sentoffers")]
+        [HttpGet("sent")]
         public async Task<IActionResult> GetSentOffers()
         {
             var result = await _offerService.GetSentOffers();
@@ -23,7 +23,7 @@ namespace NTech.WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("receivedoffers")]
+        [HttpGet("received")]
         public async Task<IActionResult> GetReceivedOffers()
         {
             var result = await _offerService.GetReceivedOffers();

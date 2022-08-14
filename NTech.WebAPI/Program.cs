@@ -86,9 +86,6 @@ builder.Services.AddDependencyResolvers(
     new CoreModule(),
     new BackgroundServiceModule());
 #endregion
-#region Hangfire
-builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFireSqlServer")));
-#endregion
 
 #region Background Services
 builder.Services.AddHostedService<EmailSendWorker>();
@@ -109,8 +106,9 @@ app.UseExceptionMiddleware();
 #endregion
 
 #region Hangfire
-app.UseHangfireDashboard();
-app.UseHangfireServer();
+//builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFireSqlServer")));
+//app.UseHangfireDashboard();
+//app.UseHangfireServer();
 #endregion
 
 app.UseStaticFiles();
