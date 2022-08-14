@@ -33,6 +33,8 @@ namespace NTech.Business.Helpers
 
             CreateMap<EmailQueue, EmailQueueWriteDto>().ReverseMap();
             CreateMap<EmailQueue, EmailQueueReadDto>().ReverseMap();
+
+            CreateMap<User, UserReadDto>().ReverseMap();
         }
     }
 }

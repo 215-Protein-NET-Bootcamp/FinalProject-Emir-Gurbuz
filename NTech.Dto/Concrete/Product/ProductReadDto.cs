@@ -12,6 +12,7 @@ namespace NTech.Dto.Concrete
         public BrandReadDto Brand { get; set; }
         public UsingStatusReadDto UsingStatus { get; set; }
         public ImageReadDto Image { get; set; }
+        public UserReadDto User { get; set; }
         public decimal Price { get; set; }
         public bool isOfferable { get; set; }
         public bool IsSold { get; set; }
