@@ -11,7 +11,7 @@ using System.Text;
 
 namespace NTech.WebAPI.Worker.EmailSend
 {
-    public class EmailSendWorker : BackgroundService
+    public class SendEmailWorker : BackgroundService
     {
         private readonly IConfiguration _configuration;
         private readonly MessageBrokerOptions _brokerOptions;
@@ -19,7 +19,7 @@ namespace NTech.WebAPI.Worker.EmailSend
         private readonly IEmailSender _mailService;
         private readonly IMessageBrokerHelper _brokerHelper;
         private readonly IEmailQueueService _emailQueueService;
-        public EmailSendWorker(IConfiguration configuration, IMessageConsumer messageConsumer, IEmailSender mailSender, IMessageBrokerHelper brokerHelper)
+        public SendEmailWorker(IConfiguration configuration, IMessageConsumer messageConsumer, IEmailSender mailSender, IMessageBrokerHelper brokerHelper)
         {
             _configuration = configuration;
             _brokerOptions = _configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOptions>();

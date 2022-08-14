@@ -88,7 +88,8 @@ builder.Services.AddDependencyResolvers(
 #endregion
 
 #region Background Services
-builder.Services.AddHostedService<EmailSendWorker>();
+builder.Services.AddHostedService<SendEmailWorker>();
+builder.Services.AddHostedService<ConsumerEmailWorker>();
 #endregion
 var app = builder.Build();
 
