@@ -44,5 +44,7 @@
         public string FailedResetPassword => "Reset password failed";
 
         public string OfferedPriceCannotBeHigherThanProductPrice => "Offered price cannot be higher than product price";
+
+        public string OfferIsAlreadyExists => "Offer is already exists";
     }
 }

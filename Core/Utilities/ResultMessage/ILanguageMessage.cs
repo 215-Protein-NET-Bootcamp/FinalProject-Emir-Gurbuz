@@ -35,5 +35,6 @@
         string FailedResetPassword { get; }
 
         string OfferedPriceCannotBeHigherThanProductPrice { get; }
+        string OfferIsAlreadyExists { get; }
     }
 }
