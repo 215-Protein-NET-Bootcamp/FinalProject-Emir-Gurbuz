@@ -4,6 +4,9 @@ namespace NTech.Dto.Concrete.EmailQueue
 {
     public class EmailQueueWriteDto : IWriteDto
     {
-        string Data { get; set; }
+        public string Email { get; set; }
+        public string Body { get; set; }
+        public string Subject { get; set; }
+        public byte TryCount { get; set; }
     }
 }

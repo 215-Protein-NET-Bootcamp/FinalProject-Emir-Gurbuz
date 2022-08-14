@@ -1,7 +1,5 @@
 ﻿using Core.Entity;
 using Core.Entity.Concrete;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NTech.Core.Extensions;
 using NTech.Entity.Concrete;
@@ -28,6 +26,8 @@ namespace NTech.DataAccess.Contexts
         public DbSet<Color> Colors { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<UsingStatus> UsingStatuses { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<EmailQueue> EmailQueues { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
