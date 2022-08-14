@@ -41,7 +41,8 @@ namespace NTech.Business.Concrete
         {
             var result = BusinessRule.Run(
                 await checkOfferedPriceGreaterThanProductPriceAsync(dto),
-                await checkOfferAsync(dto));
+                await checkOfferAsync(dto),
+                await checkProductIsSold(dto));
 
             if (dto.Percent != 0)
             {
@@ -53,7 +54,6 @@ namespace NTech.Business.Concrete
 
             return await base.AddAsync(dto);
         }
-
 
         [ValidationAspect(typeof(OfferWriteDtoValidator))]
         public override async Task<IResult> UpdateAsync(int id, OfferWriteDto dto)
@@ -80,6 +80,13 @@ namespace NTech.Business.Concrete
             if (offer == null)
                 return new SuccessResult();
             return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
+        }
+        private async Task<IResult> checkProductIsSold(OfferWriteDto dto)
+        {
+            ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
+            if (product.IsSold)
+                return new ErrorResult(_languageMessage.ProductHasBeenSold);
+            return new SuccessResult();
         }
 
         public async Task<IDataResult<List<OfferReadDto>>> GetSentOffers()
