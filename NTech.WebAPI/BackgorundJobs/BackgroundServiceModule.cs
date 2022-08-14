@@ -1,6 +1,12 @@
 ﻿using Core.Utilities.IoC;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
+using NTech.Business.Abstract;
+using NTech.Business.Concrete;
+using NTech.DataAccess.Abstract;
+using NTech.DataAccess.Concrete.EntityFramework;
+using NTech.DataAccess.UnitOfWork.Abstract;
+using NTech.DataAccess.UnitOfWork.Concrete;
 
 namespace NTech.WebAPI.BackgorundJobs
 {
@@ -11,6 +17,10 @@ namespace NTech.WebAPI.BackgorundJobs
             services.AddSingleton<IMessageConsumer, MqConsumerHelper>();
             services.AddSingleton<IMessageBrokerHelper, MqQueueHelper>();
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
+
+            services.AddScoped<IEmailQueueService, EmailQueueManager>();
+            services.AddScoped<IEmailQueueDal, EfEmailQueueDal>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

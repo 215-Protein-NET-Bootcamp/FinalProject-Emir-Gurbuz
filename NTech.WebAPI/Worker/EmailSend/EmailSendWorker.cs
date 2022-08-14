@@ -3,6 +3,7 @@ using Core.Utilities.IoC;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Newtonsoft.Json;
+using NTech.Business.Abstract;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Diagnostics;
@@ -17,6 +18,7 @@ namespace NTech.WebAPI.Worker.EmailSend
         private readonly IMessageConsumer _messageConsumer;
         private readonly IEmailSender _mailService;
         private readonly IMessageBrokerHelper _brokerHelper;
+        private readonly IEmailQueueService _emailQueueService;
         public EmailSendWorker(IConfiguration configuration, IMessageConsumer messageConsumer, IEmailSender mailSender, IMessageBrokerHelper brokerHelper)
         {
             _configuration = configuration;
@@ -24,6 +26,7 @@ namespace NTech.WebAPI.Worker.EmailSend
             _messageConsumer = messageConsumer;
             _mailService = mailSender;
             _brokerHelper = brokerHelper;
+            _emailQueueService = ServiceTool.ServiceProvider.GetService<IEmailQueueService>();
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -44,7 +47,7 @@ namespace NTech.WebAPI.Worker.EmailSend
                     arguments: null);
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(1200);
                     var consumer = new EventingBasicConsumer(channel);
 
                     consumer.Received += async (model, mq) =>
@@ -57,6 +60,8 @@ namespace NTech.WebAPI.Worker.EmailSend
                             Debug.WriteLine(emailQueue.TryCount);
                             if (emailQueue.TryCount >= 5)
                             {
+                                emailQueue.TryCount = 0;
+                                await _emailQueueService.AddAsync(emailQueue);
                                 return;
                             }
                             await _mailService.SendEmailAsync(new EmailMessage
