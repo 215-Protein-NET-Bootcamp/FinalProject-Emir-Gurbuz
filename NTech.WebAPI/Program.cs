@@ -95,6 +95,7 @@ builder.Services.AddHostedService<EmailSendWorker>();
 #endregion
 var app = builder.Build();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
