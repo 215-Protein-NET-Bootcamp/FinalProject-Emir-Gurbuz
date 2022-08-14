@@ -37,8 +37,8 @@ namespace Core.Aspect.Autofac.Logging
                 Type = a.GetType().ToString()
             }).ToList();
 
-            string email = _httpContextAccessor.HttpContext.User.ClaimEmail();
-            List<string> roles = _httpContextAccessor.HttpContext.User.ClaimRoles();
+            string email = _httpContextAccessor.HttpContext?.User?.ClaimEmail();
+            List<string> roles = _httpContextAccessor.HttpContext?.User?.ClaimRoles();
             LogDetail logDetail = new()
             {
                 MethodName = invocation.Method.Name,

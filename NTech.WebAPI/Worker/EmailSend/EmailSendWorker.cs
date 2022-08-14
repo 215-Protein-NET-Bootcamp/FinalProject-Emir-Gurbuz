@@ -62,6 +62,7 @@ namespace NTech.WebAPI.Worker.EmailSend
                             {
                                 emailQueue.TryCount = 0;
                                 await _emailQueueService.AddAsync(emailQueue);
+                                Debug.WriteLine($"Add database failed email:{emailQueue.Email}");
                                 return;
                             }
                             await _mailService.SendEmailAsync(new EmailMessage
@@ -70,6 +71,7 @@ namespace NTech.WebAPI.Worker.EmailSend
                                 Email = emailQueue.Email,
                                 Subject = emailQueue.Subject
                             });
+                            Debug.WriteLine($"Successful send email:{emailQueue.Email}");
                         }
                         catch (Exception e)
                         {

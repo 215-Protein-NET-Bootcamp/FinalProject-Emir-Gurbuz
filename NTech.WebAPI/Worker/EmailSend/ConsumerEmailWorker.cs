@@ -3,6 +3,7 @@ using Core.Entity.Concrete;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using NTech.Business.Abstract;
 using NTech.Dto.Concrete.EmailQueue;
+using System.Diagnostics;
 
 namespace NTech.WebAPI.Worker.EmailSend
 {
@@ -28,7 +29,10 @@ namespace NTech.WebAPI.Worker.EmailSend
                 foreach (EmailQueueReadDto emailQueueReadDto in emailQueueReadDtos)
                 {
                     await Task.Delay(1000);
+
                     _brokerHelper.QueueMessage(_mapper.Map<EmailQueue>(emailQueueReadDto));
+                    Debug.WriteLine($"Add queue email:{emailQueueReadDto.Email}");
+                    await _emailQueueService.HardDeleteAsync(emailQueueReadDto.Id);
                 }
             }
         }
