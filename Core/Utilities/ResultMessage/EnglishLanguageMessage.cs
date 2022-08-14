@@ -42,5 +42,7 @@
 
         public string SuccessResetPassword => "Reset password successful";
         public string FailedResetPassword => "Reset password failed";
+
+        public string OfferedPriceCannotBeHigherThanProductPrice => "Offered price cannot be higher than product price";
     }
 }

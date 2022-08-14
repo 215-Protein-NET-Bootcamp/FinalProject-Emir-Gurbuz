@@ -33,5 +33,7 @@
 
         string SuccessResetPassword { get; }
         string FailedResetPassword { get; }
+
+        string OfferedPriceCannotBeHigherThanProductPrice { get; }
     }
 }

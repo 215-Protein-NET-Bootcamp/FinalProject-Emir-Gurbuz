@@ -42,5 +42,7 @@
 
         public string SuccessResetPassword => "Şifre sıfırlama başarılı";
         public string FailedResetPassword => "Şifre sıfırlama başarısız";
+
+        public string OfferedPriceCannotBeHigherThanProductPrice => "Teklif edilen fiyat ürün fiyatından yüksek olamaz";
     }
 }
