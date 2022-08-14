@@ -8,14 +8,19 @@ namespace NTech.WebAPI.Controllers
     [Route("api/[controller]")]
     public class OffersController : BaseController<Offer, OfferWriteDto, OfferReadDto>
     {
-        public OffersController(IAsyncBaseService<Offer, OfferWriteDto, OfferReadDto> baseService) : base(baseService)
+        private readonly IOfferService _offerService;
+        public OffersController(IOfferService baseService, IOfferService offerService) : base(baseService)
         {
+            _offerService = offerService;
         }
 
-        [HttpGet]
+        [HttpGet("myoffers")]
         public async Task<IActionResult> Get()
         {
-            return await base.GetListAsync();
+            var result = await _offerService.GetMyOffersAsync();
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OfferWriteDto offerWriteDto)

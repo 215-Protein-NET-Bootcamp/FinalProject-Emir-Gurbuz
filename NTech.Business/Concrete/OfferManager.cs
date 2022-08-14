@@ -15,6 +15,7 @@ using NTech.Dto.Concrete;
 using NTech.Entity.Concrete;
 using Microsoft.Extensions.DependencyInjection;
 using Core.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace NTech.Business.Concrete
 {
@@ -71,6 +72,16 @@ namespace NTech.Business.Concrete
             if (offer == null)
                 return new SuccessResult();
             return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
+        }
+
+        public async Task<IDataResult<List<OfferReadDto>>> GetMyOffersAsync()
+        {
+            int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
+
+            List<Offer> offers = await _offerDal.GetAll(o => o.UserId == userId).ToListAsync();
+            List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
+
+            return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, _languageMessage.SuccessfullyListed);
         }
     }
 }
