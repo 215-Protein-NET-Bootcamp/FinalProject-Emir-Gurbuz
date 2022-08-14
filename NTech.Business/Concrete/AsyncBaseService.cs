@@ -67,7 +67,7 @@ namespace NTech.Business.Concrete
             return new SuccessDataResult<List<TReadDto>>(returnEntities, LanguageMessage.SuccessfullyListed);
         }
 
-        public async Task<IResult> HardDeleteAsync(int id)
+        public virtual async Task<IResult> HardDeleteAsync(int id)
         {
             TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
             if (deletedEntity == null)
@@ -81,7 +81,7 @@ namespace NTech.Business.Concrete
                 new ErrorResult(LanguageMessage.FailedToDelete);
         }
 
-        public async Task<IResult> SoftDeleteAsync(int id)
+        public virtual async Task<IResult> SoftDeleteAsync(int id)
         {
             TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
             if (deletedEntity == null)

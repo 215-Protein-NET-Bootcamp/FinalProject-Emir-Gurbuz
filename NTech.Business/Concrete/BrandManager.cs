@@ -30,11 +30,20 @@ namespace NTech.Business.Concrete
         {
             return base.UpdateAsync(id, dto);
         }
-        [CacheAspect<DataResult<List<BrandReadDto>>>]
-        public override async Task<DataResult<List<BrandReadDto>>> GetListAsync()
+        [CacheAspect<DataResult<List<BrandReadDto>>>()]
+        public override Task<DataResult<List<BrandReadDto>>> GetListAsync()
         {
-            var result = await base.GetListAsync();
-            return result;
+            return base.GetListAsync();
+        }
+        [CacheRemoveAspect("BrandReadDto")]
+        public override Task<IResult> SoftDeleteAsync(int id)
+        {
+            return base.SoftDeleteAsync(id);
+        }
+        [CacheRemoveAspect("BrandReadDto")]
+        public override Task<IResult> HardDeleteAsync(int id)
+        {
+            return base.HardDeleteAsync(id);
         }
     }
 }

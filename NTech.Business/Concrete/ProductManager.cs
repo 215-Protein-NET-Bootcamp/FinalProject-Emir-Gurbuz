@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entity.Concrete;
@@ -26,11 +27,18 @@ namespace NTech.Business.Concrete
             _cacheManager = cacheManager;
         }
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
+        [CacheRemoveAspect("ProductReadDto")]
         public override Task<IResult> AddAsync(ProductWriteDto dto)
         {
             return base.AddAsync(dto);
         }
 
+        [ValidationAspect(typeof(ProductWriteDtoValidator))]
+        [CacheRemoveAspect("ProductReadDto")]
+        public override Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
+        {
+            return base.UpdateAsync(id, dto);
+        }
         public async Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route)
         {
             string key = $"product+{paginationFilter.PageNumber}+{paginationFilter.PageSize}";
@@ -44,10 +52,15 @@ namespace NTech.Business.Concrete
             return result;
         }
 
-        [ValidationAspect(typeof(ProductWriteDtoValidator))]
-        public override Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
+        [CacheRemoveAspect("ProductReadDto")]
+        public override Task<IResult> SoftDeleteAsync(int id)
         {
-            return base.UpdateAsync(id, dto);
+            return base.SoftDeleteAsync(id);
+        }
+        [CacheRemoveAspect("ProductReadDto")]
+        public override Task<IResult> HardDeleteAsync(int id)
+        {
+            return base.HardDeleteAsync(id);
         }
     }
 }
