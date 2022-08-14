@@ -25,34 +25,6 @@ namespace NTech.WebAPI.Worker.EmailSend
             _mailService = mailSender;
             _brokerHelper = brokerHelper;
         }
-        private async Task SendEmailAsync(CancellationToken stoppingToken)
-        {
-            _messageConsumer.GetQueue((message) =>
-            {
-                EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
-                try
-                {
-                    if (emailQueue.TryCount >= 5)
-                    {
-                        //TODO: change status
-                        return;
-                    }
-                    Debug.WriteLine("gönderildi");
-                    var task = _mailService.SendEmailAsync(new EmailMessage
-                    {
-                        Body = emailQueue.Body,
-                        Email = emailQueue.Email,
-                        Subject = emailQueue.Subject
-                    });
-                    task.Wait();
-                }
-                catch (Exception)
-                {
-                    emailQueue.TryCount++;
-                    _brokerHelper.QueueMessage(emailQueue);
-                }
-            });
-        }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new ConnectionFactory()
@@ -83,7 +55,7 @@ namespace NTech.WebAPI.Worker.EmailSend
                         try
                         {
                             Debug.WriteLine(emailQueue.TryCount);
-                            if(emailQueue.TryCount >= 5)
+                            if (emailQueue.TryCount >= 5)
                             {
                                 return;
                             }

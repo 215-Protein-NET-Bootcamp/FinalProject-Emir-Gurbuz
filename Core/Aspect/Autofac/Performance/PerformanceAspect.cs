@@ -20,6 +20,7 @@ namespace Core.Aspect.Autofac.Performance
             _stopwatch = ServiceTool.ServiceProvider.GetService<Stopwatch>();
             _messageBrokerHelper = ServiceTool.ServiceProvider.GetService<IMessageBrokerHelper>();
             _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+            _interval = interval;
         }
 
         protected override void OnBefore(IInvocation invocation)
