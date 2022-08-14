@@ -34,40 +34,40 @@ namespace NTech.Business.Concrete
         }
 
         [ValidationAspect(typeof(OfferWriteDtoValidator))]
-        public override Task<IResult> AddAsync(OfferWriteDto dto)
+        public async override Task<IResult> AddAsync(OfferWriteDto dto)
         {
             var result = BusinessRule.Run(
-                checkOfferedPriceGreaterThanProductPrice(dto),
-                checkOffer(dto));
+                await checkOfferedPriceGreaterThanProductPriceAsync(dto),
+                await checkOfferAsync(dto));
             if (result != null)
-                return Task.Run(() => result);
+                return result;
 
-            return base.AddAsync(dto);
+            return await base.AddAsync(dto);
         }
 
 
         [ValidationAspect(typeof(OfferWriteDtoValidator))]
-        public override Task<IResult> UpdateAsync(int id, OfferWriteDto dto)
+        public override async Task<IResult> UpdateAsync(int id, OfferWriteDto dto)
         {
             var result = BusinessRule.Run(
-                checkOfferedPriceGreaterThanProductPrice(dto));
+                await checkOfferedPriceGreaterThanProductPriceAsync(dto));
             if (result != null)
-                return Task.Run(() => result);
+                return result;
 
-            return base.UpdateAsync(id, dto);
+            return await base.UpdateAsync(id, dto);
         }
 
-        private IResult checkOfferedPriceGreaterThanProductPrice(OfferWriteDto dto)
+        private async Task<IResult> checkOfferedPriceGreaterThanProductPriceAsync(OfferWriteDto dto)
         {
-            ProductReadDto product = _productService.GetByIdAsync(dto.ProductId).Result.Data;
+            ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (dto.OfferedPrice > product.Price)
                 return new ErrorResult(_languageMessage.OfferedPriceCannotBeHigherThanProductPrice);
             return new SuccessResult();
         }
-        private IResult checkOffer(OfferWriteDto dto)
+        private async Task<IResult> checkOfferAsync(OfferWriteDto dto)
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
-            Offer offer = _offerDal.GetAsync(x => x.ProductId == dto.ProductId && x.UserId == userId).Result;
+            var offer = await _offerDal.GetAsync(x => x.ProductId == dto.ProductId && x.UserId == userId);
             if (offer == null)
                 return new SuccessResult();
             return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
