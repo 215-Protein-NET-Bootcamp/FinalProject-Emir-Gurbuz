@@ -18,6 +18,7 @@ using NTech.Entity.Concrete;
 
 namespace NTech.Business.Concrete
 {
+    [SecuredOperation("User")]
     public class ProductManager : AsyncBaseService<Product, ProductWriteDto, ProductReadDto>, IProductService
     {
         private readonly IUriService _uriService;
@@ -41,7 +42,6 @@ namespace NTech.Business.Concrete
             return base.UpdateAsync(id, dto);
         }
 
-        [SecuredOperation("User")]
         public async Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route)
         {
             string key = $"product+{paginationFilter.PageNumber}+{paginationFilter.PageSize}";
