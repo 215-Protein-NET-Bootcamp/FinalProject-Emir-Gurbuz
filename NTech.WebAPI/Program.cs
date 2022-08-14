@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Core.DependencyResolvers;
 using Core.Entity.Concrete;
 using Core.Extensions;
+using Core.Extensions.Middleware;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
@@ -101,6 +102,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+#region ExceptionMiddleware
+app.UseExceptionMiddleware();
+#endregion
+
 #region Hangfire
 app.UseHangfireDashboard();
 app.UseHangfireServer();
