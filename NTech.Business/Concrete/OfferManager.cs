@@ -67,8 +67,8 @@ namespace NTech.Business.Concrete
         private IResult checkOffer(OfferWriteDto dto)
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
-            Offer offerReadDto = _offerDal.GetAsync(x => x.ProductId == dto.ProductId && x.UserId == userId).Result;
-            if (offerReadDto == null)
+            Offer offer = _offerDal.GetAsync(x => x.ProductId == dto.ProductId && x.UserId == userId).Result;
+            if (offer == null)
                 return new SuccessResult();
             return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
         }

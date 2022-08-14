@@ -7,7 +7,7 @@ namespace NTech.Dto.Concrete
         public int ProductId { get; set; }
         public int? UserId { get; set; }
         public decimal OfferedPrice { get; set; }
-        public byte? Percent { get; set; }
+        public int? Percent { get; set; }
         public bool? Status { get; set; }
     }
 }
