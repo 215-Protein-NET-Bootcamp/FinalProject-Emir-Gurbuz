@@ -12,7 +12,7 @@ namespace NTech.Dto.Concrete
         public int UsingStatusId { get; set; }
         public int? ImageId { get; set; }
         public decimal Price { get; set; }
-        public bool isOfferable { get; set; }
+        public bool? isOfferable { get; set; }
         public byte Rating { get; set; }
     }
 }

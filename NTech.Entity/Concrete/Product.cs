@@ -6,6 +6,11 @@ namespace NTech.Entity.Concrete
 {
     public class Product : IEntity
     {
+        public Product()
+        {
+            IsOfferable = false;
+        }
+
         public int Id { get; set; }
 
         public int? CategoryId { get; set; }
@@ -17,11 +22,11 @@ namespace NTech.Entity.Concrete
 
         public int? ColorId { get; set; }
         [ForeignKey("ColorId")]
-        public Color Color { get; set; }
+        public Color? Color { get; set; }
 
         public int? BrandId { get; set; }
         [ForeignKey("BrandId")]
-        public Brand Brand { get; set; }
+        public Brand? Brand { get; set; }
 
         public int? UsingStatusId { get; set; }
         [ForeignKey("UsingStatusId")]
@@ -36,7 +41,7 @@ namespace NTech.Entity.Concrete
         public User User { get; set; }
 
         public decimal Price { get; set; }
-        public bool isOfferable { get; set; }
+        public bool IsOfferable { get; set; }
         public bool IsSold { get; set; }
         public byte Rating { get; set; }
 
