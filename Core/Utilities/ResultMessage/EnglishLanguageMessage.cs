@@ -56,5 +56,7 @@
         public string DenyOfferFailed => "Offer is denied failed";
 
         public string ProductHasBeenSold => "Product has been sold";
+
+        public string CannotBeOffer => "You cannot be offer this product";
     }
 }

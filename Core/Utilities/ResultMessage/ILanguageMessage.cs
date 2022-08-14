@@ -44,5 +44,6 @@
         string DenyOfferFailed { get; }
 
         string ProductHasBeenSold { get; }
+        string CannotBeOffer { get; }
     }
 }

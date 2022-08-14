@@ -56,5 +56,7 @@
         public string DenyOfferFailed => "Teklif reddedilemedi";
 
         public string ProductHasBeenSold => "Satılmış ürüne teklif veremessin";
+
+        public string CannotBeOffer => "Bu ürüne teklif veremessin";
     }
 }

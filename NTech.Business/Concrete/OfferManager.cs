@@ -42,7 +42,8 @@ namespace NTech.Business.Concrete
             var result = BusinessRule.Run(
                 await checkOfferedPriceGreaterThanProductPriceAsync(dto),
                 await checkOfferAsync(dto),
-                await checkProductIsSold(dto));
+                await checkProductIsSold(dto),
+                await checkProductIsOfferable(dto));
 
             if (dto.Percent != 0)
             {
@@ -86,6 +87,13 @@ namespace NTech.Business.Concrete
             ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (product.IsSold)
                 return new ErrorResult(_languageMessage.ProductHasBeenSold);
+            return new SuccessResult();
+        }
+        private async Task<IResult> checkProductIsOfferable(OfferWriteDto dto)
+        {
+            ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
+            if (product.isOfferable)
+                return new ErrorResult(_languageMessage.CannotBeOffer);
             return new SuccessResult();
         }
 
