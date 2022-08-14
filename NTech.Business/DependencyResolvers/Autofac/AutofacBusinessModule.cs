@@ -19,24 +19,24 @@ namespace NTech.Business.DependencyResolvers.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             #region DataAccess
-            builder.RegisterType<EfBrandDal>().As<IBrandDal>().SingleInstance();
-            builder.RegisterType<EfCategoryDal>().As<ICategoryDal>().SingleInstance();
-            builder.RegisterType<EfColorDal>().As<IColorDal>().SingleInstance();
-            builder.RegisterType<EfImageDal>().As<IImageDal>().SingleInstance();
-            builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
-            builder.RegisterType<EfUsingStatusDal>().As<IUsingStatusDal>().SingleInstance();
-            builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
+            builder.RegisterType<EfBrandDal>().As<IBrandDal>();
+            builder.RegisterType<EfCategoryDal>().As<ICategoryDal>();
+            builder.RegisterType<EfColorDal>().As<IColorDal>();
+            builder.RegisterType<EfImageDal>().As<IImageDal>();
+            builder.RegisterType<EfProductDal>().As<IProductDal>();
+            builder.RegisterType<EfUsingStatusDal>().As<IUsingStatusDal>();
+            builder.RegisterType<EfUserDal>().As<IUserDal>();
             #endregion
 
             #region Business
-            builder.RegisterType<ProductManager>().As<IProductService>().SingleInstance();
-            builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
-            builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
-            builder.RegisterType<ColorManager>().As<IColorService>().SingleInstance();
-            builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
-            builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>().SingleInstance();
-            builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
-            builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
+            builder.RegisterType<ProductManager>().As<IProductService>();
+            builder.RegisterType<CategoryManager>().As<ICategoryService>();
+            builder.RegisterType<BrandManager>().As<IBrandService>();
+            builder.RegisterType<ColorManager>().As<IColorService>();
+            builder.RegisterType<BrandManager>().As<IBrandService>();
+            builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>();
+            builder.RegisterType<AuthManager>().As<IAuthService>();
+            builder.RegisterType<UserManager>().As<IUserService>();
             #endregion
 
             #region UnitOfWork
