@@ -1,6 +1,4 @@
 ﻿using Core.Dto;
-using Core.Entity.Concrete;
-using NTech.Entity.Concrete;
 
 namespace NTech.Dto.Concrete
 {
@@ -8,7 +6,7 @@ namespace NTech.Dto.Concrete
     {
         public int Id { get; set; }
         public int? ProductId { get; set; }
-        public Product Product { get; set; }
+        public ProductReadDto Product { get; set; }
         public UserReadDto User { get; set; }
         public decimal OfferedPrice { get; set; }
         public byte? Percent { get; set; }
