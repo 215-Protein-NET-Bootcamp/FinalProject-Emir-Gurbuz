@@ -7,5 +7,6 @@
         public static readonly string WrongValidationType = "Wrong validation type";
         public static readonly string WrongLoggingType = "Wrong logging type";
         public static readonly string SerilogNotFoundFolderPath = "Serilog not found folder path";
+        public static readonly string Unauthorized = "Unauthorized";
     }
 }
