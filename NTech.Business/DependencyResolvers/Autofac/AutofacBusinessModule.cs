@@ -26,6 +26,8 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<EfProductDal>().As<IProductDal>();
             builder.RegisterType<EfUsingStatusDal>().As<IUsingStatusDal>();
             builder.RegisterType<EfUserDal>().As<IUserDal>();
+            builder.RegisterType<EfOfferDal>().As<IOfferDal>();
+            builder.RegisterType<EfEmailQueueDal>().As<IEmailQueueDal>();
             #endregion
 
             #region Business
@@ -37,6 +39,8 @@ namespace NTech.Business.DependencyResolvers.Autofac
             builder.RegisterType<UsingStatusManager>().As<IUsingStatusService>();
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<UserManager>().As<IUserService>();
+            builder.RegisterType<OfferManager>().As<IOfferService>();
+            builder.RegisterType<EmailQueueManager>().As<IEmailQueueService>();
             #endregion
 
             #region UnitOfWork
