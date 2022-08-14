@@ -101,10 +101,19 @@ namespace NTech.Business.Concrete
                 return new ErrorResult(_languageMessage.NotFound);
             offer.Status = true;
             await _offerDal.UpdateAsync(offer);
+            await deleteOtherOffers(offer);
             int row = await _unitOfWork.CompleteAsync();
             return row > 0 ?
                 new SuccessResult(_languageMessage.AcceptOfferSuccess) :
                 new ErrorResult(_languageMessage.AcceptOfferFailed);
+        }
+
+        private async Task deleteOtherOffers(Offer offer)
+        {
+            //get denied or waited offers
+            var offers = await _offerDal.GetAll(o => o.ProductId == offer.ProductId && o.Id != offer.Id).ToListAsync();
+            foreach (Offer o in offers)
+                await _offerDal.DeleteAsync(o);
         }
 
         public async Task<IResult> DenyOffer(int offerId)

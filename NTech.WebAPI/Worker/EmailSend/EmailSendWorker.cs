@@ -57,7 +57,6 @@ namespace NTech.WebAPI.Worker.EmailSend
                         EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
                         try
                         {
-                            Debug.WriteLine(emailQueue.TryCount);
                             if (emailQueue.TryCount >= 5)
                             {
                                 emailQueue.TryCount = 0;
@@ -76,6 +75,7 @@ namespace NTech.WebAPI.Worker.EmailSend
                         catch (Exception e)
                         {
                             emailQueue.TryCount++;
+                            Debug.WriteLine($"{emailQueue.TryCount} failed send email:{emailQueue.Email}");
                             _brokerHelper.QueueMessage(emailQueue);
                         }
                     };
