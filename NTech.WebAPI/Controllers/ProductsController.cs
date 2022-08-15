@@ -10,9 +10,11 @@ namespace NTech.WebAPI.Controllers
     public class ProductsController : BaseController<Product, ProductWriteDto, ProductReadDto>
     {
         private readonly IProductService _productService;
-        public ProductsController(IProductService baseService) : base(baseService)
+        private readonly IImageService _imageService;
+        public ProductsController(IProductService baseService, IImageService imageService) : base(baseService)
         {
             _productService = baseService;
+            _imageService = imageService;
         }
 
         //[HttpGet]
@@ -38,6 +40,9 @@ namespace NTech.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductWriteDto productWriteDto)
         {
+            var image = await _imageService.UploadAsync(Request.Form.Files[0]);
+            productWriteDto.ImageId = image.Data.Id;
+
             return await base.AddAsync(productWriteDto);
         }
 
