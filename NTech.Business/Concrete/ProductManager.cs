@@ -5,9 +5,11 @@ using Core.CrossCuttingConcerns.Caching;
 using Core.Entity.Concrete;
 using Core.Extensions;
 using Core.Utilities.Business;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.URI;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NTech.Business.Abstract;
 using NTech.Business.BusinessAspects;
@@ -28,13 +30,15 @@ namespace NTech.Business.Concrete
         private readonly IImageService _imageService;
         private readonly ILanguageMessage _languageMessage;
         private readonly IOfferDal _offerDal;
-        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService, IOfferDal offerDal) : base(repository, mapper, unitOfWork, languageMessage)
+        private readonly IMessageBrokerHelper _messageBrokerHelper;
+        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService, IOfferDal offerDal, IMessageBrokerHelper messageBrokerHelper) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _uriService = uriService;
             _cacheManager = cacheManager;
             _imageService = imageService;
             _languageMessage = languageMessage;
             _offerDal = offerDal;
+            _messageBrokerHelper = messageBrokerHelper;
         }
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         [CacheRemoveAspect("ProductReadDto")]
@@ -101,10 +105,32 @@ namespace NTech.Business.Concrete
             {
                 offer.Status = true;
             }
+            deleteOtherOffers(offer);
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
                 new SuccessResult(_languageMessage.ProductBuyIsSuccessfully) :
                 new ErrorResult(_languageMessage.ProductBuyIsFailed);
+        }
+        private async Task deleteOtherOffers(Offer offer)
+        {
+            //get denied or waited offers
+            var offers = await _offerDal.GetAll(o => o.ProductId == offer.ProductId && o.Id != offer.Id).ToListAsync();
+
+            foreach (Offer o in offers)
+            {
+                sendEmail(o);
+                await _offerDal.DeleteAsync(o);
+            }
+        }
+        private void sendEmail(Offer offer)
+        {
+            _messageBrokerHelper.QueueMessage(
+                new EmailQueue
+                {
+                    Subject = "Teklif verdiğiniz ürün satıldı",
+                    Body = $"Merhaba {offer.User.FirstName} {offer.User.LastName}, teklif verdiğiniz ürün satıldı :(",
+                    Email = offer.User.Email
+                });
         }
     }
 }

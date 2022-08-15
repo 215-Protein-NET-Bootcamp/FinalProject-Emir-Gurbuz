@@ -9,6 +9,7 @@ namespace NTech.WebAPI.Controllers
     public class OffersController : BaseController<Offer, OfferWriteDto, OfferReadDto>
     {
         private readonly IOfferService _offerService;
+
         public OffersController(IOfferService baseService, IOfferService offerService) : base(baseService)
         {
             _offerService = offerService;
@@ -64,5 +65,7 @@ namespace NTech.WebAPI.Controllers
         {
             return await base.SoftDeleteAsync(id);
         }
+
+
     }
 }

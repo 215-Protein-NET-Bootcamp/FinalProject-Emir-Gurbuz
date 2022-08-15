@@ -16,6 +16,8 @@ using NTech.Entity.Concrete;
 using Microsoft.Extensions.DependencyInjection;
 using Core.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Core.Utilities.MessageBrokers.RabbitMq;
+using Core.Entity.Concrete;
 
 namespace NTech.Business.Concrete
 {
@@ -27,13 +29,15 @@ namespace NTech.Business.Concrete
         private readonly IOfferDal _offerDal;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
-        public OfferManager(IOfferDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IProductService productService, IOfferDal offerDal) : base(repository, mapper, unitOfWork, languageMessage)
+        private readonly IMessageBrokerHelper _messageBrokerHelper;
+        public OfferManager(IOfferDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IProductService productService, IOfferDal offerDal, IMessageBrokerHelper messageBrokerHelper) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _languageMessage = languageMessage;
             _productService = productService;
             _offerDal = offerDal;
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
             _unitOfWork = unitOfWork;
+            _messageBrokerHelper = messageBrokerHelper;
         }
 
         [ValidationAspect(typeof(OfferWriteDtoValidator))]
@@ -124,9 +128,12 @@ namespace NTech.Business.Concrete
             await _offerDal.UpdateAsync(offer);
             await deleteOtherOffers(offer);
             int row = await _unitOfWork.CompleteAsync();
-            return row > 0 ?
-                new SuccessResult(_languageMessage.AcceptOfferSuccess) :
-                new ErrorResult(_languageMessage.AcceptOfferFailed);
+            if (row > 0)
+            {
+                sendEmail(offer, "Teklifiniz onaylandı", "teklifiniz onaylandı :)");
+                return new SuccessResult(_languageMessage.AcceptOfferSuccess);
+            }
+            return new ErrorResult(_languageMessage.AcceptOfferFailed);
         }
 
         private async Task deleteOtherOffers(Offer offer)
@@ -145,9 +152,12 @@ namespace NTech.Business.Concrete
             offer.Status = false;
             await _offerDal.UpdateAsync(offer);
             int row = await _unitOfWork.CompleteAsync();
-            return row > 0 ?
-                new SuccessResult(_languageMessage.DenyOfferSuccess) :
-                new ErrorResult(_languageMessage.DenyOfferFailed);
+            if (row > 0)
+            {
+                sendEmail(offer, "Teklifiniz reddedildi", "teklifiniz reddedildi :(");
+                return new SuccessResult(_languageMessage.DenyOfferSuccess);
+            }
+            return new ErrorResult(_languageMessage.DenyOfferFailed);
         }
 
         public async Task<IDataResult<Offer>> GetOfferByUserIdAndProductIdAsync(int productId)
@@ -157,6 +167,17 @@ namespace NTech.Business.Concrete
             if (offer == null)
                 return new ErrorDataResult<Offer>(_languageMessage.NotFound);
             return new SuccessDataResult<Offer>(offer);
+        }
+
+        private void sendEmail(Offer offer, string subject, string body)
+        {
+            _messageBrokerHelper.QueueMessage(
+                new EmailQueue
+                {
+                    Subject = subject,
+                    Body = $"Merhaba {offer.User.FirstName} {offer.User.LastName}, {body}",
+                    Email = offer.User.Email
+                });
         }
     }
 }
