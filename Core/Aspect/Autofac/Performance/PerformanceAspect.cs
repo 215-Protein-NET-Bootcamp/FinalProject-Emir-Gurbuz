@@ -35,7 +35,7 @@ namespace Core.Aspect.Autofac.Performance
                 string message = $"Performance: {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name} -> total seconds:{_stopwatch.Elapsed.TotalSeconds}";
                 _messageBrokerHelper.QueueMessage(new EmailQueue
                 {
-                    Email = _configuration.GetSection("AdminEmail").Value,
+                    Email = _configuration.GetSection("AdminUser:Email").Value,
                     Subject = "Application Performance Alert",
                     Body = message,
                 });
