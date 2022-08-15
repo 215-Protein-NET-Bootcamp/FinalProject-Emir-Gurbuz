@@ -58,5 +58,11 @@
         public string ProductHasBeenSold => "Satılmış ürüne teklif veremessin";
 
         public string CannotBeOffer => "Bu ürüne teklif veremessin";
+
+        public string FileIsNotNull => "Dosya boş olamaz";
+
+        public string UnSupportedFile => "Geçersiz dosya uzantısı";
+
+        public string FileSizeIsHigh => "Dosya boyutu yüksek";
     }
 }

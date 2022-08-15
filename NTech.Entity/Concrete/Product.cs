@@ -41,7 +41,7 @@ namespace NTech.Entity.Concrete
         public User User { get; set; }
 
         public decimal Price { get; set; }
-        public bool IsOfferable { get; set; }
+        public bool? IsOfferable { get; set; }
         public bool IsSold { get; set; }
         public byte Rating { get; set; }
 

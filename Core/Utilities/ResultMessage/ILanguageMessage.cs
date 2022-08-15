@@ -45,5 +45,9 @@
 
         string ProductHasBeenSold { get; }
         string CannotBeOffer { get; }
+
+        string FileIsNotNull { get; }
+        string UnSupportedFile { get;  }
+        string FileSizeIsHigh { get;  }
     }
 }

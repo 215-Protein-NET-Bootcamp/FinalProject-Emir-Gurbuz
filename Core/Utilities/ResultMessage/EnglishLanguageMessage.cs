@@ -58,5 +58,11 @@
         public string ProductHasBeenSold => "Product has been sold";
 
         public string CannotBeOffer => "You cannot be offer this product";
+
+        public string FileIsNotNull => "File is not null";
+
+        public string UnSupportedFile => "UnSupported file";
+
+        public string FileSizeIsHigh => "File size is high";
     }
 }

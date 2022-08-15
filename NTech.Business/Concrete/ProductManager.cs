@@ -3,6 +3,7 @@ using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entity.Concrete;
+using Core.Utilities.Business;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.URI;
@@ -23,16 +24,32 @@ namespace NTech.Business.Concrete
     {
         private readonly IUriService _uriService;
         private readonly ICacheManager _cacheManager;
-        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager) : base(repository, mapper, unitOfWork, languageMessage)
+        private readonly IImageService _imageService;
+        private readonly ILanguageMessage _languageMessage;
+        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _uriService = uriService;
             _cacheManager = cacheManager;
+            _imageService = imageService;
+            _languageMessage = languageMessage;
         }
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         [CacheRemoveAspect("ProductReadDto")]
-        public override Task<IResult> AddAsync(ProductWriteDto dto)
+        public async override Task<IResult> AddAsync(ProductWriteDto dto)
         {
-            return base.AddAsync(dto);
+            var result = BusinessRule.Run(
+                await checkImageAsync(dto));
+            if (result != null)
+                return result;
+            return await base.AddAsync(dto);
+        }
+
+        private async Task<IResult> checkImageAsync(ProductWriteDto dto)
+        {
+            var image = await _imageService.GetByIdAsync((int)dto.ImageId);
+            if (image != null)
+                return new ErrorResult();
+            return new SuccessResult();
         }
 
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
@@ -49,8 +66,9 @@ namespace NTech.Business.Concrete
             {
                 return _cacheManager.Get<PaginatedResult<IEnumerable<ProductReadDto>>>(key);
             }
-            var products = Mapper.Map<List<ProductReadDto>>(Repository.GetAll(false).ToList());
+            List<ProductReadDto> products = Mapper.Map<List<ProductReadDto>>(Repository.GetAll(false).ToList());
             var result = PaginationHelper.CreatePaginatedResponse(products, paginationFilter, products.Count(), _uriService, route);
+
             _cacheManager.Add(key, result, 30);
             return result;
         }
