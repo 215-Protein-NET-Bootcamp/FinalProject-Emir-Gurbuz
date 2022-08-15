@@ -48,7 +48,7 @@ namespace NTech.Business.Concrete
 
             string databasePath = configuration.GetSection("UploadImagePath").Value;
 
-            if (formFile.Length / 1024f > 400)
+            if (formFile.Length / 1024f > 400) // check file size
                 return new ErrorDataResult<Image>(_languageMessage.FileSizeIsHigh);
 
             string ex = Path.GetExtension(formFile.FileName);

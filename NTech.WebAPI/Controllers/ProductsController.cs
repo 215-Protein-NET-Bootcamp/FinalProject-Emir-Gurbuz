@@ -38,7 +38,7 @@ namespace NTech.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody,FromForm] ProductWriteDto productWriteDto,IFormFile? file)
+        public async Task<IActionResult> Post([FromBody,FromForm] ProductWriteDto productWriteDto,IFormFile file)
         {
             var image = await _imageService.UploadAsync(Request.Form.Files[0]);
             productWriteDto.ImageId = image.Data.Id;
