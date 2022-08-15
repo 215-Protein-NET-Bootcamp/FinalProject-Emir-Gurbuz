@@ -149,5 +149,14 @@ namespace NTech.Business.Concrete
                 new SuccessResult(_languageMessage.DenyOfferSuccess) :
                 new ErrorResult(_languageMessage.DenyOfferFailed);
         }
+
+        public async Task<IDataResult<Offer>> GetOfferByUserIdAndProductIdAsync(int productId)
+        {
+            int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
+            var offer = await _offerDal.GetAsync(x => x.ProductId == productId && x.UserId == userId);
+            if (offer == null)
+                return new ErrorDataResult<Offer>(_languageMessage.NotFound);
+            return new SuccessDataResult<Offer>(offer);
+        }
     }
 }

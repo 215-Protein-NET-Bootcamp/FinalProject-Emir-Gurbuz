@@ -47,7 +47,9 @@
         string CannotBeOffer { get; }
 
         string FileIsNotNull { get; }
-        string UnSupportedFile { get;  }
-        string FileSizeIsHigh { get;  }
+        string UnSupportedFile { get; }
+        string FileSizeIsHigh { get; }
+        string ProductBuyIsFailed { get; }
+        string ProductBuyIsSuccessfully { get; }
     }
 }

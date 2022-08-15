@@ -64,5 +64,9 @@
         public string UnSupportedFile => "Geçersiz dosya uzantısı";
 
         public string FileSizeIsHigh => "Dosya boyutu yüksek";
+
+        public string ProductBuyIsFailed => "Ürün satın alma başarısız";
+
+        public string ProductBuyIsSuccessfully => "Ürün satın alma başarılı";
     }
 }

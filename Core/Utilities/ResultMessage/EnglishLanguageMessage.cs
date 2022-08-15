@@ -64,5 +64,9 @@
         public string UnSupportedFile => "UnSupported file";
 
         public string FileSizeIsHigh => "File size is high";
+
+        public string ProductBuyIsFailed => "Product buy is failed";
+
+        public string ProductBuyIsSuccessfully => "Product buy is successfully";
     }
 }

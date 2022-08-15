@@ -8,5 +8,6 @@ namespace NTech.Business.Abstract
     public interface IProductService : IAsyncBaseService<Product, ProductWriteDto, ProductReadDto>
     {
         Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route);
+        Task<IResult> BuyAsync(int productId);
     }
 }

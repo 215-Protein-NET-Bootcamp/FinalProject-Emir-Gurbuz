@@ -10,5 +10,6 @@ namespace NTech.Business.Abstract
         Task<IDataResult<List<OfferReadDto>>> GetReceivedOffers();
         Task<IResult> AcceptOffer(int offerId);
         Task<IResult> DenyOffer(int offerId);
+        Task<IDataResult<Offer>> GetOfferByUserIdAndProductIdAsync(int productId);
     }
 }

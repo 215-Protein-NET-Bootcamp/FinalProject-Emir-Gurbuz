@@ -3,6 +3,7 @@ using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entity.Concrete;
+using Core.Extensions;
 using Core.Utilities.Business;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
@@ -26,12 +27,14 @@ namespace NTech.Business.Concrete
         private readonly ICacheManager _cacheManager;
         private readonly IImageService _imageService;
         private readonly ILanguageMessage _languageMessage;
-        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService) : base(repository, mapper, unitOfWork, languageMessage)
+        private readonly IOfferDal _offerDal;
+        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService, IOfferDal offerDal) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _uriService = uriService;
             _cacheManager = cacheManager;
             _imageService = imageService;
             _languageMessage = languageMessage;
+            _offerDal = offerDal;
         }
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         [CacheRemoveAspect("ProductReadDto")]
@@ -82,6 +85,26 @@ namespace NTech.Business.Concrete
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);
+        }
+
+        public async Task<IResult> BuyAsync(int productId)
+        {
+            int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
+            Offer offer = await _offerDal.GetAsync(x => x.ProductId == productId && x.UserId == userId);
+            Product product = await Repository.GetAsync(p => p.Id == productId);
+
+            if (product == null)
+                return new SuccessResult(_languageMessage.FailedGet);
+
+            product.IsSold = true;
+            if (offer != null)
+            {
+                offer.Status = true;
+            }
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult(_languageMessage.ProductBuyIsSuccessfully) :
+                new ErrorResult(_languageMessage.ProductBuyIsFailed);
         }
     }
 }
