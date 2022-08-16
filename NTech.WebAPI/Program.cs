@@ -115,10 +115,9 @@ app.UseExceptionMiddleware();
 #region Background Services
 app.UseHangfireDashboard();
 app.UseHangfireServer();
-//builder.Services.AddHostedService<EmailSendWorker>();
+
 BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
 BackgroundJob.Schedule(() => new ConsumerEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
-//Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/1 * * * * *");
 #endregion
 
 app.UseStaticFiles();
