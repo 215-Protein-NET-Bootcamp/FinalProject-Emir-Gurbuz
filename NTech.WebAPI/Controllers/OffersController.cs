@@ -33,6 +33,12 @@ namespace NTech.WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            return await base.GetByIdAsync(id);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OfferWriteDto offerWriteDto)
         {
@@ -43,6 +49,7 @@ namespace NTech.WebAPI.Controllers
         {
             return await base.UpdateAsync(id, offerWriteDto);
         }
+
         [HttpPut("{id}/accept")]
         public async Task<IActionResult> Accept([FromRoute] int id)
         {
@@ -51,6 +58,7 @@ namespace NTech.WebAPI.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+
         [HttpPut("{id}/deny")]
         public async Task<IActionResult> Deny([FromRoute] int id)
         {

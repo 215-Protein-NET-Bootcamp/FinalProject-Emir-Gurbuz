@@ -4,6 +4,7 @@ using Core.Utilities.ResultMessage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using NTech.Business.Abstract;
+using NTech.Business.BusinessAspects;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.Dto.Concrete;
@@ -11,6 +12,7 @@ using NTech.Entity.Concrete;
 
 namespace NTech.Business.Concrete
 {
+    [SecuredOperation("User")]
     public class ImageManager : AsyncBaseService<Image, ImageWriteDto, ImageReadDto>, IImageService
     {
         private readonly IConfiguration configuration;
