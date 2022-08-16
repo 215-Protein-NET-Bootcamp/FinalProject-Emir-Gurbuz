@@ -2,14 +2,12 @@
 using Core.Utilities.IoC;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
-using Hangfire;
 using Newtonsoft.Json;
 using NTech.Business.Abstract;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Diagnostics;
 using System.Text;
-using System.Threading.Channels;
 
 namespace NTech.WebAPI.BackgorundJobs
 {
@@ -39,17 +37,19 @@ namespace NTech.WebAPI.BackgorundJobs
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(
-                    queue: "NTechQueue",
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-                var consumer = new EventingBasicConsumer(channel);
-                consumerEmailAsync(consumer, channel);
+                while (true)
+                {
+                    await Task.Delay(1200);
+                    channel.QueueDeclare(
+                       queue: "NTechQueue",
+                       durable: false,
+                       exclusive: false,
+                       autoDelete: false,
+                       arguments: null);
+                    var consumer = new EventingBasicConsumer(channel);
+                    await consumerEmailAsync(consumer, channel);
+                }
             }
-            await Task.Delay(500);
-            BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(500));
         }
         private async Task consumerEmailAsync(EventingBasicConsumer consumer, IModel channel)
         {
