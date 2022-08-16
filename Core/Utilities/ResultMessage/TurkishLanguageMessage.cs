@@ -68,5 +68,9 @@
         public string ProductBuyIsFailed => "Ürün satın alma başarısız";
 
         public string ProductBuyIsSuccessfully => "Ürün satın alma başarılı";
+
+        public string SuccessfullyFileUpload => "Dosya yükleme başarılı";
+
+        public string FailedToFileUpload => "Dosya yükleme başarısız";
     }
 }

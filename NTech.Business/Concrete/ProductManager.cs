@@ -9,6 +9,7 @@ using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.URI;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NTech.Business.Abstract;
@@ -133,17 +134,22 @@ namespace NTech.Business.Concrete
                 });
         }
 
-        public async Task<IResult> SetImageAsync(int productId, int imageId)
+        public async Task<IResult> SetImageAsync(int productId, IFormFile file)
         {
             Product product = await Repository.GetAsync(p => p.Id == productId);
             if (product == null)
                 return new ErrorResult(LanguageMessage.NotFound);
-            product.ImageId = imageId;
+
+            var imageResult = await _imageService.UploadAsync(file);
+            if (imageResult.Success == false)
+                return imageResult;
+
+            product.ImageId = imageResult.Data.Id;
             await Repository.UpdateAsync(product);
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
-                new SuccessResult(LanguageMessage.SuccessfullyAdded) :
-                new ErrorResult(LanguageMessage.FailedToAdd);
+                new SuccessResult(LanguageMessage.SuccessfullyFileUpload) :
+                new ErrorResult(LanguageMessage.FailedToFileUpload);
         }
     }
 }

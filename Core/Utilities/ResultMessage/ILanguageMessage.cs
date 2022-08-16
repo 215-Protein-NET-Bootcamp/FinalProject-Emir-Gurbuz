@@ -51,5 +51,8 @@
         string FileSizeIsHigh { get; }
         string ProductBuyIsFailed { get; }
         string ProductBuyIsSuccessfully { get; }
+
+        string SuccessfullyFileUpload { get; }
+        string FailedToFileUpload { get; }
     }
 }

@@ -38,7 +38,7 @@ namespace NTech.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ProductWriteDto productWriteDto [FromForm] IFormFile file)
+        public async Task<IActionResult> Post([FromBody] ProductWriteDto productWriteDto, [FromForm] IFormFile file)
         {
             var image = await _imageService.UploadAsync(file);
             productWriteDto.ImageId = image.Data.Id;
@@ -46,11 +46,10 @@ namespace NTech.WebAPI.Controllers
             return await base.AddAsync(productWriteDto);
         }
 
-        [HttpPost("{id}/upload")]
+        [HttpPost("{productId}/upload")]
         public async Task<IActionResult> Post([FromRoute] int productId, IFormFile file)
         {
-            var image = await _imageService.UploadAsync(Request.Form.Files[0]);
-            var result = await _productService.SetImageAsync(productId, image.Data.Id);
+            var result = await _productService.SetImageAsync(productId, file);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
