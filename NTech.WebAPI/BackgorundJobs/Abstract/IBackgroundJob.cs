@@ -2,6 +2,6 @@
 {
     public interface IBackgroundJob
     {
-        void Run();
+        Task Run();
     }
 }

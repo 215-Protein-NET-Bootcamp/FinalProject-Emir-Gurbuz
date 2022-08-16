@@ -88,9 +88,14 @@ builder.Services.AddDependencyResolvers(
 #endregion
 
 #region Background Services
-builder.Services.AddHostedService<SendEmailWorker>();
-builder.Services.AddHostedService<ConsumerEmailWorker>();
+//builder.Services.AddHostedService<SendEmailWorker>();
+//builder.Services.AddHostedService<ConsumerEmailWorker>();
 #endregion
+
+#region Hangfire
+builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("SqlServer")));
+#endregion
+
 var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -106,22 +111,16 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionMiddleware();
 #endregion
 
-#region Hangfire
-//builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFireSqlServer")));
-//app.UseHangfireDashboard();
-//app.UseHangfireServer();
+
+#region Background Services
+app.UseHangfireDashboard();
+app.UseHangfireServer();
+//builder.Services.AddHostedService<EmailSendWorker>();
+BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
+//Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/1 * * * * *");
 #endregion
 
 app.UseStaticFiles();
-
-#region Background Services
-//builder.Services.AddHostedService<EmailSendWorker>();
-////BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
-//Hangfire.RecurringJob.AddOrUpdate(() => new SendEmailJob().Run(), "*/2 * * * * *");
-
-
-#endregion
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

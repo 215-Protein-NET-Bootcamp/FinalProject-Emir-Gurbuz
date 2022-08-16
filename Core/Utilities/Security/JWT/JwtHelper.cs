@@ -1,7 +1,6 @@
 ﻿using Core.Entity.Concrete;
 using Core.Extensions;
 using Core.Utilities.Security.Encryption;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,14 +18,14 @@ namespace Core.Utilities.Security.JWT
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
         }
-        public AccessToken CreateAccessToken(User appUser, List<string> roles)
+        public AccessToken CreateAccessToken(User user, List<string> roles)
         {
             _accessTokenExpiration = DateTime.UtcNow.AddMinutes(_tokenOptions.AccessTokenExpiration);
 
             SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             SigningCredentials signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
 
-            JwtSecurityToken jwt = createJwtSecurityToken(appUser, roles, _accessTokenExpiration, _tokenOptions, signingCredentials);
+            JwtSecurityToken jwt = createJwtSecurityToken(user, roles, _accessTokenExpiration, _tokenOptions, signingCredentials);
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
             string token = tokenHandler.WriteToken(jwt);
@@ -37,24 +36,25 @@ namespace Core.Utilities.Security.JWT
             };
         }
 
-        private JwtSecurityToken createJwtSecurityToken(User appUser, List<string> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
+        private JwtSecurityToken createJwtSecurityToken(User user, List<string> identityRoles, DateTime accessTokenExpiration, AccessTokenOptions tokenOptions, SigningCredentials signingCredentials)
         {
             return new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
                 audience: tokenOptions.Audience,
                 notBefore: DateTime.UtcNow,
                 expires: accessTokenExpiration,
-                claims: setClaims(appUser, identityRoles),
+                claims: setClaims(user, identityRoles),
                 signingCredentials: signingCredentials);
         }
 
-        private IEnumerable<Claim> setClaims(User appUser, List<string> roles)
+        private IEnumerable<Claim> setClaims(User user, List<string> roles)
         {
             List<Claim> claims = new List<Claim>();
-            claims.AddEmail(appUser.Email);
-            claims.AddName(String.Format("{0} {1}", appUser.FirstName, appUser.LastName));
-            claims.AddNameIdentifier(appUser.Id.ToString());
-            claims.AddDateOfBirth(appUser.DateOfBirth);
+
+            claims.AddEmail(user.Email);
+            claims.AddName(String.Format("{0} {1}", user.FirstName, user.LastName));
+            claims.AddNameIdentifier(user.Id.ToString());
+            claims.AddDateOfBirth(user.DateOfBirth);
             claims.AddRoles(roles.ToArray());
 
             return claims;

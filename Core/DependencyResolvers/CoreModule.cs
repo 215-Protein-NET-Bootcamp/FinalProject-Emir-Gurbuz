@@ -17,9 +17,12 @@ namespace Core.DependencyResolvers
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             #endregion
 
-            #region Cache
+            #region Memory Cache
             //services.AddMemoryCache();
             //services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            #endregion
+
+            #region Redis
             services.AddSingleton<ICacheManager, RedisCacheManager>();
             #endregion
 

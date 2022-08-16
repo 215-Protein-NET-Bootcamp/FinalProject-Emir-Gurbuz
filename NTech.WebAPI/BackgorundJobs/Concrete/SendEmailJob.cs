@@ -2,7 +2,9 @@
 using Core.Utilities.IoC;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
+using Hangfire;
 using Newtonsoft.Json;
+using NTech.Business.Abstract;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Diagnostics;
@@ -15,18 +17,18 @@ namespace NTech.WebAPI.BackgorundJobs
     {
         private readonly IConfiguration _configuration;
         private readonly MessageBrokerOptions _brokerOptions;
-        private readonly IEmailConsumer _messageConsumer;
         private readonly IEmailSender _mailService;
         private readonly IMessageBrokerHelper _brokerHelper;
+        private readonly IEmailQueueService _emailQueueService;
         public SendEmailJob()
         {
             _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
             _brokerOptions = _configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOptions>();
-            _messageConsumer = ServiceTool.ServiceProvider.GetService<IEmailConsumer>();
             _mailService = ServiceTool.ServiceProvider.GetService<IEmailSender>();
             _brokerHelper = ServiceTool.ServiceProvider.GetService<IMessageBrokerHelper>();
+            _emailQueueService = ServiceTool.ServiceProvider.GetService<IEmailQueueService>();
         }
-        public void Run()
+        public async Task Run()
         {
             var factory = new ConnectionFactory()
             {
@@ -43,56 +45,51 @@ namespace NTech.WebAPI.BackgorundJobs
                     exclusive: false,
                     autoDelete: false,
                     arguments: null);
-
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, mq) =>
+                consumerEmailAsync(consumer, channel);
+            }
+            await Task.Delay(500);
+            BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(500));
+        }
+        private async Task consumerEmailAsync(EventingBasicConsumer consumer, IModel channel)
+        {
+            consumer.Received += async (model, mq) =>
+            {
+                string message = getMessageString(mq);
+                EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
+                try
                 {
-                    var body = mq.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
-
-                    var task = _mailService.SendEmailAsync(new EmailMessage
+                    if (emailQueue.TryCount >= 5)
+                    {
+                        emailQueue.TryCount = 0;
+                        await _emailQueueService.AddAsync(emailQueue);
+                        Debug.WriteLine($"Add database failed email:{emailQueue.Email}");
+                        return;
+                    }
+                    await _mailService.SendEmailAsync(new EmailMessage
                     {
                         Body = emailQueue.Body,
                         Email = emailQueue.Email,
                         Subject = emailQueue.Subject
                     });
-                    task.Wait();
-
-
-                    //emailQueue.TryCount++;
-                    //_brokerHelper.QueueMessage(JsonConvert.SerializeObject(emailQueue));
-                };
-                channel.BasicConsume(
-                        queue: "NTechQueue",
-                autoAck: true,
-                consumer: consumer);
-            }
-            //_messageConsumer.GetQueue((message) =>
-            //{
-            //    EmailQueue emailQueue = JsonConvert.DeserializeObject<EmailQueue>(message);
-            //    try
-            //    {
-            //        if (emailQueue.TryCount >= 5)
-            //        {
-            //            //TODO: change status
-            //            return;
-            //        }
-            //        Debug.WriteLine("gönderildi");
-            //        var task = _mailService.SendEmailAsync(new EmailMessage
-            //        {
-            //            Body = emailQueue.Body,
-            //            Email = emailQueue.Email,
-            //            Subject = emailQueue.Subject
-            //        });
-            //        task.Wait();
-            //    }
-            //    catch (Exception)
-            //    {
-            //        emailQueue.TryCount++;
-            //        _brokerHelper.QueueMessage(emailQueue);
-            //    }
-            //});
+                    Debug.WriteLine($"Successful sended email:{emailQueue.Email}");
+                }
+                catch (Exception e)
+                {
+                    emailQueue.TryCount++;
+                    Debug.WriteLine($"{emailQueue.TryCount} failed send email:{emailQueue.Email}");
+                    _brokerHelper.QueueMessage(emailQueue);
+                }
+            };
+            channel.BasicConsume(
+                    queue: "NTechQueue",
+            autoAck: true,
+            consumer: consumer);
+        }
+        private string getMessageString(BasicDeliverEventArgs mq)
+        {
+            byte[] body = mq.Body.ToArray();
+            return Encoding.UTF8.GetString(body);
         }
     }
 }

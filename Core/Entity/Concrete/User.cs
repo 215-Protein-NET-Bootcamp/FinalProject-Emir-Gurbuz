@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Core.Entity.Concrete
+﻿namespace Core.Entity.Concrete
 {
     public class User : IEntity
     {
