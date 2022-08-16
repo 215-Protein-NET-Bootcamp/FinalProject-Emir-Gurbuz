@@ -16,7 +16,7 @@ namespace NTech.Entity.Concrete
         [ForeignKey("UserId")]
         public User User { get; set; }
 
-        public decimal OfferedPrice { get; set; }
+        public decimal? OfferedPrice { get; set; }
         public byte? Percent { get; set; }
 
         public bool? Status { get; set; }

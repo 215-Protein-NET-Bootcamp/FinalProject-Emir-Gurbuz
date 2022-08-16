@@ -71,7 +71,7 @@ namespace NTech.Business.Concrete
         {
             TEntity deletedEntity = await Repository.GetAsync(x => x.Id == id);
             if (deletedEntity == null)
-                return new ErrorResult(LanguageMessage.NotFoundete a);
+                return new ErrorResult(LanguageMessage.NotFound);
 
             await Repository.DeleteAsync(deletedEntity);
 
