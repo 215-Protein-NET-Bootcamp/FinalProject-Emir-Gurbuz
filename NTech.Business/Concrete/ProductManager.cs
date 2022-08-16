@@ -29,7 +29,6 @@ namespace NTech.Business.Concrete
         private readonly IUriService _uriService;
         private readonly ICacheManager _cacheManager;
         private readonly IImageService _imageService;
-        private readonly ILanguageMessage _languageMessage;
         private readonly IOfferDal _offerDal;
         private readonly IMessageBrokerHelper _messageBrokerHelper;
         public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService, IOfferDal offerDal, IMessageBrokerHelper messageBrokerHelper) : base(repository, mapper, unitOfWork, languageMessage)
@@ -37,7 +36,6 @@ namespace NTech.Business.Concrete
             _uriService = uriService;
             _cacheManager = cacheManager;
             _imageService = imageService;
-            _languageMessage = languageMessage;
             _offerDal = offerDal;
             _messageBrokerHelper = messageBrokerHelper;
         }
@@ -99,7 +97,7 @@ namespace NTech.Business.Concrete
             Product product = await Repository.GetAsync(p => p.Id == productId);
 
             if (product == null)
-                return new SuccessResult(_languageMessage.FailedGet);
+                return new SuccessResult(LanguageMessage.FailedGet);
 
             product.IsSold = true;
             if (offer != null)
@@ -109,8 +107,8 @@ namespace NTech.Business.Concrete
             deleteOtherOffers(offer);
             int row = await UnitOfWork.CompleteAsync();
             return row > 0 ?
-                new SuccessResult(_languageMessage.ProductBuyIsSuccessfully) :
-                new ErrorResult(_languageMessage.ProductBuyIsFailed);
+                new SuccessResult(LanguageMessage.ProductBuyIsSuccessfully) :
+                new ErrorResult(LanguageMessage.ProductBuyIsFailed);
         }
         private async Task deleteOtherOffers(Offer offer)
         {
