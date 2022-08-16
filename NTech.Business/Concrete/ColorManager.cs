@@ -3,6 +3,7 @@ using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
+using Microsoft.EntityFrameworkCore;
 using NTech.Business.Abstract;
 using NTech.Business.BusinessAspects;
 using NTech.Business.Validators.FluentValidation;
@@ -10,6 +11,7 @@ using NTech.DataAccess.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.Dto.Concrete;
 using NTech.Entity.Concrete;
+using NTech.Entity.Concrete.Filters;
 
 namespace NTech.Business.Concrete
 {
@@ -34,10 +36,22 @@ namespace NTech.Business.Concrete
         {
             return base.UpdateAsync(id, dto);
         }
+
         [CacheAspect<DataResult<List<ColorReadDto>>>()]
         public override Task<DataResult<List<ColorReadDto>>> GetListAsync()
         {
             return base.GetListAsync();
+        }
+
+        public async Task<DataResult<List<ColorReadDto>>> GetListByFilterAsync(ColorFilterResource colorFilterResouce)
+        {
+            IQueryable<Color> colors = Repository.GetAll();
+            if (colorFilterResouce.Name != null)
+            {
+                colors = colors.Where(c => c.Name.ToLower().Contains(colorFilterResouce.Name));
+            }
+            List<ColorReadDto> colorReadDtos = Mapper.Map<List<ColorReadDto>>(await colors.ToListAsync());
+            return new SuccessDataResult<List<ColorReadDto>>(colorReadDtos);
         }
 
         [SecuredOperation("Admin")]
@@ -53,5 +67,6 @@ namespace NTech.Business.Concrete
         {
             return base.SoftDeleteAsync(id);
         }
+
     }
 }
