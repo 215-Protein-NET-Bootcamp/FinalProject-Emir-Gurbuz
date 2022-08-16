@@ -4,6 +4,7 @@ using Core.Aspect.Autofac.Validation;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using NTech.Business.Abstract;
+using NTech.Business.BusinessAspects;
 using NTech.Business.Validators.FluentValidation;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
@@ -18,28 +19,36 @@ namespace NTech.Business.Concrete
         {
         }
 
+        [SecuredOperation("Admin")]
         [ValidationAspect(typeof(CategoryWriteDtoValidator))]
         [CacheRemoveAspect("CategoryReadDto")]
         public override Task<IResult> AddAsync(CategoryWriteDto dto)
         {
             return base.AddAsync(dto);
         }
+
+        [SecuredOperation("Admin")]
         [ValidationAspect(typeof(CategoryWriteDtoValidator))]
         [CacheRemoveAspect("CategoryReadDto")]
         public override Task<IResult> UpdateAsync(int id, CategoryWriteDto dto)
         {
             return base.UpdateAsync(id, dto);
         }
+
         [CacheAspect<DataResult<List<CategoryReadDto>>>()]
         public override Task<DataResult<List<CategoryReadDto>>> GetListAsync()
         {
             return base.GetListAsync();
         }
+
+        [SecuredOperation("Admin")]
         [CacheRemoveAspect("CategoryReadDto")]
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);
         }
+
+        [SecuredOperation("Admin")]
         [CacheRemoveAspect("CategoryReadDto")]
         public override Task<IResult> SoftDeleteAsync(int id)
         {
