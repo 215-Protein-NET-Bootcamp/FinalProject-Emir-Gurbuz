@@ -6,6 +6,7 @@ Used Technologies
   <li>Serilog</li>
   <li>FluentValidation</li>
   <li>RabbitMq</li>
+  <li>Hangfire and BackgroundService</li>
   <li>Redis Cache</li>
   <li>Microsoft Memory Cache</li>
   <li>AutoMapper</li>
