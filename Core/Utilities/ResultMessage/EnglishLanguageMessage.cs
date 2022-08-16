@@ -68,5 +68,9 @@
         public string ProductBuyIsFailed => "Product buy is failed";
 
         public string ProductBuyIsSuccessfully => "Product buy is successfully";
+
+        public string SuccessfullyFileUpload => "Successfully file upload";
+
+        public string FailedToFileUpload => "Failed to file upload";
     }
 }
