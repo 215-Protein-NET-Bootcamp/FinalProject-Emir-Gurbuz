@@ -132,5 +132,18 @@ namespace NTech.Business.Concrete
                     Email = offer.User.Email
                 });
         }
+
+        public async Task<IResult> SetImageAsync(int productId, int imageId)
+        {
+            Product product = await Repository.GetAsync(p => p.Id == productId);
+            if (product == null)
+                return new ErrorResult(LanguageMessage.NotFound);
+            product.ImageId = imageId;
+            await Repository.UpdateAsync(product);
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult(LanguageMessage.SuccessfullyAdded) :
+                new ErrorResult(LanguageMessage.FailedToAdd);
+        }
     }
 }

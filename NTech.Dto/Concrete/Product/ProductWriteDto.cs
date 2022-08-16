@@ -1,4 +1,5 @@
 ﻿using Core.Dto;
+using Microsoft.AspNetCore.Http;
 
 namespace NTech.Dto.Concrete
 {

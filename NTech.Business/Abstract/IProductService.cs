@@ -9,5 +9,6 @@ namespace NTech.Business.Abstract
     {
         Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route);
         Task<IResult> BuyAsync(int productId);
+        Task<IResult> SetImageAsync(int productId, int imageId);
     }
 }
