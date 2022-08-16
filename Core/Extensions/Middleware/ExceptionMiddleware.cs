@@ -43,6 +43,7 @@ namespace Core.Extensions.Middleware
             }
             if (e.GetType() == typeof(UnauthorizedException))
             {
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 message = e.Message;
             }
             IResult result = new ErrorResult(message);
