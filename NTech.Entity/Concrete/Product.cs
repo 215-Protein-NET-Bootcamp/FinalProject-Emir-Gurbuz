@@ -34,7 +34,7 @@ namespace NTech.Entity.Concrete
 
         public int? ImageId { get; set; }
         [ForeignKey("ImageId")]
-        public Image Image { get; set; }
+        public Image? Image { get; set; }
 
         public int? UserId { get; set; }
         [ForeignKey("UserId")]
