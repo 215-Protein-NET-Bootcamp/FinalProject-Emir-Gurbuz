@@ -14,7 +14,7 @@ namespace NTech.WebAPI.BackgorundJobs
     {
         public void Load(IServiceCollection services)
         {
-            services.AddSingleton<IMessageConsumer, MqConsumerHelper>();
+            services.AddSingleton<IEmailConsumer, MqConsumerHelper>();
             services.AddSingleton<IMessageBrokerHelper, MqQueueHelper>();
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
 

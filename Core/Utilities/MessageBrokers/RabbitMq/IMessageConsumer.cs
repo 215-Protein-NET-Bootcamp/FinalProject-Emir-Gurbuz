@@ -1,7 +1,7 @@
 ﻿namespace Core.Utilities.MessageBrokers.RabbitMq
 {
-    public interface IMessageConsumer
+    public interface IEmailConsumer
     {
-        void GetQueue(Action<string> action);
+        void GetQueue();
     }
 }

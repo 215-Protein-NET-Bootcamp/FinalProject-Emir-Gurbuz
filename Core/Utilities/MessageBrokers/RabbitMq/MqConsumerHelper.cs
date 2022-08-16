@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Diagnostics;
 using System.Text;
 
 namespace Core.Utilities.MessageBrokers.RabbitMq
 {
-    public class MqConsumerHelper : IMessageConsumer
+    public class MqConsumerHelper : IEmailConsumer
     {
         private readonly IConfiguration _configuration;
         private readonly MessageBrokerOptions _brokerOptions;
@@ -16,7 +15,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             _brokerOptions = _configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOptions>();
         }
 
-        public void GetQueue(Action<string> action)
+        public void GetQueue()
         {
             var factory = new ConnectionFactory()
             {
@@ -34,16 +33,11 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
                     autoDelete: false,
                     arguments: null);
 
-                var consumer = new AsyncEventingBasicConsumer(channel);
+                var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += async (model, mq) =>
                 {
-                    await Task.Delay(1000);
-                    await Task.Run(() =>
-                    {
-                        var body = mq.Body.ToArray();
-                        var message = Encoding.UTF8.GetString(body);
-                        action(message);
-                    });
+                    var body = mq.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
                 };
 
                 channel.BasicConsume(

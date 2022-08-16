@@ -54,7 +54,7 @@ namespace NTech.Business.DependencyResolvers.Autofac
             #endregion
 
             #region MessageBroker
-            builder.RegisterType<MqConsumerHelper>().As<IMessageConsumer>().SingleInstance();
+            builder.RegisterType<MqConsumerHelper>().As<IEmailConsumer>().SingleInstance();
             builder.RegisterType<MqQueueHelper>().As<IMessageBrokerHelper>().SingleInstance();
             #endregion
 
