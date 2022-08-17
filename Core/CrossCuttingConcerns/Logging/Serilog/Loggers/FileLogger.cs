@@ -4,6 +4,7 @@ using Core.Utilities.IoC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Formatting.Json;
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
 {
@@ -24,7 +25,7 @@ namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
                 rollingInterval: RollingInterval.Hour,
                 retainedFileCountLimit: null,
                 fileSizeLimitBytes: 500000,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}"
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}\n"
                 ).CreateLogger();
         }
     }
