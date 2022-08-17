@@ -7,6 +7,6 @@ namespace NTech.Business.Abstract
 {
     public interface IColorService : IAsyncBaseService<Color, ColorWriteDto, ColorReadDto>
     {
-        Task<DataResult<List<ColorReadDto>>> GetListByFilterAsync(ColorFilterResource colorFilterResouce);
+        Task<IDataResult<List<ColorReadDto>>> GetListByFilterAsync(ColorFilterResource colorFilterResouce);
     }
 }

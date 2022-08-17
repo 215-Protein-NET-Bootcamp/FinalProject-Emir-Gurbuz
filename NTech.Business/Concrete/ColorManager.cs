@@ -43,12 +43,12 @@ namespace NTech.Business.Concrete
             return base.GetListAsync();
         }
 
-        public async Task<DataResult<List<ColorReadDto>>> GetListByFilterAsync(ColorFilterResource colorFilterResouce)
+        public async Task<IDataResult<List<ColorReadDto>>> GetListByFilterAsync(ColorFilterResource colorFilterResouce)
         {
             IQueryable<Color> colors = Repository.GetAll();
             if (colorFilterResouce.Name != null)
             {
-                colors = colors.Where(c => c.Name.ToLower().Contains(colorFilterResouce.Name));
+                colors = colors.Where(c => c.Name.ToLower().Contains(colorFilterResouce.Name.ToLower()));
             }
             List<ColorReadDto> colorReadDtos = Mapper.Map<List<ColorReadDto>>(await colors.ToListAsync());
             return new SuccessDataResult<List<ColorReadDto>>(colorReadDtos);
