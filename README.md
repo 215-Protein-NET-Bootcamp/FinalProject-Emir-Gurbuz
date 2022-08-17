@@ -97,6 +97,13 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
     }
   }
 ```
+<h4>⬇️ Admin Email appsettings.json ⬇️</h4>
+
+```json
+"AdminUser": {
+    "Email": "emir.gurbuz06@hotmail.com"
+  }
+```
 <h4>⬇️ Upload Image Path in appsettings.json ⬇️</h4>
 
 ```json
