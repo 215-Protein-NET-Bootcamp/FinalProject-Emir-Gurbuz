@@ -46,7 +46,7 @@ builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(build
 builder.Services.AddScoped<DbContext, NTechDbContext>();
 #endregion
 ```
-
+<h4>⬇️ Add migration - Package Manager Console ⬇️</h4>
 <img src="screenshots/migration.png"/>
 
 <h4>⬇️ Jwt Options in appsettings.json ⬇️</h4>
