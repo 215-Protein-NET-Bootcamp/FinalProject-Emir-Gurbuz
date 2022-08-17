@@ -28,7 +28,7 @@ Exception Log Aspects ❌ <br>
 
 <hr>
 <h2>Startup</h3>
-<h4>⬇️ Connection Strings ⬇️</h4>
+<h4>⬇️ Connection Strings in appsettings.json ⬇️</h4>
 
 ```json
 "ConnectionStrings": {
@@ -36,7 +36,7 @@ Exception Log Aspects ❌ <br>
     "PostgreSql": "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=NTechDb;"
   },
 ```
-<h4>UseSqlServer or UseNpgsql in program.cs</h4>
+<h4>⬇️ UseSqlServer or UseNpgsql in program.cs ⬇️</h4>
 
 ```c#
 #region SqlContext, PostgreContext
@@ -47,7 +47,7 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 #endregion
 ```
 
-<h4>⬇️ Jwt Options ⬇️</h4>
+<h4>⬇️ Jwt Options in appsettings.json ⬇️</h4>
 
 ```json
 "AccessTokenOptions": {
@@ -57,6 +57,52 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
     "SecurityKey": "nCsFlhJlNp62k1iM49q2-+?caSrvNte"
   }
 ```
+<h4>⬇️ Redis Configuration in appsettings.json ⬇️</h4>
+
+```json
+"RedisConfiguration": {
+    "Host": "localhost",
+    "Port": 49153,
+    "Password": "redispw"
+  }
+```
+<h4>⬇️ Email Configuration in appsettings.json ⬇️</h4>
+
+```json
+"EmailConfiguration": {
+    "Port": 587,
+    "Server": "smtp.office365.com",
+    "EnableSsl": true,
+    "Username": "username@hotmail.com",
+    "Password": "***"
+  }
+```
+<h4>⬇️ RabbitMq Configuration in appsettings.json ⬇️</h4>
+
+```json
+"MessageBrokerOptions": {
+    "HostName": "localhost",
+    "UserName": "admin",
+    "Password": "123456"
+  }
+```
+<h4>⬇️ SeriLog Configuration in appsettings.json ⬇️</h4>
+
+```json
+"SeriLogConfigurations": {
+    "FileLogConfiguration": {
+      "FolderPath": "/logs/"
+    }
+  }
+```
+<h4>⬇️ Upload Image Path in appsettings.json ⬇️</h4>
+
+```json
+"UploadImagePath": "wwwroot/images/"
+```
+
+
+
 <hr>
 
 <h2>
