@@ -21,8 +21,7 @@ namespace NTech.WebAPI.Controllers
             return await base.GetListAsync();
         }
 
-        [NonAction]
-        [HttpGet]
+        [HttpGet("filter")]
         public async Task<IActionResult> Get([FromQuery] ColorFilterResource? colorFilterResouce)
         {
             var result = await _colorService.GetListByFilterAsync(colorFilterResouce);
