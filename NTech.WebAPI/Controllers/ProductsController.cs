@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NTech.Business.Abstract;
 using NTech.Dto.Concrete;
 using NTech.Entity.Concrete;
+using NTech.Entity.Concrete.Filters;
 
 namespace NTech.WebAPI.Controllers
 {
@@ -28,6 +29,14 @@ namespace NTech.WebAPI.Controllers
         {
             var requestUrl = $"{Request.Scheme}://{Request.Host.Value}/";
             var result = await _productService.GetPaginationAsync(paginationFilter, requestUrl);
+            return Ok(result);
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Get([FromQuery] PaginationFilter paginationFilter, [FromQuery] ProductFilterResource productFilterResource)
+        {
+            var requestUrl = $"{Request.Scheme}://{Request.Host.Value}/";
+            var result = await _productService.GetListByFilterAsync(paginationFilter, requestUrl, productFilterResource);
             return Ok(result);
         }
 

@@ -11,19 +11,19 @@ using Core.Utilities.ResultMessage;
 using Core.Utilities.URI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using NTech.Business.Abstract;
 using NTech.Business.BusinessAspects;
+using NTech.Business.Extensions;
 using NTech.Business.Helpers;
 using NTech.Business.Validators.FluentValidation;
 using NTech.DataAccess.Abstract;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.Dto.Concrete;
 using NTech.Entity.Concrete;
+using NTech.Entity.Concrete.Filters;
 
 namespace NTech.Business.Concrete
 {
-    [SecuredOperation("User")]
     public class ProductManager : AsyncBaseService<Product, ProductWriteDto, ProductReadDto>, IProductService
     {
         private readonly IUriService _uriService;
@@ -39,6 +39,8 @@ namespace NTech.Business.Concrete
             _offerDal = offerDal;
             _messageBrokerHelper = messageBrokerHelper;
         }
+
+        [SecuredOperation("User")]
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         [CacheRemoveAspect("ProductReadDto")]
         public async override Task<IResult> AddAsync(ProductWriteDto dto)
@@ -58,6 +60,7 @@ namespace NTech.Business.Concrete
             return new SuccessResult();
         }
 
+        [SecuredOperation("User")]
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         [CacheRemoveAspect("ProductReadDto")]
         public override Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
@@ -78,18 +81,60 @@ namespace NTech.Business.Concrete
             _cacheManager.Add(key, result, 30);
             return result;
         }
+        public async Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetListByFilterAsync(PaginationFilter paginationFilter, string route, ProductFilterResource productFilterResource)
+        {
+            IQueryable<Product> products = Repository.GetAll(false);
+            products = setFilter(products, productFilterResource);
 
+            List<ProductReadDto> productReadDtos = Mapper.Map<List<ProductReadDto>>(await products.ToListAsync());
+            var result = PaginationHelper.CreatePaginatedResponse(productReadDtos, paginationFilter, productReadDtos.Count(), _uriService, route);
+            return result;
+        }
+
+        private IQueryable<Product> setFilter(IQueryable<Product> products, ProductFilterResource productFilterResource)
+        {
+            if (productFilterResource.Name != null)
+                products = products.getByName(productFilterResource);
+
+            if (productFilterResource.Description != null)
+                products = products.getByDescription(productFilterResource);
+
+            if (productFilterResource.MaximumPrice != null)
+                products = products.getByMaximumPrice(productFilterResource);
+
+            if (productFilterResource.MinimumPrice != null)
+                products = products.getByMinimumPrice(productFilterResource);
+
+            if (productFilterResource.UsingStatusId != null)
+                products = products.getByUsingStatusId(productFilterResource);
+
+            if (productFilterResource.ColorId != null)
+                products = products.getByColorId(productFilterResource);
+
+            if (productFilterResource.CategoryId != null)
+                products = products.getByCategoryId(productFilterResource);
+
+            if (productFilterResource.BrandId != null)
+                products = products.getByBrandId(productFilterResource);
+
+            return products;
+        }
+
+        [SecuredOperation("User")]
         [CacheRemoveAspect("ProductReadDto")]
         public override Task<IResult> SoftDeleteAsync(int id)
         {
             return base.SoftDeleteAsync(id);
         }
+
+        [SecuredOperation("User")]
         [CacheRemoveAspect("ProductReadDto")]
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);
         }
 
+        [SecuredOperation("User")]
         public async Task<IResult> BuyAsync(int productId)
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
@@ -132,6 +177,7 @@ namespace NTech.Business.Concrete
                 });
         }
 
+        [SecuredOperation("User")]
         public async Task<IResult> SetImageAsync(int productId, IFormFile file)
         {
             Product product = await Repository.GetAsync(p => p.Id == productId);
@@ -149,5 +195,6 @@ namespace NTech.Business.Concrete
                 new SuccessResult(LanguageMessage.SuccessfullyFileUpload) :
                 new ErrorResult(LanguageMessage.FailedToFileUpload);
         }
+
     }
 }
