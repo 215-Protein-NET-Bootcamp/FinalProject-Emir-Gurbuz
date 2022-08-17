@@ -64,7 +64,7 @@ namespace NTech.Business.Concrete
             IQueryable<Category> categories = _categoryDal.GetAll();
             if (categoryFilterResource.Name != null)
             {
-                categories.Where(c => c.Name.ToLower().Contains(categoryFilterResource.Name.ToLower()));
+                categories = categories.Where(c => c.Name.ToLower().Contains(categoryFilterResource.Name.ToLower()));
             }
             List<CategoryReadDto> categoryReadDtos = Mapper.Map<List<CategoryReadDto>>(await categories.ToListAsync());
             return new SuccessDataResult<List<CategoryReadDto>>(categoryReadDtos, LanguageMessage.SuccessfullyListed);
