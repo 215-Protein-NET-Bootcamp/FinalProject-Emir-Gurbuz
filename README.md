@@ -47,6 +47,8 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 #endregion
 ```
 
+<img src="screenshots/migration.png"/>
+
 <h4>⬇️ Jwt Options in appsettings.json ⬇️</h4>
 
 ```json
