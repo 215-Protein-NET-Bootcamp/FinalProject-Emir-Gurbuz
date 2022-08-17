@@ -15,11 +15,11 @@ namespace NTech.Business.Extensions
         }
         public static IQueryable<Product> getByMaximumPrice(this IQueryable<Product> products, ProductFilterResource productFilterResource)
         {
-            return products.Where(p => p.Price < productFilterResource.MaximumPrice);
+            return products.Where(p => p.Price <= productFilterResource.MaximumPrice);
         }
         public static IQueryable<Product> getByMinimumPrice(this IQueryable<Product> products, ProductFilterResource productFilterResource)
         {
-            return products.Where(p => p.Price > productFilterResource.MinimumPrice);
+            return products.Where(p => p.Price >= productFilterResource.MinimumPrice);
         }
         public static IQueryable<Product> getByUsingStatusId(this IQueryable<Product> products, ProductFilterResource productFilterResource)
         {
