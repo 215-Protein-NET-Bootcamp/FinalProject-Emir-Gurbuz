@@ -46,7 +46,8 @@ namespace NTech.Business.Concrete
         public async override Task<IResult> AddAsync(ProductWriteDto dto)
         {
             var result = BusinessRule.Run(
-                await checkImageAsync(dto));
+                //await checkImageAsync(dto)
+                );
             if (result != null)
                 return result;
             return await base.AddAsync(dto);
