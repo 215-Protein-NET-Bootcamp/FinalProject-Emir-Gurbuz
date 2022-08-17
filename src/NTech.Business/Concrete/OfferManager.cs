@@ -46,8 +46,8 @@ namespace NTech.Business.Concrete
             var result = BusinessRule.Run(
                 await checkOfferedPriceGreaterThanProductPriceAsync(dto),
                 await checkOfferAsync(dto),
-                await checkProductIsSold(dto),
-                await checkProductIsOfferable(dto));
+                await checkProductIsSoldAsync(dto),
+                await checkProductIsOfferableAsync(dto));
 
             if (dto.Percent != 0)
             {
@@ -64,7 +64,10 @@ namespace NTech.Business.Concrete
         public override async Task<IResult> UpdateAsync(int id, OfferWriteDto dto)
         {
             var result = BusinessRule.Run(
-                await checkOfferedPriceGreaterThanProductPriceAsync(dto));
+                await checkOfferedPriceGreaterThanProductPriceAsync(dto),
+                await checkOfferAsync(dto),
+                await checkProductIsSoldAsync(dto),
+                await checkProductIsOfferableAsync(dto));
             if (result != null)
                 return result;
 
@@ -86,14 +89,14 @@ namespace NTech.Business.Concrete
                 return new SuccessResult();
             return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
         }
-        private async Task<IResult> checkProductIsSold(OfferWriteDto dto)
+        private async Task<IResult> checkProductIsSoldAsync(OfferWriteDto dto)
         {
             ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (product.IsSold)
                 return new ErrorResult(_languageMessage.ProductHasBeenSold);
             return new SuccessResult();
         }
-        private async Task<IResult> checkProductIsOfferable(OfferWriteDto dto)
+        private async Task<IResult> checkProductIsOfferableAsync(OfferWriteDto dto)
         {
             ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (product.isOfferable)
