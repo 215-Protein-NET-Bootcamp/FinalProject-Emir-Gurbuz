@@ -109,7 +109,14 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 ```json
 "UploadImagePath": "wwwroot/images/"
 ```
+<h4>⬇️ Select Language in program.cs - TurkishLanguageMessage() or EnglishLanguageMessage() ⬇️</h4>
 
+```c#
+#region Result Message Language
+//builder.Services.AddMessageLanguage(new EnglishLanguageMessage());
+builder.Services.AddMessageLanguage(new TurkishLanguageMessage());
+#endregion
+```
 
 
 <hr>
