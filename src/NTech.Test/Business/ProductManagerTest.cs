@@ -52,6 +52,25 @@ namespace NTech.Test.Business
         }
 
         [Theory, InlineData(1)]
+        public async Task Product_delete_success(int id)
+        {
+            _productServiceMock.Setup(x => x.SoftDeleteAsync(It.IsAny<int>())).ReturnsAsync(new SuccessResult());
+
+            var result = await _productServiceMock.Object.SoftDeleteAsync(id);
+
+            Assert.True(result.Success);
+        }
+        [Theory, InlineData(1)]
+        public async Task Product_delete_error(int id)
+        {
+            _productServiceMock.Setup(x => x.SoftDeleteAsync(It.IsAny<int>())).ReturnsAsync(new ErrorResult());
+
+            var result = await _productServiceMock.Object.SoftDeleteAsync(id);
+
+            Assert.False(result.Success);
+        }
+
+        [Theory, InlineData(1)]
         public async Task Product_Buy_success(int id)
         {
             _productServiceMock.Setup(x => x.BuyAsync(It.IsAny<int>())).ReturnsAsync(new SuccessResult());
