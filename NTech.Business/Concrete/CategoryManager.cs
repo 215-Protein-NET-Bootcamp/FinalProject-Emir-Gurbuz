@@ -67,7 +67,7 @@ namespace NTech.Business.Concrete
                 categories.Where(c => c.Name.ToLower().Contains(categoryFilterResource.Name.ToLower()));
             }
             List<CategoryReadDto> categoryReadDtos = Mapper.Map<List<CategoryReadDto>>(await categories.ToListAsync());
-            return new SuccessDataResult<List<CategoryReadDto>>(categoryReadDtos);
+            return new SuccessDataResult<List<CategoryReadDto>>(categoryReadDtos, LanguageMessage.SuccessfullyListed);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace NTech.Business.Concrete
                 colors = colors.Where(c => c.Name.ToLower().Contains(colorFilterResouce.Name.ToLower()));
             }
             List<ColorReadDto> colorReadDtos = Mapper.Map<List<ColorReadDto>>(await colors.ToListAsync());
-            return new SuccessDataResult<List<ColorReadDto>>(colorReadDtos);
+            return new SuccessDataResult<List<ColorReadDto>>(colorReadDtos, LanguageMessage.SuccessfullyListed);
         }
 
         [SecuredOperation("Admin")]
