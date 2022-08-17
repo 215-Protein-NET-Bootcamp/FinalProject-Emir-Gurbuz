@@ -46,7 +46,7 @@ builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(build
 builder.Services.AddScoped<DbContext, NTechDbContext>();
 #endregion
 ```
-
+<h4>⬇️ Add Migration - Package Manager Console ⬇️</h4>
 <img src="screenshots/migration.png"/>
 
 <h4>⬇️ Jwt Options in appsettings.json ⬇️</h4>
@@ -95,6 +95,13 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
     "FileLogConfiguration": {
       "FolderPath": "/logs/"
     }
+  }
+```
+<h4>⬇️ Admin Email appsettings.json ⬇️</h4>
+
+```json
+"AdminUser": {
+    "Email": "emir.gurbuz06@hotmail.com"
   }
 ```
 <h4>⬇️ Upload Image Path in appsettings.json ⬇️</h4>
