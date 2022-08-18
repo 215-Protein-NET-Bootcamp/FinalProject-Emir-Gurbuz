@@ -32,6 +32,25 @@ namespace NTech.Test.Business
             Assert.False(result.Success);
         }
 
+        [Theory, InlineData(1)]
+        public async Task EmailQueue_delete_success(int id)
+        {
+            _emailQueueServiceMock.Setup(x => x.HardDeleteAsync(It.IsAny<int>())).ReturnsAsync(new SuccessResult());
+
+            var result = await _emailQueueServiceMock.Object.HardDeleteAsync(id);
+
+            Assert.True(result.Success);
+        }
+        [Theory, InlineData(1)]
+        public async Task EmailQueue_delete_error(int id)
+        {
+            _emailQueueServiceMock.Setup(x => x.HardDeleteAsync(It.IsAny<int>())).ReturnsAsync(new ErrorResult());
+
+            var result = await _emailQueueServiceMock.Object.HardDeleteAsync(id);
+
+            Assert.False(result.Success);
+        }
+
         private EmailQueue emailQueue
         {
             get
