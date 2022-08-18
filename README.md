@@ -134,13 +134,10 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 ```
 
 
-<h4>⬇️ Select Language in program.cs - TurkishMessageLanguage or EnglishMessageLanguage ⬇️</h4>
+<h4>⬇️ Select Language in appsettings.json - Tr or En ⬇️</h4>
 
-```c#
-#region Result Message Language
-//builder.Services.AddMessageLanguage(typeof(EnglishMessageLanguage));
-builder.Services.AddMessageLanguage(typeof(TurkishMessageLanguage));
-#endregion
+```json
+"MessageResultLanguage": "Tr"
 ```
 
 
