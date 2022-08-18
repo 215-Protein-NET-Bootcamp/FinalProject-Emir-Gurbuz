@@ -9,9 +9,9 @@ namespace Core.Extensions
     {
         public static IServiceCollection AddMessageLanguage(this IServiceCollection services, IConfiguration configuration)
         {
-            switch (configuration.GetSection("MessageResultLanguage").Value)
+            switch (configuration.GetSection("MessageResultLanguage").Value.ToLower())
             {
-                case "Tr":
+                case "tr":
                     return services.AddMessageLanguage(typeof(TurkishMessageLanguage));
 
                 default:
