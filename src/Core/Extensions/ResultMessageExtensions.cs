@@ -13,7 +13,8 @@ namespace Core.Extensions
             {
                 case "tr":
                     return services.AddMessageLanguage(typeof(TurkishMessageLanguage));
-
+                case "en":
+                    return services.AddMessageLanguage(typeof(EnglishMessageLanguage));
                 default:
                     return services.AddMessageLanguage(typeof(EnglishMessageLanguage));
             }
