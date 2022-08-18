@@ -1,6 +1,6 @@
 ﻿namespace Core.Utilities.ResultMessage
 {
-    public class EnglishLanguageMessage : ILanguageMessage
+    public class EnglishMessageLanguage : ILanguageMessage
     {
         public string SuccessfullyAdded => "Successfully added";
 

@@ -74,7 +74,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
 
 #region Result Message Language
-builder.Services.AddMessageLanguage(typeof(TurkishLanguageMessage));
+builder.Services.AddMessageLanguage(typeof(TurkishMessageLanguage));
 #endregion
 #region AutofacBusinessModule
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
