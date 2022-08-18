@@ -49,6 +49,9 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 <h4>⬇️ Add Migration - Package Manager Console ⬇️</h4>
 <img src="screenshots/migration.png"/>
 
+<h2>⚠️ if you use postgresql and hangfire, create the "NTechDb" database in SqlServer ⚠️</h2>
+<img src="screenshots/ntechdb_sqlserver.png"/>
+
 <h4>⬇️ Jwt Options in appsettings.json ⬇️</h4>
 
 ```json
