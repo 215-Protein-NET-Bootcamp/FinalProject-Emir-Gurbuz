@@ -23,13 +23,14 @@ namespace NTech.Business.Concrete
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AuthManager(ITokenHelper tokenHelper, ILanguageMessage languageMessage, IMessageBrokerHelper messageBrokerHelper, IUserService userService, IMapper mapper)
+        public AuthManager(ITokenHelper tokenHelper, ILanguageMessage languageMessage, IMessageBrokerHelper messageBrokerHelper, IUserService userService, IMapper mapper, IConfiguration configuration)
         {
             _tokenHelper = tokenHelper;
             _languageMessage = languageMessage;
             _messageBrokerHelper = messageBrokerHelper;
             _userService = userService;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public async Task<IDataResult<AccessToken>> CreateAccessToken(User appUser)
