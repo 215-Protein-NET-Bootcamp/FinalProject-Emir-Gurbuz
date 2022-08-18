@@ -1,4 +1,6 @@
-﻿namespace Core.Utilities.Messages
+﻿using System.Runtime.Serialization;
+
+namespace Core.Utilities.Messages
 {
     public class ExceptionMessages
     {
@@ -9,5 +11,7 @@
         public static readonly string SerilogNotFoundFolderPath = "Serilog not found folder path";
         public static readonly string Unauthorized = "Unauthorized";
         public static readonly string NullLanguageMessage = "Wrong language message type";
+        public static readonly string NoSelectedDatabase = "No selected database";
+        public static readonly string NoSelectedMessageResultLanguage = "No selected message result language";
     }
 }

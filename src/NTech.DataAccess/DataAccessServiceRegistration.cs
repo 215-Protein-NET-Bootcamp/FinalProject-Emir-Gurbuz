@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Exceptions.Service;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NTech.DataAccess.Contexts;
@@ -18,10 +19,9 @@ namespace NTech.DataAccess
                     services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
                     break;
                 default:
-                    services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("PostgreSql")));
-                    break;
+                    throw new NoSelectedDatabaseException();
             }
-            builder.Services.AddScoped<DbContext, NTechDbContext>();
+            services.AddScoped<DbContext, NTechDbContext>();
             return services;
         }
     }

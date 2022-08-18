@@ -1,4 +1,5 @@
 ﻿using Core.Exceptions.Extension;
+using Core.Exceptions.Service;
 using Core.Utilities.ResultMessage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,7 @@ namespace Core.Extensions
                 case "en":
                     return services.AddMessageLanguage(typeof(EnglishMessageLanguage));
                 default:
-                    return services.AddMessageLanguage(typeof(EnglishMessageLanguage));
+                    throw new NoSelectedMessageResultLanguageException();
             }
         }
         public static IServiceCollection AddMessageLanguage(this IServiceCollection services, Type languageMessageType)
