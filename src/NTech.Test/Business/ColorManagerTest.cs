@@ -48,7 +48,7 @@ namespace NTech.Test.Business
 
             var result = await _colorServiceMock.Object.UpdateAsync(id, colorWriteDto);
 
-            Assert.True(result.Success);
+            Assert.False(result.Success);
         }
 
         [Theory, InlineData(1)]
