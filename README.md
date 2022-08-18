@@ -79,6 +79,20 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
     "Password": "***"
   }
 ```
+<h4>⬇️ Email Messages in appsettings.json ⬇️</h4>
+
+```json
+"EmailMessages": {
+    "AcceptOfferSubject": "Teklifiniz Onaylandı",
+    "AcceptOfferBody": "Merhaba {0} {1}, teklifiniz onaylandı :)",
+    "DenyOfferSubject": "Teklifiniz Reddedildi",
+    "DenyOfferBody": "Merhaba {0} {1}, teklifiniz reddedildi :(",
+    "LockAccountSubject": "Uyarı",
+    "LockAccountBody": "Sayın {0} {1} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 3 dakika sonra tekrar deneyiniz.",
+    "LoginSubject": "Giriş Başarılı",
+    "LoginBody": "Hoşgeldiniz {0} {1}"
+  }
+```
 <h4>⬇️ RabbitMq Configuration in appsettings.json ⬇️</h4>
 
 ```json
