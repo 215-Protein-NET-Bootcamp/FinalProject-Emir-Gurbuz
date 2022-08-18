@@ -51,7 +51,7 @@ namespace NTech.Business.Concrete
                 await checkProductIsSoldAsync(dto),
                 await checkProductIsOfferableAsync(dto));
 
-            if (dto.Percent != 0)
+            if (dto.Percent != null)
                 dto.OfferedPrice = (decimal)(dto.OfferedPrice * dto.Percent / 100);
 
             if (result != null)
