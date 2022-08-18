@@ -72,5 +72,7 @@
         public string SuccessfullyFileUpload => "Dosya yükleme başarılı";
 
         public string FailedToFileUpload => "Dosya yükleme başarısız";
+
+        public string OfferedPriceNotNull => "Teklif fiyatı boş olamaz";
     }
 }

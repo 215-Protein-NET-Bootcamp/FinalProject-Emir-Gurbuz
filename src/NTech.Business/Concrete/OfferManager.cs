@@ -25,7 +25,6 @@ namespace NTech.Business.Concrete
     public class OfferManager : AsyncBaseService<Offer, OfferWriteDto, OfferReadDto>, IOfferService
     {
         private readonly IProductService _productService;
-        private readonly ILanguageMessage _languageMessage;
         private readonly IOfferDal _offerDal;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +32,6 @@ namespace NTech.Business.Concrete
         private readonly IConfiguration _configuration;
         public OfferManager(IOfferDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IProductService productService, IOfferDal offerDal, IMessageBrokerHelper messageBrokerHelper, IConfiguration configuration) : base(repository, mapper, unitOfWork, languageMessage)
         {
-            _languageMessage = languageMessage;
             _productService = productService;
             _offerDal = offerDal;
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
@@ -57,6 +55,9 @@ namespace NTech.Business.Concrete
 
             if (dto.Percent != null)
                 dto.OfferedPrice = (decimal)(productResult.Data.Price * dto.Percent / 100);
+
+            if (dto.OfferedPrice == null)
+                return new ErrorResult(LanguageMessage.OfferedPriceNotNull);
 
             if (result != null)
                 return result;
@@ -82,7 +83,7 @@ namespace NTech.Business.Concrete
         {
             ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (dto.OfferedPrice > product.Price)
-                return new ErrorResult(_languageMessage.OfferedPriceCannotBeHigherThanProductPrice);
+                return new ErrorResult(LanguageMessage.OfferedPriceCannotBeHigherThanProductPrice);
 
             return new SuccessResult();
         }
@@ -94,13 +95,13 @@ namespace NTech.Business.Concrete
             if (offer == null)
                 return new SuccessResult();
 
-            return new ErrorResult(_languageMessage.OfferIsAlreadyExists);
+            return new ErrorResult(LanguageMessage.OfferIsAlreadyExists);
         }
         private async Task<IResult> checkProductIsSoldAsync(OfferWriteDto dto)
         {
             ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (product.IsSold)
-                return new ErrorResult(_languageMessage.ProductHasBeenSold);
+                return new ErrorResult(LanguageMessage.ProductHasBeenSold);
 
             return new SuccessResult();
         }
@@ -108,7 +109,7 @@ namespace NTech.Business.Concrete
         {
             ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
             if (product.isOfferable)
-                return new ErrorResult(_languageMessage.CannotBeOffer);
+                return new ErrorResult(LanguageMessage.CannotBeOffer);
 
             return new SuccessResult();
         }
@@ -120,7 +121,7 @@ namespace NTech.Business.Concrete
             List<Offer> offers = await _offerDal.GetAll(o => o.UserId == userId).ToListAsync();
             List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
 
-            return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, _languageMessage.SuccessfullyListed);
+            return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, LanguageMessage.SuccessfullyListed);
         }
         public async Task<IDataResult<List<OfferReadDto>>> GetReceivedOffers()
         {
@@ -129,14 +130,14 @@ namespace NTech.Business.Concrete
             List<Offer> offers = await _offerDal.GetAll(o => o.Product.UserId == userId).ToListAsync();
             List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
 
-            return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, _languageMessage.SuccessfullyListed);
+            return new SuccessDataResult<List<OfferReadDto>>(offerReadDtos, LanguageMessage.SuccessfullyListed);
         }
 
         public async Task<IResult> AcceptOffer(int offerId)
         {
             Offer offer = await _offerDal.GetAsync(o => o.Id == offerId);
             if (offer == null)
-                return new ErrorResult(_languageMessage.NotFound);
+                return new ErrorResult(LanguageMessage.NotFound);
 
             offer.Status = true;
             await _offerDal.UpdateAsync(offer);
@@ -147,9 +148,9 @@ namespace NTech.Business.Concrete
             if (row > 0)
             {
                 sendEmail(offer, _configuration.GetSection("EmailMessages:AcceptOfferSubject").Value, _configuration.GetSection("EmailMessages:AcceptOfferBody").Value);
-                return new SuccessResult(_languageMessage.AcceptOfferSuccess);
+                return new SuccessResult(LanguageMessage.AcceptOfferSuccess);
             }
-            return new ErrorResult(_languageMessage.AcceptOfferFailed);
+            return new ErrorResult(LanguageMessage.AcceptOfferFailed);
         }
 
         private async Task deleteOtherOffers(Offer offer)
@@ -164,7 +165,7 @@ namespace NTech.Business.Concrete
         {
             Offer offer = await _offerDal.GetAsync(o => o.Id == offerId);
             if (offer == null)
-                return new ErrorResult(_languageMessage.NotFound);
+                return new ErrorResult(LanguageMessage.NotFound);
 
             offer.Status = false;
             await _offerDal.UpdateAsync(offer);
@@ -173,9 +174,9 @@ namespace NTech.Business.Concrete
             if (row > 0)
             {
                 sendEmail(offer, _configuration.GetSection("EmailMessages:DenyOfferSubject").Value, _configuration.GetSection("EmailMessages:DenyOfferBody").Value);
-                return new SuccessResult(_languageMessage.DenyOfferSuccess);
+                return new SuccessResult(LanguageMessage.DenyOfferSuccess);
             }
-            return new ErrorResult(_languageMessage.DenyOfferFailed);
+            return new ErrorResult(LanguageMessage.DenyOfferFailed);
         }
 
         public async Task<IDataResult<Offer>> GetOfferByUserIdAndProductIdAsync(int productId)
@@ -184,7 +185,7 @@ namespace NTech.Business.Concrete
             var offer = await _offerDal.GetAsync(x => x.ProductId == productId && x.UserId == userId);
 
             if (offer == null)
-                return new ErrorDataResult<Offer>(_languageMessage.NotFound);
+                return new ErrorDataResult<Offer>(LanguageMessage.NotFound);
 
             return new SuccessDataResult<Offer>(offer);
         }

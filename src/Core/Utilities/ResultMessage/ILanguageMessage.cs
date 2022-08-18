@@ -54,5 +54,6 @@
 
         string SuccessfullyFileUpload { get; }
         string FailedToFileUpload { get; }
+        string OfferedPriceNotNull { get; }
     }
 }

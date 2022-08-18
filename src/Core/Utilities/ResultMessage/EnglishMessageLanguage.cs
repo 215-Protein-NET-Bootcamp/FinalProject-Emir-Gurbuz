@@ -72,5 +72,7 @@
         public string SuccessfullyFileUpload => "Successfully file upload";
 
         public string FailedToFileUpload => "Failed to file upload";
+
+        public string OfferedPriceNotNull => "Offered price is not null";
     }
 }
