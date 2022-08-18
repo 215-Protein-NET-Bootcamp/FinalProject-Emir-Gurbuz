@@ -126,6 +126,13 @@ builder.Services.AddScoped<DbContext, NTechDbContext>();
 ```json
 "UploadImagePath": "wwwroot/images/"
 ```
+<h4>⬇️ Use Hangfire or BackgroundService in appsettings.json ⬇️</h4>
+
+```json
+  "UseHangFire": false,
+  "UseBackgroundServices": true
+```
+
 <h4>⬇️ Select Language in program.cs - TurkishMessageLanguage or EnglishMessageLanguage ⬇️</h4>
 
 ```c#
