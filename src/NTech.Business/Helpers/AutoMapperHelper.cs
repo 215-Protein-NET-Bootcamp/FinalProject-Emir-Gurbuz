@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Dto.Concrete;
 using Core.Entity.Concrete;
 using NTech.Dto.Concrete;
 using NTech.Dto.Concrete.EmailQueue;
@@ -35,6 +36,7 @@ namespace NTech.Business.Helpers
             CreateMap<EmailQueue, EmailQueueReadDto>().ReverseMap();
 
             CreateMap<User, UserReadDto>().ReverseMap();
+            CreateMap<User, RegisterDto>().ReverseMap();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Aspect.Autofac.Validation;
+﻿using AutoMapper;
+using Core.Aspect.Autofac.Validation;
 using Core.Dto.Concrete;
 using Core.Entity.Concrete;
 using Core.Utilities.Business;
@@ -7,6 +8,7 @@ using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
+using Microsoft.Extensions.Configuration;
 using NTech.Business.Abstract;
 using NTech.Business.Validators.FluentValidation;
 
@@ -18,13 +20,16 @@ namespace NTech.Business.Concrete
         private readonly ILanguageMessage _languageMessage;
         private readonly IMessageBrokerHelper _messageBrokerHelper;
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthManager(ITokenHelper tokenHelper, ILanguageMessage languageMessage, IMessageBrokerHelper messageBrokerHelper, IUserService userService)
+        public AuthManager(ITokenHelper tokenHelper, ILanguageMessage languageMessage, IMessageBrokerHelper messageBrokerHelper, IUserService userService, IMapper mapper)
         {
             _tokenHelper = tokenHelper;
             _languageMessage = languageMessage;
             _messageBrokerHelper = messageBrokerHelper;
             _userService = userService;
+            _mapper = mapper;
         }
 
         public async Task<IDataResult<AccessToken>> CreateAccessToken(User appUser)
@@ -51,11 +56,12 @@ namespace NTech.Business.Concrete
             {
                 EmailQueue emailQueue = new()
                 {
-                    Subject = "Uyarı",
-                    Body = $"Sayın {user.FirstName} {user.LastName} üç defa başarısız giriş sonucunda hesabınız kilitlenmiştir. 3 dakika sonra tekrar deneyiniz.",
+                    Subject = _configuration.GetSection("EmailMessages:LockAccountSubject").Value,
+                    Body = string.Format(_configuration.GetSection("EmailMessages:LockAccountBody").Value, user.FirstName, user.LastName),
                     Email = user.Email
                 };
                 user.LockoutEnd = DateTime.Now.AddMinutes(3);
+
                 await _userService.UpdateAsync(user);
                 _messageBrokerHelper.QueueMessage(emailQueue);
                 return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
@@ -75,8 +81,8 @@ namespace NTech.Business.Concrete
             {
                 EmailQueue emailQueue = new()
                 {
-                    Subject = "Giriş Başarılı",
-                    Body = $"Hoşgeldiniz {user.FirstName} {user.LastName}",
+                    Subject = _configuration.GetSection("EmailMessages:LoginSubject").Value,
+                    Body = string.Format(_configuration.GetSection("EmailMessages:LoginBody").Value, user.FirstName, user.LastName),
                     Email = user.Email
                 };
                 user.AccessFailedCount = 0;
@@ -98,15 +104,10 @@ namespace NTech.Business.Concrete
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
 
-            User user = new()
-            {
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                Email = registerDto.Email,
-                DateOfBirth = registerDto.DateOfBirth,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
-            };
+            User user = _mapper.Map<User>(registerDto);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
             var result = await _userService.AddAsync(user);
             return result.Success ?
                 new SuccessResult(_languageMessage.RegisterSuccessfull) :
@@ -131,7 +132,7 @@ namespace NTech.Business.Concrete
             userResult.Data.PasswordSalt = passwordSalt;
 
             IResult updateResult = await _userService.UpdateAsync(userResult.Data);
-            //int row = await _unitOfWork.CompleteAsync();
+            
             return updateResult.Success == true ?
                 new SuccessResult(_languageMessage.SuccessResetPassword) :
                 new ErrorResult(_languageMessage.FailedResetPassword);
