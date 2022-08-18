@@ -36,15 +36,10 @@ Exception Log Aspects ❌ <br>
     "PostgreSql": "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=NTechDb;"
   },
 ```
-<h4>⬇️ UseSqlServer or UseNpgsql in program.cs ⬇️</h4>
+<h4>⬇️ Select Database in appsettings.json - PostgreSql or SqlServer ⬇️</h4>
 
-```c#
-#region SqlContext, PostgreContext
-//builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
-
-builder.Services.AddScoped<DbContext, NTechDbContext>();
-#endregion
+```json
+"Database": "PostgreSql"
 ```
 <h4>⬇️ Add Migration - Package Manager Console ⬇️</h4>
 <img src="screenshots/migration.png"/>
