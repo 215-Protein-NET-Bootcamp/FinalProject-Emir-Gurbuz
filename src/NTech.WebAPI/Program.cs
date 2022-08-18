@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NTech.Business.DependencyResolvers.Autofac;
 using NTech.Business.Helpers;
+using NTech.DataAccess;
 using NTech.DataAccess.Contexts;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.DataAccess.UnitOfWork.Concrete;
@@ -31,10 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region SqlContext, PostgreContext
-builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
-
-builder.Services.AddScoped<DbContext, NTechDbContext>();
+builder.Services.AddDatabase(builder.Configuration);
 #endregion
 
 #region Identity
