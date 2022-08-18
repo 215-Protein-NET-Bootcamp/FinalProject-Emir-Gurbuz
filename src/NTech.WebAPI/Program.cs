@@ -31,7 +31,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region SqlContext, PostgreContext
-//builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+builder.Services.AddDbContext<NTechDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 builder.Services.AddDbContext<NTechDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")));
 
 builder.Services.AddScoped<DbContext, NTechDbContext>();
@@ -75,7 +75,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
 
 #region Result Message Language
-builder.Services.AddMessageLanguage(typeof(TurkishMessageLanguage));
+builder.Services.AddMessageLanguage(builder.Configuration);
 #endregion
 
 #region AutofacBusinessModule

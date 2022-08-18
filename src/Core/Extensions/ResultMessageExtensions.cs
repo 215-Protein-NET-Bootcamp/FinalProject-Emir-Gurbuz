@@ -1,17 +1,22 @@
 ﻿using Core.Exceptions.Extension;
 using Core.Utilities.ResultMessage;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Extensions
 {
     public static class ResultMessageExtensions
     {
-        public static IServiceCollection AddMessageLanguage(this IServiceCollection services, ILanguageMessage languageMessage)
+        public static IServiceCollection AddMessageLanguage(this IServiceCollection services, IConfiguration configuration)
         {
-            WrongLanguageMessageTypeException.ThrowIfNotAssignable(languageMessage);
+            switch (configuration.GetSection("MessageResultLanguage").Value)
+            {
+                case "Tr":
+                    return services.AddMessageLanguage(typeof(TurkishMessageLanguage));
 
-            services.AddSingleton<ILanguageMessage>(languageMessage);
-            return services;
+                default:
+                    return services.AddMessageLanguage(typeof(EnglishMessageLanguage));
+            }
         }
         public static IServiceCollection AddMessageLanguage(this IServiceCollection services, Type languageMessageType)
         {
