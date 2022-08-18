@@ -91,12 +91,18 @@ builder.Services.AddDependencyResolvers(
 #endregion
 
 #region Background Services
-//builder.Services.AddHostedService<SendEmailWorker>();
-//builder.Services.AddHostedService<ConsumerEmailWorker>();
+if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == false)
+{
+    builder.Services.AddHostedService<SendEmailWorker>();
+    builder.Services.AddHostedService<ConsumerEmailWorker>();
+}
 #endregion
 
-#region Hangfire
-builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("SqlServer")));
+#region AddHangfire
+if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == true)
+{
+    builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.GetConnectionString("SqlServer")));
+}
 #endregion
 
 var app = builder.Build();
@@ -118,11 +124,13 @@ app.UseExceptionMiddleware();
 
 
 #region Hangfire Background Services
-app.UseHangfireDashboard();
-app.UseHangfireServer();
-
-BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
-BackgroundJob.Schedule(() => new ConsumerEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
+if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == true)
+{
+    app.UseHangfireDashboard();
+    app.UseHangfireServer();
+    BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
+    BackgroundJob.Schedule(() => new ConsumerEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
+}
 #endregion
 
 app.UseStaticFiles();
