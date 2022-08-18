@@ -5,7 +5,7 @@ using NTech.Business.Abstract;
 using NTech.Dto.Concrete.EmailQueue;
 using System.Diagnostics;
 
-namespace NTech.WebAPI.Worker.EmailSend
+namespace NTech.WebAPI.BackgorundJobs.Workers
 {
     public class ConsumerEmailWorker : BackgroundService
     {

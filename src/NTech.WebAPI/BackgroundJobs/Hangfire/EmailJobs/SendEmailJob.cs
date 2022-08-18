@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 using System.Diagnostics;
 using System.Text;
 
-namespace NTech.WebAPI.BackgorundJobs
+namespace NTech.WebAPI.BackgorundJobs.Hangfire
 {
     public class SendEmailJob : IBackgroundJob
     {

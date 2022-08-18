@@ -6,7 +6,7 @@ using NTech.Business.Abstract;
 using NTech.Dto.Concrete.EmailQueue;
 using System.Diagnostics;
 
-namespace NTech.WebAPI.BackgorundJobs
+namespace NTech.WebAPI.BackgorundJobs.Hangfire
 {
     public class ConsumerEmailJob : IBackgroundJob
     {

@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 using System.Diagnostics;
 using System.Text;
 
-namespace NTech.WebAPI.Worker.EmailSend
+namespace NTech.WebAPI.BackgorundJobs.Workers
 {
     public class SendEmailWorker : BackgroundService
     {
@@ -46,6 +46,7 @@ namespace NTech.WebAPI.Worker.EmailSend
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(1200);
+                    Debug.WriteLine("asd");
                     var consumer = new EventingBasicConsumer(channel);
                     await consumerEmailAsync(consumer, channel);
                 }

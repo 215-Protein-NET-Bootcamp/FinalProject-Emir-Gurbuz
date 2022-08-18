@@ -18,7 +18,8 @@ using NTech.DataAccess.Contexts;
 using NTech.DataAccess.UnitOfWork.Abstract;
 using NTech.DataAccess.UnitOfWork.Concrete;
 using NTech.WebAPI.BackgorundJobs;
-using NTech.WebAPI.Worker.EmailSend;
+using NTech.WebAPI.BackgorundJobs.Hangfire;
+using NTech.WebAPI.BackgorundJobs.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +77,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #region Result Message Language
 builder.Services.AddMessageLanguage(typeof(TurkishMessageLanguage));
 #endregion
+
 #region AutofacBusinessModule
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(builder =>
@@ -91,7 +93,7 @@ builder.Services.AddDependencyResolvers(
 #endregion
 
 #region Background Services
-if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == false)
+if (builder.Configuration.GetSection("UseBackgroundServices").Get<bool>() == true)
 {
     builder.Services.AddHostedService<SendEmailWorker>();
     builder.Services.AddHostedService<ConsumerEmailWorker>();
