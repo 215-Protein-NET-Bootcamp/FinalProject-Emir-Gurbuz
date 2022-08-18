@@ -8,5 +8,6 @@
         public static readonly string WrongLoggingType = "Wrong logging type";
         public static readonly string SerilogNotFoundFolderPath = "Serilog not found folder path";
         public static readonly string Unauthorized = "Unauthorized";
+        public static readonly string NullLanguageMessage = "Wrong language message type";
     }
 }

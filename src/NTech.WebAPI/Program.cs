@@ -68,11 +68,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 #endregion
+
 #region AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
+
 #region Result Message Language
-builder.Services.AddMessageLanguage(new TurkishLanguageMessage());
+builder.Services.AddMessageLanguage(typeof(TurkishLanguageMessage));
 #endregion
 #region AutofacBusinessModule
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -81,6 +83,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         builder.RegisterModule(new AutofacBusinessModule());
     });
 #endregion
+
 #region CoreServiceTool
 builder.Services.AddDependencyResolvers(
     new CoreModule(),
@@ -98,7 +101,9 @@ builder.Services.AddHangfire(_ => _.UseSqlServerStorage(builder.Configuration.Ge
 
 var app = builder.Build();
 
+#region PostgreSql EnableLegacyTimestampBehavior
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -112,7 +117,7 @@ app.UseExceptionMiddleware();
 #endregion
 
 
-#region Background Services
+#region Hangfire Background Services
 app.UseHangfireDashboard();
 app.UseHangfireServer();
 
