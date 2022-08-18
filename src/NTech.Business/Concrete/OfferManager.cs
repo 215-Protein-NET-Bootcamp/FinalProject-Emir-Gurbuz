@@ -51,8 +51,12 @@ namespace NTech.Business.Concrete
                 await checkProductIsSoldAsync(dto),
                 await checkProductIsOfferableAsync(dto));
 
+            var productResult = await _productService.GetByIdAsync(dto.ProductId);
+            if (productResult.Success == false)
+                return productResult;
+
             if (dto.Percent != null)
-                dto.OfferedPrice = (decimal)(dto.OfferedPrice * dto.Percent / 100);
+                dto.OfferedPrice = (decimal)(productResult.Data.Price * dto.Percent / 100);
 
             if (result != null)
                 return result;
@@ -85,7 +89,7 @@ namespace NTech.Business.Concrete
         private async Task<IResult> checkOfferAsync(OfferWriteDto dto)
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
-            
+
             var offer = await _offerDal.GetAsync(x => x.ProductId == dto.ProductId && x.UserId == userId);
             if (offer == null)
                 return new SuccessResult();
@@ -121,7 +125,7 @@ namespace NTech.Business.Concrete
         public async Task<IDataResult<List<OfferReadDto>>> GetReceivedOffers()
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
-            
+
             List<Offer> offers = await _offerDal.GetAll(o => o.Product.UserId == userId).ToListAsync();
             List<OfferReadDto> offerReadDtos = Mapper.Map<List<OfferReadDto>>(offers);
 
@@ -178,7 +182,7 @@ namespace NTech.Business.Concrete
         {
             int userId = _httpContextAccessor.HttpContext.User.ClaimNameIdentifier();
             var offer = await _offerDal.GetAsync(x => x.ProductId == productId && x.UserId == userId);
-            
+
             if (offer == null)
                 return new ErrorDataResult<Offer>(_languageMessage.NotFound);
 

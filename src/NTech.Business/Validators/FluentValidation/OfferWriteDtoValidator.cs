@@ -11,12 +11,13 @@ namespace NTech.Business.Validators.FluentValidation
                 .NotNull()
                 .NotEmpty();
 
-            RuleFor(o => o.OfferedPrice)
-                .NotNull()
-                .NotEmpty();
+            //RuleFor(o => o.OfferedPrice)
+            //    .NotNull()
+            //    .NotEmpty();
 
-            RuleFor(o => o.OfferedPrice)
-                .GreaterThan(0);
+            //RuleFor(o => o.OfferedPrice)
+            //    .GreaterThan(0);
         }
+
     }
 }
