@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Aspect.Autofac.Caching;
 using Core.DataAccess;
 using Core.Dto;
 using Core.Entity;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NTech.Business.Abstract;
-using NTech.DataAccess.Contexts;
 using NTech.DataAccess.UnitOfWork.Abstract;
 
 namespace NTech.Business.Concrete

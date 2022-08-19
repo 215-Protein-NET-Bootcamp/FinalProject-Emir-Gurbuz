@@ -14,7 +14,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             Configuration = configuration;
             _brokerOptions = Configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOptions>();
         }
-        public void QueueMessage(object messageText)
+        public void QueueMessage(string queueName, object messageText)
         {
             var factory = new ConnectionFactory
             {
@@ -26,7 +26,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(
-                    queue: "NTechQueue",
+                    queue: queueName,
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
@@ -37,7 +37,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
 
                 channel.BasicPublish(
                     exchange: string.Empty,
-                    routingKey: "NTechQueue",
+                    routingKey: queueName,
                     basicProperties: null,
                     body: body);
             }

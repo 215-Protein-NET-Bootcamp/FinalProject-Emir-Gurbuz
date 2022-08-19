@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Entity.Concrete;
+using Core.Enums;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using NTech.Business.Abstract;
 using NTech.Dto.Concrete.EmailQueue;
@@ -30,7 +31,7 @@ namespace NTech.WebAPI.BackgorundJobs.Workers
                 {
                     await Task.Delay(1000);
 
-                    _brokerHelper.QueueMessage(_mapper.Map<EmailQueue>(emailQueueReadDto));
+                    _brokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(), _mapper.Map<EmailQueue>(emailQueueReadDto));
                     Debug.WriteLine($"Add queue email:{emailQueueReadDto.Email}");
                     await _emailQueueService.HardDeleteAsync(emailQueueReadDto.Id);
                 }

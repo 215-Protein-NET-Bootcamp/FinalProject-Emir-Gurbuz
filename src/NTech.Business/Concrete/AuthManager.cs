@@ -2,6 +2,7 @@
 using Core.Aspect.Autofac.Validation;
 using Core.Dto.Concrete;
 using Core.Entity.Concrete;
+using Core.Enums;
 using Core.Utilities.Business;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Result;
@@ -64,7 +65,7 @@ namespace NTech.Business.Concrete
                 user.LockoutEnd = DateTime.Now.AddMinutes(3);
 
                 await _userService.UpdateAsync(user);
-                _messageBrokerHelper.QueueMessage(emailQueue);
+                _messageBrokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(), emailQueue);
                 return new ErrorDataResult<AccessToken>(_languageMessage.LockAccount);
             }
 
@@ -89,7 +90,7 @@ namespace NTech.Business.Concrete
                 user.AccessFailedCount = 0;
                 user.LockoutEnd = null;
                 await _userService.UpdateAsync(user);
-                _messageBrokerHelper.QueueMessage(emailQueue);
+                _messageBrokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(), emailQueue);
                 return accessToken;
             }
 

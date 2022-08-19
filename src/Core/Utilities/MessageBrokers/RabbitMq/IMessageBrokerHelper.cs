@@ -2,6 +2,6 @@
 {
     public interface IMessageBrokerHelper
     {
-        void QueueMessage(object messageText);
+        void QueueMessage(string queueName, object messageText);
     }
 }

@@ -29,17 +29,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDatabase(builder.Configuration);
 #endregion
 
-#region Identity
-//builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
-//{
-//    options.Password.RequireNonAlphanumeric = false;
-
-//    options.Lockout.MaxFailedAccessAttempts = 3;
-//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
-
-//}).AddEntityFrameworkStores<NTechDbContext>().AddDefaultTokenProviders();
-#endregion
-
 #region JWT
 AccessTokenOptions tokenOptions = builder.Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -78,7 +67,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     });
 #endregion
 
-#region CoreServiceTool
+#region CoreModule And BackgroundServiceModule
 builder.Services.AddDependencyResolvers(
     new CoreModule(),
     new BackgroundServiceModule());

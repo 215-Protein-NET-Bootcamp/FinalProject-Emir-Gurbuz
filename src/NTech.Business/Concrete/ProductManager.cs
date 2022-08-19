@@ -3,6 +3,7 @@ using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entity.Concrete;
+using Core.Enums;
 using Core.Extensions;
 using Core.Utilities.Business;
 using Core.Utilities.MessageBrokers.RabbitMq;
@@ -169,7 +170,7 @@ namespace NTech.Business.Concrete
         }
         private void sendEmail(Offer offer)
         {
-            _messageBrokerHelper.QueueMessage(
+            _messageBrokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(),
                 new EmailQueue
                 {
                     Subject = "Teklif verdiğiniz ürün satıldı",

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Aspect.Autofac.Validation;
 using Core.Entity.Concrete;
+using Core.Enums;
 using Core.Extensions;
 using Core.Utilities.Business;
 using Core.Utilities.IoC;
@@ -192,7 +193,7 @@ namespace NTech.Business.Concrete
 
         private void sendEmail(Offer offer, string subject, string body)
         {
-            _messageBrokerHelper.QueueMessage(
+            _messageBrokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(),
                 new EmailQueue
                 {
                     Subject = subject,

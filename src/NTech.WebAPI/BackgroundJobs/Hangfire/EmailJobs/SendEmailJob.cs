@@ -1,4 +1,5 @@
 ﻿using Core.Entity.Concrete;
+using Core.Enums;
 using Core.Utilities.IoC;
 using Core.Utilities.Mail;
 using Core.Utilities.MessageBrokers.RabbitMq;
@@ -41,7 +42,7 @@ namespace NTech.WebAPI.BackgorundJobs.Hangfire
                 {
                     await Task.Delay(1200);
                     channel.QueueDeclare(
-                       queue: "NTechQueue",
+                       queue: QueueNameEnum.EmailQueue.ToString(),
                        durable: false,
                        exclusive: false,
                        autoDelete: false,
@@ -78,11 +79,11 @@ namespace NTech.WebAPI.BackgorundJobs.Hangfire
                 {
                     emailQueue.TryCount++;
                     Debug.WriteLine($"{emailQueue.TryCount} failed send email:{emailQueue.Email}");
-                    _brokerHelper.QueueMessage(emailQueue);
+                    _brokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(), emailQueue);
                 }
             };
             channel.BasicConsume(
-                    queue: "NTechQueue",
+                    queue: QueueNameEnum.EmailQueue.ToString(),
             autoAck: true,
             consumer: consumer);
         }

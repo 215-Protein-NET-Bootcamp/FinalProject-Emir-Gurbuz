@@ -6,6 +6,7 @@ using Castle.DynamicProxy;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Entity.Concrete;
 using Microsoft.Extensions.Configuration;
+using Core.Enums;
 
 namespace Core.Aspect.Autofac.Performance
 {
@@ -33,7 +34,7 @@ namespace Core.Aspect.Autofac.Performance
             if (_stopwatch.Elapsed.TotalSeconds > _interval)
             {
                 string message = $"Performance: {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name} -> total seconds:{_stopwatch.Elapsed.TotalSeconds}";
-                _messageBrokerHelper.QueueMessage(new EmailQueue
+                _messageBrokerHelper.QueueMessage(QueueNameEnum.EmailQueue.ToString(), new EmailQueue
                 {
                     Email = _configuration.GetSection("AdminUser:Email").Value,
                     Subject = "Application Performance Alert",
