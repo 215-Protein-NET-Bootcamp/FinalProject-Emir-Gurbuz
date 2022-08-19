@@ -124,7 +124,8 @@ namespace NTech.Business.Concrete
                 return new ErrorDataResult<AccessToken>(_languageMessage.UserNotFound);
 
             var result = BusinessRule.Run(
-                checkOldPassword(userResult.Data, resetPasswordDto.OldPassword));
+                checkOldPassword(userResult.Data, resetPasswordDto.OldPassword),
+                checkSameOldPasswordAndNewPassword(userResult.Data, resetPasswordDto));
             if (result != null)
                 return result;
 
@@ -139,6 +140,19 @@ namespace NTech.Business.Concrete
             return updateResult.Success == true ?
                 new SuccessResult(_languageMessage.SuccessResetPassword) :
                 new ErrorResult(_languageMessage.FailedResetPassword);
+        }
+
+        private IResult checkSameOldPasswordAndNewPassword(User user, ResetPasswordDto resetPasswordDto)
+        {
+            if (resetPasswordDto.NewPassword == resetPasswordDto.OldPassword)
+            {
+                return new ErrorResult(_languageMessage.NotSameOldPasswordAndNewPassword);
+            }
+            if (HashingHelper.VerifyPasswordHash(resetPasswordDto.NewPassword, user.PasswordHash, user.PasswordSalt))
+            {
+                return new ErrorResult(_languageMessage.NotSameOldPasswordAndNewPassword);
+            }
+            return new SuccessResult();
         }
 
         private IResult checkOldPassword(User user, string oldPassword)

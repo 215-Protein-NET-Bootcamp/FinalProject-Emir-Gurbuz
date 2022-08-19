@@ -74,5 +74,7 @@
         public string FailedToFileUpload => "Dosya yükleme başarısız";
 
         public string OfferedPriceNotNull => "Teklif fiyatı boş olamaz";
+
+        public string NotSameOldPasswordAndNewPassword => "Yeni şifre eski şifre ile aynı olamaz";
     }
 }

@@ -74,5 +74,7 @@
         public string FailedToFileUpload => "Failed to file upload";
 
         public string OfferedPriceNotNull => "Offered price is not null";
+
+        public string NotSameOldPasswordAndNewPassword => "The new password cannot be the same as the old password";
     }
 }
