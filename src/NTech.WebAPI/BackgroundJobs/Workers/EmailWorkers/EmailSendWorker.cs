@@ -29,6 +29,27 @@ namespace NTech.WebAPI.BackgorundJobs.Workers
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            //await Task.Delay(1100);
+            //var factory = new ConnectionFactory()
+            //{
+            //    HostName = _brokerOptions.HostName,
+            //    UserName = _brokerOptions.UserName,
+            //    Password = _brokerOptions.Password
+            //};
+            //using (var connection = factory.CreateConnection())
+            //using (var channel = connection.CreateModel())
+            //{
+            //    channel.QueueDeclare(
+            //        queue: QueueNameEnum.EmailQueue.ToString(),
+            //        durable: false,
+            //        exclusive: false,
+            //        autoDelete: false,
+            //        arguments: null);
+            //    Debug.WriteLine("asd");
+            //    var consumer = new EventingBasicConsumer(channel);
+            //    await consumerEmailAsync(consumer, channel);
+            //}
+
             var factory = new ConnectionFactory()
             {
                 HostName = _brokerOptions.HostName,
@@ -47,7 +68,6 @@ namespace NTech.WebAPI.BackgorundJobs.Workers
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(1200);
-                    Debug.WriteLine("asd");
                     var consumer = new EventingBasicConsumer(channel);
                     await consumerEmailAsync(consumer, channel);
                 }
