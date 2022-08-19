@@ -16,11 +16,9 @@ namespace NTech.Business.Concrete
     public class ImageManager : AsyncBaseService<Image, ImageWriteDto, ImageReadDto>, IImageService
     {
         private readonly IConfiguration configuration;
-        private readonly ILanguageMessage _languageMessage;
         public ImageManager(IImageDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IConfiguration configuration) : base(repository, mapper, unitOfWork, languageMessage)
         {
             this.configuration = configuration;
-            _languageMessage = languageMessage;
         }
 
         public override Task<IResult> AddAsync(ImageWriteDto dto)
@@ -46,16 +44,16 @@ namespace NTech.Business.Concrete
         public async Task<IDataResult<Image>> UploadAsync(IFormFile formFile)
         {
             if (formFile == null)
-                return new ErrorDataResult<Image>(_languageMessage.FileIsNotNull);
+                return new ErrorDataResult<Image>(LanguageMessage.FileIsNotNull);
 
             string databasePath = configuration.GetSection("UploadImagePath").Value;
 
             if (formFile.Length / 1024f > 400) // check file size
-                return new ErrorDataResult<Image>(_languageMessage.FileSizeIsHigh);
+                return new ErrorDataResult<Image>(LanguageMessage.FileSizeIsHigh);
 
             string ex = Path.GetExtension(formFile.FileName);
             if ((ex == ".jpg" || ex == ".jpeg" || ex == ".png") == false)
-                return new ErrorDataResult<Image>(_languageMessage.UnSupportedFile);
+                return new ErrorDataResult<Image>(LanguageMessage.UnSupportedFile);
 
             string fileName = $"{Guid.NewGuid()}{ex}";
             string path = Path.Combine(Directory.GetCurrentDirectory(), databasePath);
@@ -63,21 +61,24 @@ namespace NTech.Business.Concrete
             if (File.Exists(path) == false)
                 Directory.CreateDirectory(path);
 
+            return await writeAsync(formFile, path, fileName, databasePath);
+        }
+        private async Task<IDataResult<Image>> writeAsync(IFormFile formFile, string path, string fileName, string databasePath)
+        {
             using (var stream = new FileStream(Path.Combine(path, fileName), FileMode.Create, FileAccess.Write, FileShare.None, 1024, useAsync: false))
             {
                 await formFile.CopyToAsync(stream);
                 await stream.FlushAsync();
-
-                Image image = new()
-                {
-                    Path = $"{databasePath}{fileName}"
-                };
-                await Repository.AddAsync(image);
-                int row = await UnitOfWork.CompleteAsync();
-                return row > 0 ?
-                    new SuccessDataResult<Image>(image) :
-                    new ErrorDataResult<Image>();
             }
+            Image image = new()
+            {
+                Path = $"{databasePath}{fileName}"
+            };
+            await Repository.AddAsync(image);
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessDataResult<Image>(image) :
+                new ErrorDataResult<Image>();
         }
     }
 }
