@@ -15,5 +15,7 @@ namespace NTech.Dto.Concrete
         public decimal Price { get; set; }
         public bool? isOfferable { get; set; }
         public byte Rating { get; set; }
+
+        public IFormFile File { get; set; }
     }
 }
