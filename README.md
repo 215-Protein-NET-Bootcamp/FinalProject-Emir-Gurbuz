@@ -134,9 +134,9 @@ Exception Log Aspects ❌ <br>
 ```json
 "MessageResultLanguage": "Tr"
 ```
-
-
 <hr>
+<h4>Email send is 5 times trying. And saving it in database.</h4>
+<img src="screenshots/email_queue_debug.png"/>
 
 <h2>
 <a href="https://documenter.getpostman.com/view/17832908/VUjTkiTt#816019f3-f6ca-436f-9a17-faa58d9e2e06">Postman Documentation</a>
