@@ -115,6 +115,7 @@ namespace NTech.Business.Concrete
                 new ErrorResult(_languageMessage.RegisterFailure);
         }
 
+        [ValidationAspect(typeof(ResetPasswordDtoValidator))]
         public async Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {
             var userResult = await _userService.GetByIdAsync(resetPasswordDto.UserId);
@@ -133,7 +134,7 @@ namespace NTech.Business.Concrete
             userResult.Data.PasswordSalt = passwordSalt;
 
             IResult updateResult = await _userService.UpdateAsync(userResult.Data);
-            
+
             return updateResult.Success == true ?
                 new SuccessResult(_languageMessage.SuccessResetPassword) :
                 new ErrorResult(_languageMessage.FailedResetPassword);
