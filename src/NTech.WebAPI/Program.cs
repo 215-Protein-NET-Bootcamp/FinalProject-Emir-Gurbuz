@@ -25,11 +25,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region SqlContext, PostgreContext
+#region SqlContext, PostgreContext - Go to the appsettings.json -> "Database" : PostgreSql or SqlServer
 builder.Services.AddDatabase(builder.Configuration);
 #endregion
 
-#region JWT
+#region JWT - Go to the appsettings.json -> "AccessTokenOptions"
 AccessTokenOptions tokenOptions = builder.Configuration.GetSection("AccessTokenOptions").Get<AccessTokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAutoMapper(typeof(AutoMapperHelper));
 #endregion
 
-#region Result Message Language
+#region Result Message Language - Go to the appsettings.json -> "MessageResultLanguage" : Tr or En
 builder.Services.AddMessageLanguage(builder.Configuration);
 #endregion
 
@@ -106,11 +106,12 @@ app.UseExceptionMiddleware();
 #endregion
 
 
-#region Hangfire Background Services
+#region Hangfire Jobs
 if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == true)
 {
     app.UseHangfireDashboard();
     app.UseHangfireServer();
+
     BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
     BackgroundJob.Schedule(() => new ConsumerEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
 }
