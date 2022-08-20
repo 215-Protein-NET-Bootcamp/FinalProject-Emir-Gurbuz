@@ -61,10 +61,11 @@ namespace NTech.DataAccess.Contexts
 
         private User getAdminUser()
         {
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash("", out passwordHash, out passwordSalt);
-
             User user = Configuration.GetSection("AdminUser").Get<User>();
+
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(Configuration.GetSection("AdminUser:Password").Value, out passwordHash, out passwordSalt);
+
             user.Id = 1;
             user.DateOfBirth = DateTime.Now;
             user.LockoutEnabled = false;
