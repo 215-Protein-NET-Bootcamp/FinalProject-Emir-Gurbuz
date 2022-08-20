@@ -90,10 +90,6 @@ if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == true)
 
 var app = builder.Build();
 
-#region PostgreSql EnableLegacyTimestampBehavior
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-#endregion
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

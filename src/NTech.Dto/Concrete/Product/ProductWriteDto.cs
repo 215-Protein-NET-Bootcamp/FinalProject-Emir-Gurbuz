@@ -16,6 +16,6 @@ namespace NTech.Dto.Concrete
         public bool? isOfferable { get; set; }
         public byte Rating { get; set; }
 
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
     }
 }
