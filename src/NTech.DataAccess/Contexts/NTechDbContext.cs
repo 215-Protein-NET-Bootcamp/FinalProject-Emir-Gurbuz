@@ -41,12 +41,7 @@ namespace NTech.DataAccess.Contexts
         }
         private void addAdminUser(ModelBuilder modelBuilder)
         {
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash("", out passwordHash, out passwordSalt);
-
             User user = getAdminUser();
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
 
             User[] userEntitySeeds = {
                 user
@@ -66,12 +61,17 @@ namespace NTech.DataAccess.Contexts
 
         private User getAdminUser()
         {
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash("", out passwordHash, out passwordSalt);
+
             User user = Configuration.GetSection("AdminUser").Get<User>();
             user.Id = 1;
             user.DateOfBirth = DateTime.Now;
             user.LockoutEnabled = false;
             user.Status = true;
             user.CreatedDate = DateTime.Now;
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
 
             return user;
         }
