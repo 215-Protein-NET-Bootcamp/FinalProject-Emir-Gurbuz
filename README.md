@@ -115,11 +115,14 @@ Exception Log Aspects ❌ <br>
     }
   }
 ```
-<h4>⬇️ Admin Email appsettings.json ⬇️</h4>
+<h4>⬇️ Admin User appsettings.json ⬇️</h4>
 
 ```json
 "AdminUser": {
-    "Email": "emir.gurbuz06@hotmail.com"
+    "FirstName": "admin_first_name",
+    "LastName": "admin_last_name",
+    "Email": "admin_email",
+    "Password": "admin_password"
   }
 ```
 <h4>⬇️ Upload Image Path in appsettings.json ⬇️</h4>
