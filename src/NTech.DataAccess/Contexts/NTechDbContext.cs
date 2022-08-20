@@ -29,6 +29,11 @@ namespace NTech.DataAccess.Contexts
             addRoles(modelBuilder);
             addAdminUser(modelBuilder);
             addUserRoles(modelBuilder);
+
+            addCategories(modelBuilder);
+            addBrands(modelBuilder);
+            addColors(modelBuilder);
+            addUsingStatuses(modelBuilder);
         }
         private void addRoles(ModelBuilder modelBuilder)
         {
@@ -57,6 +62,55 @@ namespace NTech.DataAccess.Contexts
             };
 
             modelBuilder.Entity<UserRole>().HasData(userRoleEntitySeeds);
+        }
+        private void addCategories(ModelBuilder modelBuilder)
+        {
+            Category[] categoryEntitySeeds =
+            {
+                new() {Id=1,Name="Telefon",CreatedDate=DateTime.Now},
+                new() {Id=2,Name="Akıllı Saat",CreatedDate=DateTime.Now}
+            };
+
+            modelBuilder.Entity<Category>().HasData(categoryEntitySeeds);
+        }
+        private void addBrands(ModelBuilder modelBuilder)
+        {
+            Brand[] brandEntitySeeds =
+            {
+                new() {Id=1,Name="Samsung",CreatedDate=DateTime.Now},
+                new() {Id=2,Name="Xiaomi",CreatedDate=DateTime.Now}
+            };
+
+            modelBuilder.Entity<Category>().HasData(brandEntitySeeds);
+        }
+        private void addUsingStatuses(ModelBuilder modelBuilder)
+        {
+            UsingStatus[] usingStatusEntitySeeds =
+            {
+                new() {Id=1,Status="Sıfır",CreatedDate=DateTime.Now},
+                new() {Id=2,Status="İkinci El",CreatedDate=DateTime.Now},
+                new() {Id=3,Status="Az Kullanılmış",CreatedDate=DateTime.Now}
+            };
+
+            modelBuilder.Entity<Category>().HasData(usingStatusEntitySeeds);
+        }
+        private void addColors(ModelBuilder modelBuilder)
+        {
+            Color[] colorEntitySeeds =
+            {
+                new() {Id=1,Name="Siyah",CreatedDate=DateTime.Now},
+                new() {Id=2,Name="Beyaz",CreatedDate=DateTime.Now},
+                new() {Id=3,Name="Mor",CreatedDate=DateTime.Now},
+                new() {Id=4,Name="Pembe",CreatedDate=DateTime.Now},
+                new() {Id=5,Name="Mavi",CreatedDate=DateTime.Now},
+                new() {Id=6,Name="Yeşil",CreatedDate=DateTime.Now},
+                new() {Id=7,Name="Lacivert",CreatedDate=DateTime.Now},
+                new() {Id=8,Name="Kırmızı",CreatedDate=DateTime.Now},
+                new() {Id=9,Name="Gri",CreatedDate=DateTime.Now},
+                new() {Id=10,Name="Sarı",CreatedDate=DateTime.Now}
+            };
+
+            modelBuilder.Entity<Category>().HasData(colorEntitySeeds);
         }
 
         private User getAdminUser()
