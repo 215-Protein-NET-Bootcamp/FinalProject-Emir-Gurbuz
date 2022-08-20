@@ -76,5 +76,7 @@
         public string OfferedPriceNotNull => "Teklif fiyatı boş olamaz";
 
         public string NotSameOldPasswordAndNewPassword => "Yeni şifre eski şifre ile aynı olamaz";
+
+        public string CheckEnteredValues => "Lütfen girilen değerleri kontrol ediniz.";
     }
 }

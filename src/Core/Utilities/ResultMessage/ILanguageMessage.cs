@@ -56,5 +56,6 @@
         string FailedToFileUpload { get; }
         string OfferedPriceNotNull { get; }
         string NotSameOldPasswordAndNewPassword { get; }
+        string CheckEnteredValues { get; }
     }
 }
