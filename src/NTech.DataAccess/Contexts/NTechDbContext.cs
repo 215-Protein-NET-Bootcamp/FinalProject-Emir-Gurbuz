@@ -2,6 +2,7 @@
 using Core.Entity.Concrete;
 using Core.Utilities.Security.Hashing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using NTech.Core.Extensions;
 using NTech.Entity.Concrete;
 
@@ -43,8 +44,12 @@ namespace NTech.DataAccess.Contexts
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash("", out passwordHash, out passwordSalt);
 
+            User user = getAdminUser();
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
             User[] userEntitySeeds = {
-                new() { Id = 1, FirstName = "Emir", LastName = "Gürbüz", Email = "", DateOfBirth = DateTime.Now, PasswordHash = passwordHash, PasswordSalt = passwordSalt }
+                user
             };
 
             modelBuilder.Entity<User>().HasData(userEntitySeeds);
@@ -57,6 +62,28 @@ namespace NTech.DataAccess.Contexts
             };
 
             modelBuilder.Entity<UserRole>().HasData(userRoleEntitySeeds);
+        }
+
+        private User getAdminUser()
+        {
+            User user = Configuration.GetSection("AdminUser").Get<User>();
+            user.Id = 1;
+            user.DateOfBirth = DateTime.Now;
+            user.LockoutEnabled = false;
+            user.Status = true;
+            user.CreatedDate = DateTime.Now;
+
+            return user;
+        }
+
+        private IConfigurationRoot Configuration
+        {
+            get
+            {
+                IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+                var build = configurationBuilder.Build();
+                return build;
+            }
         }
 
         public DbSet<Product> Products { get; set; }

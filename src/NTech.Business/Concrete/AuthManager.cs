@@ -54,7 +54,7 @@ namespace NTech.Business.Concrete
                 user.AccessFailedCount = 0;
                 await _userService.UpdateAsync(user);
             }
-            if (user.AccessFailedCount >= 3)
+            if (user.AccessFailedCount >= 3 && user.LockoutEnabled == true)
             {
                 EmailQueue emailQueue = new()
                 {
