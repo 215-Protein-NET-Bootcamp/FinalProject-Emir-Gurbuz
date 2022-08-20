@@ -35,7 +35,7 @@ namespace Core.Aspect.Autofac.Exception
             {
                 Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
                 Type = a?.GetType().ToString(),
-                Value = a?.CheckPasswordProperty() ? "***" : a?.GetType().ToString()
+                Value = a.CheckPasswordProperty() ? "***" : a?.GetType().ToString()
             }).ToList();
 
             string email = _httpContextAccessor.HttpContext.User.ClaimEmail();
