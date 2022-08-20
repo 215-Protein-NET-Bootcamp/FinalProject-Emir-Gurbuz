@@ -22,11 +22,11 @@ namespace NTech.WebAPI.BackgorundJobs.Hangfire
             _brokerHelper = ServiceTool.ServiceProvider.GetService<IMessageBrokerHelper>();
         }
 
-        public async Task Run()
+        public async Task Run(TimeSpan duration)
         {
             while (true)
             {
-                await Task.Delay(TimeSpan.FromMinutes(3));
+                await Task.Delay(duration);
                 Debug.WriteLine("consumer email job");
                 List<EmailQueueReadDto> emailQueueReadDtos = (await _emailQueueService.GetListAsync()).Data;
                 foreach (EmailQueueReadDto emailQueueReadDto in emailQueueReadDtos)

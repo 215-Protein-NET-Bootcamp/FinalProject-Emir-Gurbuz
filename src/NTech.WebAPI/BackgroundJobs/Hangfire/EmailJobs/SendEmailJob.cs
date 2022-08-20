@@ -27,7 +27,7 @@ namespace NTech.WebAPI.BackgorundJobs.Hangfire
             _brokerHelper = ServiceTool.ServiceProvider.GetService<IMessageBrokerHelper>();
             _emailQueueService = ServiceTool.ServiceProvider.GetService<IEmailQueueService>();
         }
-        public async Task Run()
+        public async Task Run(TimeSpan duration)
         {
             var factory = new ConnectionFactory()
             {
@@ -40,7 +40,7 @@ namespace NTech.WebAPI.BackgorundJobs.Hangfire
             {
                 while (true)
                 {
-                    await Task.Delay(1200);
+                    await Task.Delay(duration);
                     channel.QueueDeclare(
                        queue: QueueNameEnum.EmailQueue.ToString(),
                        durable: false,

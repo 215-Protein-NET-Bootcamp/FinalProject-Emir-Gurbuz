@@ -112,8 +112,8 @@ if (builder.Configuration.GetSection("UseHangfire").Get<bool>() == true)
     app.UseHangfireDashboard();
     app.UseHangfireServer();
 
-    BackgroundJob.Schedule(() => new SendEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
-    BackgroundJob.Schedule(() => new ConsumerEmailJob().Run(), TimeSpan.FromMilliseconds(1000));
+    BackgroundJob.Schedule(() => new SendEmailJob().Run(TimeSpan.FromMilliseconds(1100)), TimeSpan.FromMilliseconds(1000));
+    BackgroundJob.Schedule(() => new ConsumerEmailJob().Run(TimeSpan.FromMinutes(3)), TimeSpan.FromMilliseconds(1000));
 }
 #endregion
 

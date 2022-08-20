@@ -2,6 +2,6 @@
 {
     public interface IBackgroundJob
     {
-        Task Run();
+        Task Run(TimeSpan duration);
     }
 }
