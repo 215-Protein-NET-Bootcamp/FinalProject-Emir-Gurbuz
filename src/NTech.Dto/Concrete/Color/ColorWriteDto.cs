@@ -4,6 +4,6 @@ namespace NTech.Dto.Concrete
 {
     public class ColorWriteDto : IWriteDto
     {
-        public string? Name { get; set; }
+        public string Name { get; set; }
     }
 }
