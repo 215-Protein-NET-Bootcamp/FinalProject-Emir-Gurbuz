@@ -83,28 +83,28 @@ namespace NTech.Business.Concrete
         private IQueryable<Product> setFilter(IQueryable<Product> products, ProductFilterResource productFilterResource)
         {
             if (productFilterResource.Name != null)
-                products = products.getByName(productFilterResource);
+                products = products.GetByName(productFilterResource);
 
             if (productFilterResource.Description != null)
-                products = products.getByDescription(productFilterResource);
+                products = products.GetByDescription(productFilterResource);
 
             if (productFilterResource.MaximumPrice != null)
-                products = products.getByMaximumPrice(productFilterResource);
+                products = products.GetByMaximumPrice(productFilterResource);
 
             if (productFilterResource.MinimumPrice != null)
-                products = products.getByMinimumPrice(productFilterResource);
+                products = products.GetByMinimumPrice(productFilterResource);
 
             if (productFilterResource.UsingStatusId != null)
-                products = products.getByUsingStatusId(productFilterResource);
+                products = products.GetByUsingStatusId(productFilterResource);
 
             if (productFilterResource.ColorId != null)
-                products = products.getByColorId(productFilterResource);
+                products = products.GetByColorId(productFilterResource);
 
             if (productFilterResource.CategoryId != null)
-                products = products.getByCategoryId(productFilterResource);
+                products = products.GetByCategoryId(productFilterResource);
 
             if (productFilterResource.BrandId != null)
-                products = products.getByBrandId(productFilterResource);
+                products = products.GetByBrandId(productFilterResource);
 
             return products;
         }
