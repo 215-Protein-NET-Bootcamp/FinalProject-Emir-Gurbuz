@@ -40,6 +40,21 @@ namespace NTech.DataAccess.Contexts
             addColors(modelBuilder);
             addUsingStatuses(modelBuilder);
         }
+
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<UsingStatus> UsingStatuses { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<EmailQueue> EmailQueues { get; set; }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+
+
         private void addRoles(ModelBuilder modelBuilder)
         {
             Role[] roleEntitySeeds = {
@@ -145,18 +160,5 @@ namespace NTech.DataAccess.Contexts
                 return build;
             }
         }
-
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Brand> Brands { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Color> Colors { get; set; }
-        public DbSet<Image> Images { get; set; }
-        public DbSet<UsingStatus> UsingStatuses { get; set; }
-        public DbSet<Offer> Offers { get; set; }
-        public DbSet<EmailQueue> EmailQueues { get; set; }
-
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
     }
 }
