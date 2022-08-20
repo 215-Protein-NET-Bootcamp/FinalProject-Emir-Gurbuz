@@ -24,6 +24,11 @@ namespace NTech.DataAccess.Contexts
             return base.SaveChangesAsync(cancellationToken);
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             addRoles(modelBuilder);
@@ -81,7 +86,7 @@ namespace NTech.DataAccess.Contexts
                 new() {Id=2,Name="Xiaomi",CreatedDate=DateTime.Now}
             };
 
-            modelBuilder.Entity<Category>().HasData(brandEntitySeeds);
+            modelBuilder.Entity<Brand>().HasData(brandEntitySeeds);
         }
         private void addUsingStatuses(ModelBuilder modelBuilder)
         {
@@ -92,7 +97,7 @@ namespace NTech.DataAccess.Contexts
                 new() {Id=3,Status="Az Kullanılmış",CreatedDate=DateTime.Now}
             };
 
-            modelBuilder.Entity<Category>().HasData(usingStatusEntitySeeds);
+            modelBuilder.Entity<UsingStatus>().HasData(usingStatusEntitySeeds);
         }
         private void addColors(ModelBuilder modelBuilder)
         {
@@ -110,7 +115,7 @@ namespace NTech.DataAccess.Contexts
                 new() {Id=10,Name="Sarı",CreatedDate=DateTime.Now}
             };
 
-            modelBuilder.Entity<Category>().HasData(colorEntitySeeds);
+            modelBuilder.Entity<Color>().HasData(colorEntitySeeds);
         }
 
         private User getAdminUser()
