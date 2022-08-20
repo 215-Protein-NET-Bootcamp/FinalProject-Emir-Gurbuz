@@ -34,8 +34,8 @@ namespace Core.Aspect.Autofac.Exception
             List<LogParameter> parameters = invocation.Arguments.Select((a, i) => new LogParameter
             {
                 Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
-                Type = a.GetType().ToString(),
-                Value = a.CheckPasswordProperty() ? "***" : a.GetType().ToString()
+                Type = a?.GetType().ToString(),
+                Value = a?.CheckPasswordProperty() ? "***" : a?.GetType().ToString()
             }).ToList();
 
             string email = _httpContextAccessor.HttpContext.User.ClaimEmail();
