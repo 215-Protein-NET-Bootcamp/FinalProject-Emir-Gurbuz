@@ -78,5 +78,15 @@
         public string NotSameOldPasswordAndNewPassword => "The new password cannot be the same as the old password";
 
         public string CheckEnteredValues => "Please check the entered values";
+
+        public string ColorNotFound => "Color is not found";
+
+        public string BrandNotFound => "Brand is not found";
+
+        public string UsingStatusNotFound => "Using status is not found";
+
+        public string CategoryNotFound => "Category is not found";
+
+        public string ImageNotFound => "Image is not found";
     }
 }

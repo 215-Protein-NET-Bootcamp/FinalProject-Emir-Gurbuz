@@ -78,5 +78,15 @@
         public string NotSameOldPasswordAndNewPassword => "Yeni şifre eski şifre ile aynı olamaz";
 
         public string CheckEnteredValues => "Lütfen girilen değerleri kontrol ediniz.";
+
+        public string ColorNotFound => "Renk bulunamadı";
+
+        public string BrandNotFound => "Marka bulunamadı";
+
+        public string UsingStatusNotFound => "Kullanım durumu bulunamadı";
+
+        public string CategoryNotFound => "Kategori bulunamadı";
+
+        public string ImageNotFound => "Resim bulunamadı";
     }
 }

@@ -32,13 +32,21 @@ namespace NTech.Business.Concrete
         private readonly IImageService _imageService;
         private readonly IOfferDal _offerDal;
         private readonly IMessageBrokerHelper _messageBrokerHelper;
-        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService, IOfferDal offerDal, IMessageBrokerHelper messageBrokerHelper) : base(repository, mapper, unitOfWork, languageMessage)
+        private readonly ICategoryService _categoryService;
+        private readonly IUsingStatusService _usingStatusService;
+        private readonly IColorService _colorService;
+        private readonly IBrandService _brandService;
+        public ProductManager(IProductDal repository, IMapper mapper, IUnitOfWork unitOfWork, ILanguageMessage languageMessage, IUriService uriService, ICacheManager cacheManager, IImageService imageService, IOfferDal offerDal, IMessageBrokerHelper messageBrokerHelper, ICategoryService categoryService, IUsingStatusService usingStatusService, IColorService colorService, IBrandService brandService) : base(repository, mapper, unitOfWork, languageMessage)
         {
             _uriService = uriService;
             _cacheManager = cacheManager;
             _imageService = imageService;
             _offerDal = offerDal;
             _messageBrokerHelper = messageBrokerHelper;
+            _categoryService = categoryService;
+            _usingStatusService = usingStatusService;
+            _colorService = colorService;
+            _brandService = brandService;
         }
 
         [SecuredOperation("User")]
@@ -46,15 +54,33 @@ namespace NTech.Business.Concrete
         [CacheRemoveAspect("ProductReadDto")]
         public async override Task<IResult> AddAsync(ProductWriteDto dto)
         {
+            var result = BusinessRule.Run(
+                await checkImageAsync(dto),
+                await checkCategoryAsync(dto),
+                await checkUsingStatusAsync(dto),
+                await checkBrandAsync(dto),
+                await checkColorAsync(dto));
+            if (result != null)
+                return result;
+
             return await base.AddAsync(dto);
         }
 
         [SecuredOperation("User")]
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
         [CacheRemoveAspect("ProductReadDto")]
-        public override Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
+        public override async Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
         {
-            return base.UpdateAsync(id, dto);
+            var result = BusinessRule.Run(
+                await checkImageAsync(dto),
+                await checkCategoryAsync(dto),
+                await checkUsingStatusAsync(dto),
+                await checkBrandAsync(dto),
+                await checkColorAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.UpdateAsync(id, dto);
         }
 
         public async Task<PaginatedResult<IEnumerable<ProductReadDto>>> GetPaginationAsync(PaginationFilter paginationFilter, string route)
@@ -144,6 +170,26 @@ namespace NTech.Business.Concrete
                 new SuccessResult(LanguageMessage.ProductBuyIsSuccessfully) :
                 new ErrorResult(LanguageMessage.ProductBuyIsFailed);
         }
+
+        [SecuredOperation("User")]
+        public async Task<IResult> SetImageAsync(int productId, IFormFile file)
+        {
+            Product product = await Repository.GetAsync(p => p.Id == productId);
+            if (product == null)
+                return new ErrorResult(LanguageMessage.NotFound);
+
+            var imageResult = await _imageService.UploadAsync(file);
+            if (imageResult.Success == false)
+                return imageResult;
+
+            product.ImageId = imageResult.Data.Id;
+            await Repository.UpdateAsync(product);
+            int row = await UnitOfWork.CompleteAsync();
+            return row > 0 ?
+                new SuccessResult(LanguageMessage.SuccessfullyFileUpload) :
+                new ErrorResult(LanguageMessage.FailedToFileUpload);
+        }
+
         private async Task deleteOtherOffers(Offer offer)
         {
             //get denied or waited offers
@@ -166,24 +212,46 @@ namespace NTech.Business.Concrete
                 });
         }
 
-        [SecuredOperation("User")]
-        public async Task<IResult> SetImageAsync(int productId, IFormFile file)
+        private async Task<IResult> checkImageAsync(ProductWriteDto dto)
         {
-            Product product = await Repository.GetAsync(p => p.Id == productId);
-            if (product == null)
-                return new ErrorResult(LanguageMessage.NotFound);
-
-            var imageResult = await _imageService.UploadAsync(file);
+            var imageResult = await _imageService.GetByIdAsync((int)dto.ImageId);
             if (imageResult.Success == false)
-                return imageResult;
-
-            product.ImageId = imageResult.Data.Id;
-            await Repository.UpdateAsync(product);
-            int row = await UnitOfWork.CompleteAsync();
-            return row > 0 ?
-                new SuccessResult(LanguageMessage.SuccessfullyFileUpload) :
-                new ErrorResult(LanguageMessage.FailedToFileUpload);
+                return new ErrorResult(LanguageMessage.ImageNotFound);
+            return new SuccessResult();
         }
+        private async Task<IResult> checkCategoryAsync(ProductWriteDto dto)
+        {
+            var categoryResult = await _categoryService.GetByIdAsync((int)dto.CategoryId);
+            if (categoryResult.Success == false)
+                return new ErrorResult(LanguageMessage.CategoryNotFound);
+            return new SuccessResult();
+        }
+        private async Task<IResult> checkUsingStatusAsync(ProductWriteDto dto)
+        {
+            var usingStatusResult = await _usingStatusService.GetByIdAsync((int)dto.UsingStatusId);
+            if (usingStatusResult.Success == false)
+                return new ErrorResult(LanguageMessage.UsingStatusNotFound);
+            return new SuccessResult();
+        }
+        private async Task<IResult> checkBrandAsync(ProductWriteDto dto)
+        {
+            if (dto.BrandId == null)
+                return new SuccessResult();
 
+            var brandResult = await _brandService.GetByIdAsync((int)dto.BrandId);
+            if (brandResult.Success == false)
+                return new ErrorResult(LanguageMessage.BrandNotFound);
+            return new SuccessResult();
+        }
+        private async Task<IResult> checkColorAsync(ProductWriteDto dto)
+        {
+            if (dto.ColorId == null)
+                return new SuccessResult();
+
+            var colorResult = await _colorService.GetByIdAsync((int)dto.ColorId);
+            if (colorResult.Success == false)
+                return new ErrorResult(LanguageMessage.ColorNotFound);
+            return new SuccessResult();
+        }
     }
 }

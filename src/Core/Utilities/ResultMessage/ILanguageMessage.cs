@@ -57,5 +57,11 @@
         string OfferedPriceNotNull { get; }
         string NotSameOldPasswordAndNewPassword { get; }
         string CheckEnteredValues { get; }
+
+        string ColorNotFound { get; }
+        string BrandNotFound { get; }
+        string UsingStatusNotFound { get; }
+        string CategoryNotFound { get; }
+        string ImageNotFound { get; }
     }
 }
