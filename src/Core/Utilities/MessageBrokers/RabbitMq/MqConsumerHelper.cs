@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Core.Utilities.MessageBrokers.RabbitMq
 {
-    public class MqConsumerHelper : IEmailConsumer
+    public class MqConsumerHelper : IMessageConsumer
     {
         private readonly IConfiguration _configuration;
         private readonly MessageBrokerOptions _brokerOptions;
