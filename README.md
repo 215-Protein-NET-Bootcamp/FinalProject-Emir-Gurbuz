@@ -41,6 +41,17 @@ Exception Log Aspects ❌ <br>
 ```json
 "Database": "PostgreSql"
 ```
+<h4>⬇️ Configure AdminUser appsettings.json ⬇️</h4>
+
+```json
+"AdminUser": {
+    "FirstName": "admin_first_name",
+    "LastName": "admin_last_name",
+    "Email": "admin_email",
+    "Password": "admin_password"
+  }
+```
+
 <h4>⬇️ Add Migration - Package Manager Console ⬇️</h4>
 <img src="screenshots/migration.png"/>
 
@@ -115,16 +126,7 @@ Exception Log Aspects ❌ <br>
     }
   }
 ```
-<h4>⬇️ Admin User appsettings.json ⬇️</h4>
 
-```json
-"AdminUser": {
-    "FirstName": "admin_first_name",
-    "LastName": "admin_last_name",
-    "Email": "admin_email",
-    "Password": "admin_password"
-  }
-```
 <h4>⬇️ Upload Image Path in appsettings.json ⬇️</h4>
 
 ```json
