@@ -46,20 +46,7 @@ namespace NTech.Business.Concrete
         [CacheRemoveAspect("ProductReadDto")]
         public async override Task<IResult> AddAsync(ProductWriteDto dto)
         {
-            var result = BusinessRule.Run(
-                //await checkImageAsync(dto)
-                );
-            if (result != null)
-                return result;
             return await base.AddAsync(dto);
-        }
-
-        private async Task<IResult> checkImageAsync(ProductWriteDto dto)
-        {
-            var image = await _imageService.GetByIdAsync((int)dto.ImageId);
-            if (image != null)
-                return new ErrorResult();
-            return new SuccessResult();
         }
 
         [SecuredOperation("User")]

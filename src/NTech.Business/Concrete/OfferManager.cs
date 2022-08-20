@@ -50,7 +50,7 @@ namespace NTech.Business.Concrete
                 await checkProductIsSoldAsync(dto),
                 await checkProductIsOfferableAsync(dto));
 
-            var productResult = await _productService.GetByIdAsync(dto.ProductId);
+            var productResult = await _productService.GetByIdAsync((int)dto.ProductId);
             if (productResult.Success == false)
                 return productResult;
 
@@ -82,7 +82,7 @@ namespace NTech.Business.Concrete
 
         private async Task<IResult> checkOfferedPriceGreaterThanProductPriceAsync(OfferWriteDto dto)
         {
-            ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
+            ProductReadDto product = (await _productService.GetByIdAsync((int)dto.ProductId)).Data;
             if (dto.OfferedPrice > product.Price)
                 return new ErrorResult(LanguageMessage.OfferedPriceCannotBeHigherThanProductPrice);
 
@@ -100,7 +100,7 @@ namespace NTech.Business.Concrete
         }
         private async Task<IResult> checkProductIsSoldAsync(OfferWriteDto dto)
         {
-            ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
+            ProductReadDto product = (await _productService.GetByIdAsync((int)dto.ProductId)).Data;
             if (product.IsSold)
                 return new ErrorResult(LanguageMessage.ProductHasBeenSold);
 
@@ -108,7 +108,7 @@ namespace NTech.Business.Concrete
         }
         private async Task<IResult> checkProductIsOfferableAsync(OfferWriteDto dto)
         {
-            ProductReadDto product = (await _productService.GetByIdAsync(dto.ProductId)).Data;
+            ProductReadDto product = (await _productService.GetByIdAsync((int)dto.ProductId)).Data;
             if (product.isOfferable)
                 return new ErrorResult(LanguageMessage.CannotBeOffer);
 

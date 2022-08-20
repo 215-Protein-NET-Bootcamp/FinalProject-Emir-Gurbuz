@@ -54,7 +54,7 @@ namespace NTech.WebAPI.Controllers
                 return BadRequest(imageResult);
 
             productWriteDto.ImageId = imageResult.Data.Id;
-            return await base.AddAsync(productWriteDto);
+            return Ok(await _productService.AddAsync(productWriteDto));//base.AddAsync(productWriteDto);
         }
 
         [HttpPost("{productId}/upload")]

@@ -4,6 +4,6 @@ namespace NTech.Dto.Concrete
 {
     public class BrandWriteDto : IWriteDto
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

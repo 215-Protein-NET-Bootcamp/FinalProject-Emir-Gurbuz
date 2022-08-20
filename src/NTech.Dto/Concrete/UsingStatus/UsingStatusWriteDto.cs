@@ -4,6 +4,6 @@ namespace NTech.Dto.Concrete
 {
     public class UsingStatusWriteDto : IWriteDto
     {
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }
