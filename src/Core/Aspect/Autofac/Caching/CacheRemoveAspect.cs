@@ -19,15 +19,18 @@ namespace Core.Aspect.Autofac.Caching
 
         protected override void OnSuccess(IInvocation invocation)
         {
-            if (_pattern.StartsWith("*") == false && _pattern.EndsWith("*") == false)
-                _pattern = $"*{_pattern}*";
-
             //if return value ErrorResult when don't remove cache key
-            dynamic task = invocation.ReturnValue as dynamic;
-            task.Wait();
-            if (task.Result is ErrorResult)
+            dynamic returnValue = invocation.ReturnValue as dynamic;
+            if (returnValue is Task)
+            {
+                returnValue.Wait();
+                returnValue = returnValue.Result;
+            }
+            if (returnValue is ErrorResult)
                 return;
 
+            if (_pattern.StartsWith("*") == false && _pattern.EndsWith("*") == false)
+                _pattern = $"*{_pattern}*";
             _cacheManager.RemoveByPattern(_pattern);
         }
     }
