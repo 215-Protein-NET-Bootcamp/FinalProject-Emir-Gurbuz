@@ -88,5 +88,7 @@
         public string CategoryNotFound => "Kategori bulunamadı";
 
         public string ImageNotFound => "Resim bulunamadı";
+
+        public string ColorIsAlreadyExists => "Renk zaten mevcut";
     }
 }

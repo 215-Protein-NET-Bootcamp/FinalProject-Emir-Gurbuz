@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Microsoft.EntityFrameworkCore;
@@ -24,17 +25,27 @@ namespace NTech.Business.Concrete
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(ColorWriteDtoValidator))]
         [CacheRemoveAspect("ColorReadDto")]
-        public override Task<IResult> AddAsync(ColorWriteDto dto)
+        public override async Task<IResult> AddAsync(ColorWriteDto dto)
         {
-            return base.AddAsync(dto);
+            IResult result = BusinessRule.Run(
+                await colorNameExists(dto));
+            if (result != null)
+                return result;
+
+            return await base.AddAsync(dto);
         }
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(ColorWriteDtoValidator))]
         [CacheRemoveAspect("ColorReadDto")]
-        public override Task<IResult> UpdateAsync(int id, ColorWriteDto dto)
+        public override async Task<IResult> UpdateAsync(int id, ColorWriteDto dto)
         {
-            return base.UpdateAsync(id, dto);
+            IResult result = BusinessRule.Run(
+                await colorNameExists(dto));
+            if (result != null)
+                return result;
+
+            return await base.UpdateAsync(id, dto);
         }
 
         [CacheAspect<DataResult<List<ColorReadDto>>>()]
@@ -66,6 +77,14 @@ namespace NTech.Business.Concrete
         public override Task<IResult> SoftDeleteAsync(int id)
         {
             return base.SoftDeleteAsync(id);
+        }
+
+        private async Task<IResult> colorNameExists(ColorWriteDto dto)
+        {
+            Color color = await Repository.GetAsync(c => c.Name.ToLower() == dto.Name.ToLower());
+            if (color != null)
+                return new ErrorResult(LanguageMessage.ColorIsAlreadyExists);
+            return new SuccessResult();
         }
 
     }

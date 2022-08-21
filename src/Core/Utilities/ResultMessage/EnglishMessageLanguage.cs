@@ -88,5 +88,7 @@
         public string CategoryNotFound => "Category is not found";
 
         public string ImageNotFound => "Image is not found";
+
+        public string ColorIsAlreadyExists => "Color is already exists";
     }
 }
