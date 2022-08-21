@@ -92,5 +92,7 @@
         public string ColorIsAlreadyExists => "Color is already exists";
 
         public string CategoryIsAlreadyExists => "Category is already exists";
+
+        public string BrandIsAlreadyExists => "Brand is already exists";
     }
 }

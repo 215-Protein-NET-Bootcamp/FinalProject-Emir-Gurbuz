@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Microsoft.EntityFrameworkCore;
@@ -26,17 +27,27 @@ namespace NTech.Business.Concrete
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(BrandWriteDtoValidator))]
         [CacheRemoveAspect("BrandReadDto")]
-        public override Task<IResult> AddAsync(BrandWriteDto dto)
+        public override async Task<IResult> AddAsync(BrandWriteDto dto)
         {
-            return base.AddAsync(dto);
+            IResult result = BusinessRule.Run(
+                await brandNameExistsAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.AddAsync(dto);
         }
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(BrandWriteDtoValidator))]
         [CacheRemoveAspect("BrandReadDto")]
-        public override Task<IResult> UpdateAsync(int id, BrandWriteDto dto)
+        public override async Task<IResult> UpdateAsync(int id, BrandWriteDto dto)
         {
-            return base.UpdateAsync(id, dto);
+            IResult result = BusinessRule.Run(
+                await brandNameExistsAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.UpdateAsync(id, dto);
         }
 
         [CacheAspect<DataResult<List<BrandReadDto>>>()]
@@ -68,6 +79,14 @@ namespace NTech.Business.Concrete
             }
             List<BrandReadDto> brandReadDtos = Mapper.Map<List<BrandReadDto>>(await brands.ToListAsync());
             return new SuccessDataResult<List<BrandReadDto>>(brandReadDtos, LanguageMessage.SuccessfullyListed);
+        }
+
+        private async Task<IResult> brandNameExistsAsync(BrandWriteDto dto)
+        {
+            Brand brand = await _brandDal.GetAsync(b => b.Name.ToLower() == dto.Name.ToLower());
+            if (brand != null)
+                return new ErrorResult(LanguageMessage.BrandIsAlreadyExists);
+            return new SuccessResult();
         }
     }
 }

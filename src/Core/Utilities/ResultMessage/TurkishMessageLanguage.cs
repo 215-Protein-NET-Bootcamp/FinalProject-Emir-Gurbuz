@@ -92,5 +92,7 @@
         public string ColorIsAlreadyExists => "Renk zaten mevcut";
 
         public string CategoryIsAlreadyExists => "Kategori zaten mevcut";
+
+        public string BrandIsAlreadyExists => "Marka zaten mevcut";
     }
 }
