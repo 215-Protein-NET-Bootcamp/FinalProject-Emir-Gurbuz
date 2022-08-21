@@ -94,5 +94,7 @@
         public string CategoryIsAlreadyExists => "Category is already exists";
 
         public string BrandIsAlreadyExists => "Brand is already exists";
+
+        public string UsingStatusIsAlreadyExists => "Using status is already exists";
     }
 }

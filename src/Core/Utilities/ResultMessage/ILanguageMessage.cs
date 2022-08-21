@@ -66,5 +66,6 @@
         string ColorIsAlreadyExists { get; }
         string CategoryIsAlreadyExists { get; }
         string BrandIsAlreadyExists { get; }
+        string UsingStatusIsAlreadyExists { get; }
     }
 }

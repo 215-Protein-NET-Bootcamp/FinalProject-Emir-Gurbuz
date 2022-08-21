@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Aspect.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Microsoft.EntityFrameworkCore;
@@ -24,16 +25,26 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UsingStatusWriteDtoValidator))]
-        public override Task<IResult> AddAsync(UsingStatusWriteDto dto)
+        public override async Task<IResult> AddAsync(UsingStatusWriteDto dto)
         {
-            return base.AddAsync(dto);
+            IResult result = BusinessRule.Run(
+                await usingStatusExistsAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.AddAsync(dto);
         }
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UsingStatusWriteDtoValidator))]
-        public override Task<IResult> UpdateAsync(int id, UsingStatusWriteDto dto)
+        public override async Task<IResult> UpdateAsync(int id, UsingStatusWriteDto dto)
         {
-            return base.UpdateAsync(id, dto);
+            IResult result = BusinessRule.Run(
+                await usingStatusExistsAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.UpdateAsync(id, dto);
         }
 
         [SecuredOperation("Admin")]
@@ -57,6 +68,14 @@ namespace NTech.Business.Concrete
             }
             List<UsingStatusReadDto> usingStatusReadDtos = Mapper.Map<List<UsingStatusReadDto>>(await usingStatuses.ToListAsync());
             return new SuccessDataResult<List<UsingStatusReadDto>>(usingStatusReadDtos, LanguageMessage.SuccessfullyListed);
+        }
+
+        private async Task<IResult> usingStatusExistsAsync(UsingStatusWriteDto dto)
+        {
+            UsingStatus usingStatus = await _usingStatusDal.GetAsync(u => u.Status.ToLower() == dto.Status.ToLower());
+            if (usingStatus != null)
+                return new ErrorResult(LanguageMessage.UsingStatusIsAlreadyExists);
+            return new SuccessResult();
         }
     }
 }

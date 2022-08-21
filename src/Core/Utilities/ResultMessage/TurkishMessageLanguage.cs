@@ -94,5 +94,7 @@
         public string CategoryIsAlreadyExists => "Kategori zaten mevcut";
 
         public string BrandIsAlreadyExists => "Marka zaten mevcut";
+
+        public string UsingStatusIsAlreadyExists => "Kullanım durumu zaten mevcut";
     }
 }
