@@ -144,7 +144,7 @@ Exception Log Aspect ❌ <br>
 <h4>Email send is 5 times trying. And saving it in database.</h4>
 <img src="screenshots/email_queue_debug.png"/>
 <br>
-<h4>If run time exceeded five seconds sending email to admin</h4>
+<h4>If the function run time exceeded five seconds sending email to admin</h4>
 <img src="screenshots/performance_alert.png"/>
 
 <h2>
