@@ -12,6 +12,7 @@
   <li>Redis Cache</li>
   <li>Microsoft Memory Cache</li>
   <li>AutoMapper</li>
+  <li>Docker</li>
   <li>JWT</li>
 </ul>
 <hr>
