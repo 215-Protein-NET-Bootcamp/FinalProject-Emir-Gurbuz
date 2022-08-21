@@ -64,5 +64,6 @@
         string CategoryNotFound { get; }
         string ImageNotFound { get; }
         string ColorIsAlreadyExists { get; }
+        string CategoryIsAlreadyExists { get; }
     }
 }

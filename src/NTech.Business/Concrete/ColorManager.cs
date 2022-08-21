@@ -28,7 +28,7 @@ namespace NTech.Business.Concrete
         public override async Task<IResult> AddAsync(ColorWriteDto dto)
         {
             IResult result = BusinessRule.Run(
-                await colorNameExists(dto));
+                await colorNameExistsAsync(dto));
             if (result != null)
                 return result;
 
@@ -41,7 +41,7 @@ namespace NTech.Business.Concrete
         public override async Task<IResult> UpdateAsync(int id, ColorWriteDto dto)
         {
             IResult result = BusinessRule.Run(
-                await colorNameExists(dto));
+                await colorNameExistsAsync(dto));
             if (result != null)
                 return result;
 
@@ -79,7 +79,7 @@ namespace NTech.Business.Concrete
             return base.SoftDeleteAsync(id);
         }
 
-        private async Task<IResult> colorNameExists(ColorWriteDto dto)
+        private async Task<IResult> colorNameExistsAsync(ColorWriteDto dto)
         {
             Color color = await Repository.GetAsync(c => c.Name.ToLower() == dto.Name.ToLower());
             if (color != null)

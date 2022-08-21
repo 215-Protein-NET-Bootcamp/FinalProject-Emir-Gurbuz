@@ -90,5 +90,7 @@
         public string ImageNotFound => "Resim bulunamadı";
 
         public string ColorIsAlreadyExists => "Renk zaten mevcut";
+
+        public string CategoryIsAlreadyExists => "Kategori zaten mevcut";
     }
 }

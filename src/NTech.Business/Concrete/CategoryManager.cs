@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Result;
 using Core.Utilities.ResultMessage;
 using Microsoft.EntityFrameworkCore;
@@ -26,17 +27,27 @@ namespace NTech.Business.Concrete
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(CategoryWriteDtoValidator))]
         [CacheRemoveAspect("CategoryReadDto")]
-        public override Task<IResult> AddAsync(CategoryWriteDto dto)
+        public override async Task<IResult> AddAsync(CategoryWriteDto dto)
         {
-            return base.AddAsync(dto);
+            IResult result = BusinessRule.Run(
+                await categoryNameExistsAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.AddAsync(dto);
         }
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(CategoryWriteDtoValidator))]
         [CacheRemoveAspect("CategoryReadDto")]
-        public override Task<IResult> UpdateAsync(int id, CategoryWriteDto dto)
+        public override async Task<IResult> UpdateAsync(int id, CategoryWriteDto dto)
         {
-            return base.UpdateAsync(id, dto);
+            IResult result = BusinessRule.Run(
+                await categoryNameExistsAsync(dto));
+            if (result != null)
+                return result;
+
+            return await base.UpdateAsync(id, dto);
         }
 
         [CacheAspect<DataResult<List<CategoryReadDto>>>()]
@@ -68,6 +79,14 @@ namespace NTech.Business.Concrete
             }
             List<CategoryReadDto> categoryReadDtos = Mapper.Map<List<CategoryReadDto>>(await categories.ToListAsync());
             return new SuccessDataResult<List<CategoryReadDto>>(categoryReadDtos, LanguageMessage.SuccessfullyListed);
+        }
+
+        private async Task<IResult> categoryNameExistsAsync(CategoryWriteDto dto)
+        {
+            Category category = await _categoryDal.GetAsync(c => c.Name.ToLower() == dto.Name.ToLower());
+            if (category != null)
+                return new ErrorResult(LanguageMessage.CategoryIsAlreadyExists);
+            return new SuccessResult();
         }
     }
 }
