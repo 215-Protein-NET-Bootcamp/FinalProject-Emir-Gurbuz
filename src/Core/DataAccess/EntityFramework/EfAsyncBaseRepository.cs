@@ -30,7 +30,9 @@ namespace Core.DataAccess.EntityFramework
 
         public virtual IQueryable<TEntity> GetAll(bool tracking = true)
         {
-            var table = _context.Set<TEntity>().Where(x => x.DeletedDate.HasValue == false);
+            var table = _context.Set<TEntity>()
+                .Where(x => x.DeletedDate.HasValue == false)
+                .OrderBy(x => x.Id);
             return tracking ?
             table.AsQueryable() :
             table.AsNoTracking().AsQueryable();
@@ -38,7 +40,9 @@ namespace Core.DataAccess.EntityFramework
 
         public virtual IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
-            var table = _context.Set<TEntity>().Where(x => x.DeletedDate.HasValue == false);
+            var table = _context.Set<TEntity>()
+                .Where(x => x.DeletedDate.HasValue == false)
+                .OrderBy(x => x.Id);
             return tracking ?
             table.Where(predicate).AsQueryable() :
             table.Where(predicate).AsNoTracking().AsQueryable();
