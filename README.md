@@ -20,12 +20,12 @@ Aspect Oriented Programming ⚙️ <br>
 Hashing Password 🔑 <br>
 Email Service 📧 <br>
 <hr>
-Cache and Cache Remove Aspects 🧰 <br>
-Performance Aspects 🚀 <br>
-Validation Aspects ✔️ <br>
-Secure Aspects 🛡️ <br>
-Log Aspects 📓 <br>
-Exception Log Aspects ❌ <br>
+Cache and Cache Remove Aspect 🧰 <br>
+Performance Aspecs 🚀 <br>
+Validation Aspect ✔️ <br>
+Secure Aspect 🛡️ <br>
+Log Aspect 📓 <br>
+Exception Log Aspect ❌ <br>
 
 <hr>
 <h2>Startup</h3>
