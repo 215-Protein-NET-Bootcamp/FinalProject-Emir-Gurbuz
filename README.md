@@ -2,6 +2,8 @@
 
 ⬇️ Used Technologies ⬇️
 <ul>
+  <li>.Net 6</li>
+  <li>Entity Framework Core 6</li>
   <li>Autofac</li>
   <li>Serilog</li>
   <li>FluentValidation</li>
@@ -10,7 +12,6 @@
   <li>Redis Cache</li>
   <li>Microsoft Memory Cache</li>
   <li>AutoMapper</li>
-  <li>EntityFrameworkCore</li>
   <li>JWT</li>
 </ul>
 <hr>
