@@ -24,7 +24,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(ColorWriteDtoValidator))]
-        [CacheRemoveAspect("ColorReadDto")]
+        [CacheRemoveAspect("*ColorReadDto*")]
         public override async Task<IResult> AddAsync(ColorWriteDto dto)
         {
             IResult result = BusinessRule.Run(
@@ -37,7 +37,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(ColorWriteDtoValidator))]
-        [CacheRemoveAspect("ColorReadDto")]
+        [CacheRemoveAspect("*ColorReadDto*")]
         public override async Task<IResult> UpdateAsync(int id, ColorWriteDto dto)
         {
             IResult result = BusinessRule.Run(
@@ -66,14 +66,14 @@ namespace NTech.Business.Concrete
         }
 
         [SecuredOperation("Admin")]
-        [CacheRemoveAspect("ColorReadDto")]
+        [CacheRemoveAspect("*ColorReadDto*")]
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);
         }
 
         [SecuredOperation("Admin")]
-        [CacheRemoveAspect("ColorReadDto")]
+        [CacheRemoveAspect("*ColorReadDto*")]
         public override Task<IResult> SoftDeleteAsync(int id)
         {
             return base.SoftDeleteAsync(id);

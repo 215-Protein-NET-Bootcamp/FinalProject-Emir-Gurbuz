@@ -28,9 +28,6 @@ namespace Core.Aspect.Autofac.Caching
             }
             if (returnValue is ErrorResult)
                 return;
-
-            if (_pattern.StartsWith("*") == false && _pattern.EndsWith("*") == false)
-                _pattern = $"*{_pattern}*";
             _cacheManager.RemoveByPattern(_pattern);
         }
     }

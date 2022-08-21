@@ -51,7 +51,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("User")]
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
-        [CacheRemoveAspect("ProductReadDto")]
+        [CacheRemoveAspect("*ProductReadDto*")]
         public async override Task<IResult> AddAsync(ProductWriteDto dto)
         {
             var result = BusinessRule.Run(
@@ -68,7 +68,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("User")]
         [ValidationAspect(typeof(ProductWriteDtoValidator))]
-        [CacheRemoveAspect("ProductReadDto")]
+        [CacheRemoveAspect("*ProductReadDto*")]
         public override async Task<IResult> UpdateAsync(int id, ProductWriteDto dto)
         {
             var result = BusinessRule.Run(
@@ -136,14 +136,14 @@ namespace NTech.Business.Concrete
         }
 
         [SecuredOperation("User")]
-        [CacheRemoveAspect("ProductReadDto")]
+        [CacheRemoveAspect("*ProductReadDto*")]
         public override Task<IResult> SoftDeleteAsync(int id)
         {
             return base.SoftDeleteAsync(id);
         }
 
         [SecuredOperation("User")]
-        [CacheRemoveAspect("ProductReadDto")]
+        [CacheRemoveAspect("*ProductReadDto*")]
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);

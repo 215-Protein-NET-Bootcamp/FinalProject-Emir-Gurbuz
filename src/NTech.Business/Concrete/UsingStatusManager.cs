@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Result;
@@ -25,6 +26,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UsingStatusWriteDtoValidator))]
+        [CacheRemoveAspect("*UsingStatusWriteDto*")]
         public override async Task<IResult> AddAsync(UsingStatusWriteDto dto)
         {
             IResult result = BusinessRule.Run(
@@ -37,6 +39,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UsingStatusWriteDtoValidator))]
+        [CacheRemoveAspect("*UsingStatusWriteDto*")]
         public override async Task<IResult> UpdateAsync(int id, UsingStatusWriteDto dto)
         {
             IResult result = BusinessRule.Run(
@@ -47,13 +50,21 @@ namespace NTech.Business.Concrete
             return await base.UpdateAsync(id, dto);
         }
 
+        [CacheAspect()]
+        public override Task<DataResult<List<UsingStatusReadDto>>> GetListAsync()
+        {
+            return base.GetListAsync();
+        }
+
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("*UsingStatusWriteDto*")]
         public override Task<IResult> SoftDeleteAsync(int id)
         {
             return base.SoftDeleteAsync(id);
         }
 
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("*UsingStatusWriteDto*")]
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);

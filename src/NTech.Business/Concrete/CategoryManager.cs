@@ -26,7 +26,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(CategoryWriteDtoValidator))]
-        [CacheRemoveAspect("CategoryReadDto")]
+        [CacheRemoveAspect("*CategoryReadDto*")]
         public override async Task<IResult> AddAsync(CategoryWriteDto dto)
         {
             IResult result = BusinessRule.Run(
@@ -39,7 +39,7 @@ namespace NTech.Business.Concrete
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(CategoryWriteDtoValidator))]
-        [CacheRemoveAspect("CategoryReadDto")]
+        [CacheRemoveAspect("*CategoryReadDto*")]
         public override async Task<IResult> UpdateAsync(int id, CategoryWriteDto dto)
         {
             IResult result = BusinessRule.Run(
@@ -57,14 +57,14 @@ namespace NTech.Business.Concrete
         }
 
         [SecuredOperation("Admin")]
-        [CacheRemoveAspect("CategoryReadDto")]
+        [CacheRemoveAspect("*CategoryReadDto*")]
         public override Task<IResult> HardDeleteAsync(int id)
         {
             return base.HardDeleteAsync(id);
         }
 
         [SecuredOperation("Admin")]
-        [CacheRemoveAspect("CategoryReadDto")]
+        [CacheRemoveAspect("*CategoryReadDto*")]
         public override Task<IResult> SoftDeleteAsync(int id)
         {
             return base.SoftDeleteAsync(id);
